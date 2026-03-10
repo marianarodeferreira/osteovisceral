@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OsteoVisceral Pro V43 - Versão Definitiva</title>
+<style>
+    :root {
+        --primary: #2c3e50;
+        --accent: #3498db;
+        --bg: #f8f9fa;
+        --symp: #c0392b;
+        --para: #27ae60;
+    }
+    body { font-family: 'Segoe UI', Roboto, sans-serif; margin: 0; background: var(--bg); color: #333; height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
+    .header { height: 50px; background: white; border-bottom: 1px solid #ddd; display: flex; align-items: center; padding: 0 20px; justify-content: space-between; flex-shrink: 0; z-index: 10; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+    .brand { font-weight: 800; color: var(--primary); font-size: 1.1rem; text-transform: uppercase; letter-spacing: 1px; }
+    .main-stage { flex: 1; display: grid; grid-template-columns: 320px 1fr; overflow: hidden; }
+    .anatomy-col { background: #fff; border-right: 1px solid #ddd; display: flex; flex-direction: column; position: relative; z-index: 2; box-shadow: 2px 0 10px rgba(0,0,0,0.05); }
+    .menu-scroll-area { flex: 0 0 auto; max-height: 55vh; overflow-y: auto; border-bottom: 1px solid #eee; }
+    .sys-btn { width: 100%; background: #fff; border: none; border-bottom: 1px solid #f0f0f0; padding: 12px 20px; text-align: left; font-weight: 700; color: #555; cursor: pointer; transition: 0.2s; font-size: 0.85rem; display: flex; justify-content: space-between; align-items: center; outline: none; }
+    .sys-btn:hover { background: #f9f9f9; color: var(--accent); }
+    .sys-btn.active { background: #f0f8ff; color: var(--accent); border-left: 4px solid var(--accent); }
+    .sys-btn::after { content: '▾'; font-size: 0.8rem; }
+    .sys-btn.active::after { content: '▴'; }
+    .organ-list { display: none; margin: 0; padding: 0; list-style: none; background: #fafafa; }
+    .organ-list.show { display: block; }
+    .organ-btn { padding: 8px 15px 8px 30px; cursor: pointer; border-bottom: 1px solid #f0f0f0; font-size: 0.85rem; color: #666; transition: 0.2s; display: block; }
+    .organ-btn:hover { background: white; color: var(--accent); padding-left: 35px; }
+    .organ-btn.selected { color: var(--accent); font-weight: bold; background: white; border-right: 3px solid var(--accent); }
+    .map-container { flex: 1; display: flex; align-items: center; justify-content: center; overflow: hidden; background: #eef2f5; position: relative; padding: 10px; }
+    .interactive-map-img { max-width: 100%; max-height: 100%; object-fit: contain; }
+    
+    .info-col { padding: 20px 30px; overflow-y: auto; background: var(--bg); display: flex; flex-direction: column; }
+    .tab-switcher { display: flex; gap: 8px; margin-bottom: 20px; background: #e9ecef; padding: 5px; border-radius: 8px; width: fit-content; flex-wrap: wrap; flex-shrink: 0; }
+    .tab-btn { border: none; background: none; padding: 8px 15px; border-radius: 6px; font-weight: 600; font-size: 0.9rem; color: #666; cursor: pointer; transition: 0.3s; }
+    .tab-btn:hover { background: rgba(255,255,255,0.5); }
+    .tab-btn.active { background: white; color: var(--primary); box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+    
+    .content-area { flex: 1; display: flex; flex-direction: column; }
+    .content-view { display: none; animation: fadeIn 0.4s ease; flex: 1; }
+    .content-view.active { display: block; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    .card { background: white; border-radius: 12px; padding: 25px; box-shadow: 0 4px 15px rgba(0,0,0,0.03); margin-bottom: 20px; border: 1px solid rgba(0,0,0,0.05); }
+    h2 { margin-top: 0; color: var(--primary); font-size: 1.6rem; border-bottom: 2px solid #f0f0f0; padding-bottom: 10px; margin-bottom: 15px; }
+    
+    .anat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 25px; }
+    .anat-text-col { padding-right: 10px; }
+    .anat-box { margin-bottom: 20px; }
+    .anat-label { font-weight: 800; color: var(--primary); display: block; margin-bottom: 5px; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.5px; }
+    .anat-text { color: #555; line-height: 1.6; font-size: 0.95rem; }
+    .anat-text ul { padding-left: 20px; margin-top: 5px; }
+    .anat-text li { margin-bottom: 5px; }
+    .ligament-btn { display: block; width: 100%; padding: 12px; margin-bottom: 8px; background: #f0f4f8; border: 1px solid #dceefb; border-radius: 6px; text-align: left; font-weight: 600; color: #2c3e50; cursor: pointer; transition: 0.2s; position: relative; }
+    .ligament-btn:hover { background: #3498db; color: white; padding-left: 20px; }
+    .ligament-btn::after { content: '👁️'; position: absolute; right: 10px; opacity: 0.5; }
+    
+    .anat-visual-col { background: #eef2f5; border-radius: 12px; border: 2px dashed #ccc; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; min-height: 350px; }
+    .anat-placeholder { color: #888; text-align: center; padding: 20px; }
+    
+    #anat-img-carousel { display: none; width: 100%; height: 100%; flex-direction: column; align-items: center; justify-content: space-between; padding: 15px; box-sizing: border-box; }
+    .carousel-img { max-width: 100%; max-height: 300px; object-fit: contain; border-radius: 5px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+    .anat-img-note { width: 100%; text-align: center; font-size: 0.85rem; color: #444; font-style: italic; margin-top: 10px; }
+    
+    .carousel-controls { display: flex; gap: 15px; margin-top: 10px; align-items: center; background: rgba(255,255,255,0.8); padding: 8px 15px; border-radius: 8px; }
+    .carousel-btn { background: var(--accent); color: white; border: none; padding: 8px 15px; border-radius: 6px; cursor: pointer; transition: 0.3s; font-weight: bold; font-size: 0.9rem; }
+    .carousel-btn:hover:not(:disabled) { background: #2980b9; transform: scale(1.05); }
+    .carousel-btn:disabled { background: #bdc3c7; cursor: not-allowed; }
+    .carousel-counter { font-weight: bold; color: #555; font-size: 0.95rem; }
+    
+    .sna-level { font-size: 1.5rem; font-weight: 800; color: var(--primary); margin-bottom: 10px; display: block; }
+    .sna-box { padding: 15px; border-radius: 8px; margin-bottom: 10px; border-left: 4px solid; }
+    .sna-symp { background: #fff5f5; border-color: var(--symp); color: #c0392b; }
+    .sna-para { background: #f0fdf4; border-color: var(--para); color: #27ae60; }
+    .sna-box ul, .diag-box ul { padding-left: 20px; margin-top: 10px; margin-bottom: 0; line-height: 1.5; color: #333; }
+    .sna-box li, .diag-box li { margin-bottom: 8px; font-size: 0.95rem; }
+    
+    .tech-img { width: 100%; height: 280px; background: #ddd; object-fit: cover; border-radius: 10px; margin-top: 15px; }
+    .tech-img-note { text-align: center; font-size: 0.9rem; color: #666; font-style: italic; margin-top: 8px; display: none; padding: 5px; background: #f9f9f9; border-radius: 5px; }
+    
+    .tech-block { margin-bottom: 30px; border-bottom: 1px solid #eee; padding-bottom: 20px; }
+    .tech-block:last-child { border-bottom: none; }
+    .tech-block h3 { color: var(--primary); font-size: 1.3rem; margin-top: 0; margin-bottom: 10px; }
+    
+    .refs-container { margin-top: 20px; margin-bottom: 40px; background: #fff; padding: 15px; border-radius: 8px; border: 1px solid #e1e8ed; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+    .refs-details { font-size: 0.9rem; color: #444; }
+    .refs-summary { cursor: pointer; font-weight: 700; color: #2c3e50; outline: none; transition: 0.2s; list-style: none; display: flex; align-items: center; border-bottom: 1px solid #eee; padding-bottom: 10px; }
+    .refs-summary::-webkit-details-marker { display: none; }
+    .refs-summary::before { content: '📖'; margin-right: 8px; font-size: 1.2rem; }
+    .refs-summary:hover { color: var(--accent); }
+    .refs-list { padding-left: 20px; margin-top: 15px; line-height: 1.6; }
+    .refs-list li { margin-bottom: 8px; }
+    
+    #error-msg { position: fixed; top: 0; left: 0; width: 100%; background: #e74c3c; color: white; padding: 10px; text-align: center; display: none; z-index: 9999; }
+</style>
+</head>
+<body>
+
+    <div id="error-msg"></div>
+
+    <div class="header">
+        <div class="brand">OsteoVisceral Pro</div>
+        <div id="top-organ-name" class="current-organ">Selecione no Menu</div>
+    </div>
+
+    <div class="main-stage">
+        <div class="anatomy-col">
+            <div class="menu-scroll-area">
+                
+                <button class="sys-btn" style="background:#eef7fa; color:#007f8b; border-left: 4px solid #007f8b;" onclick="toggleMenu('menu-cranio', this)">SISTEMA CRANIAL</button>
+                <ul id="menu-cranio" class="organ-list">
+                    <li class="organ-btn" onclick="load('fossa_anterior', this)">Fossa Craniana Anterior</li>
+                    <li class="organ-btn" onclick="load('fossa_media', this)">Fossa Craniana Média</li>
+                    <li class="organ-btn" onclick="load('fossa_posterior', this)">Fossa Craniana Posterior</li>
+                    <li class="organ-btn" onclick="load('face_forames', this)">Viscerocrânio e ATM</li>
+                </ul>
+
+                <button class="sys-btn" onclick="toggleMenu('menu-digest', this)">SISTEMA DIGESTIVO</button>
+                <ul id="menu-digest" class="organ-list">
+                    <li class="organ-btn" onclick="load('estomago', this)">Estômago</li>
+                    <li class="organ-btn" onclick="load('figado', this)">Fígado</li>
+                    <li class="organ-btn" onclick="load('vesicula', this)">Vesícula Biliar</li>
+                    <li class="organ-btn" onclick="load('pancreas', this)">Pâncreas</li>
+                    <li class="organ-btn" onclick="load('delgado', this)">Intestino Delgado</li>
+                    <li class="organ-btn" onclick="load('colon', this)">Intestino Grosso</li>
+                </ul>
+
+                <button class="sys-btn" onclick="toggleMenu('menu-resp', this)">SISTEMA RESPIRATÓRIO</button>
+                <ul id="menu-resp" class="organ-list">
+                    <li class="organ-btn" onclick="load('pulmoes', this)">Pulmões</li>
+                </ul>
+
+                <button class="sys-btn" onclick="toggleMenu('menu-cardio', this)">SISTEMA CARDIOVASCULAR</button>
+                <ul id="menu-cardio" class="organ-list">
+                    <li class="organ-btn" onclick="load('coracao', this)">Coração</li>
+                </ul>
+
+                <button class="sys-btn" onclick="toggleMenu('menu-urin', this)">SISTEMA URINÁRIO</button>
+                <ul id="menu-urin" class="organ-list">
+                    <li class="organ-btn" onclick="load('rins', this)">Rins</li>
+                    <li class="organ-btn" onclick="load('bexiga', this)">Bexiga</li>
+                </ul>
+
+                <button class="sys-btn" onclick="toggleMenu('menu-reprod', this)">SISTEMA REPRODUTOR & PÉLVICO</button>
+                <ul id="menu-reprod" class="organ-list">
+                    <li class="organ-btn" onclick="load('utero', this)">Útero</li>
+                    <li class="organ-btn" onclick="load('coccix', this)">Cóccix</li>
+                </ul>
+
+            </div>
+
+            <div class="map-container">
+                <img src="tronco_visceras.jpg" class="interactive-map-img" alt="Mapa" onerror="this.src='https://placehold.co/400x600/e9ecef/999?text=IMAGEM+DO+TRONCO'">
+            </div>
+        </div>
+
+        <div class="info-col">
+            <div class="tab-switcher">
+                <button class="tab-btn active" onclick="switchTab('anatomia', this)">Anatomia & Biomecânica</button>
+                <button class="tab-btn" onclick="switchTab('sna', this)">SNA / Neuro</button>
+                <button class="tab-btn" onclick="switchTab('tecnica', this)">Técnica Manual</button>
+            </div>
+
+            <div class="content-area">
+                <div id="view-anatomia" class="content-view active">
+                    <div class="card">
+                        <h2 id="anat-title">Anatomia</h2>
+                        <div class="anat-grid">
+                            <div class="anat-text-col">
+                                <div class="anat-box">
+                                    <span class="anat-label">📍 Topografia, Limites & Movimento </span>
+                                    <div id="anat-loc" class="anat-text"></div>
+                                </div>
+                                <div class="anat-box">
+                                    <span class="anat-label">🔗 Relações Fasciais & Ósseas</span>
+                                    <div id="anat-rel" class="anat-text"></div>
+                                </div>
+                                <hr style="border:0; border-top:1px solid #eee; margin:20px 0;">
+                                <div class="anat-box">
+                                    <span class="anat-label">⚓ Sistema de Fixação / Ligamentos</span>
+                                    <div id="anat-fix-list"></div>
+                                </div>
+                            </div>
+                            <div class="anat-visual-col">
+                                <div id="anat-img-carousel">
+                                    <img id="carousel-img" class="carousel-img" src="">
+                                    <div id="carousel-note" class="anat-img-note"></div>
+                                    
+                                    <div id="carousel-controls" class="carousel-controls">
+                                        <button id="btn-prev" class="carousel-btn" onclick="prevImage()">⬅️ Anterior</button>
+                                        <span id="carousel-counter" class="carousel-counter">1 / 2</span>
+                                        <button id="btn-next" class="carousel-btn" onclick="nextImage()">Próxima ➡️</button>
+                                    </div>
+                                </div>
+
+                                <div id="anat-placeholder" class="anat-placeholder">
+                                    <h3>VISUALIZADOR</h3>
+                                    <p>Clique numa estrutura à esquerda para ver a imagem.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="view-sna" class="content-view">
+                    <div class="card">
+                        <h2 id="sna-title">Vias Neurológicas (Viscerossomáticas)</h2>
+                        <hr style="border:0; border-top:1px solid #eee; margin:15px 0;">
+                        
+                        <div class="sna-box sna-symp">
+                            <strong id="sna-titulo-s" style="font-size:1.1rem;">🔴 Simpático / Artérias</strong>
+                            <div id="sna-txt-s"></div>
+                        </div>
+                        
+                        <div class="sna-box sna-para">
+                            <strong id="sna-titulo-p" style="font-size:1.1rem;">🔵 Parassimpático / Nervos Cranianos</strong>
+                            <div id="sna-txt-p"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="view-tecnica" class="content-view">
+                    <div class="card" id="tech-container">
+                        </div>
+                </div>
+            </div>
+
+            <div class="refs-container" id="refs-box" style="display:none;">
+                <details class="refs-details">
+                    <summary class="refs-summary">Referências Bibliográficas</summary>
+                    <ul id="refs-list" class="refs-list"></ul>
+                </details>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        window.onerror = function(message, source, lineno, colno, error) {
+            const msgBox = document.getElementById('error-msg');
+            msgBox.style.display = 'block';
+            msgBox.innerText = "ERRO: " + message + " (Linha " + lineno + ").";
+        };
+
+        var currentCarouselImages = [];
+        var currentCarouselIndex = 0;
+
+        const db = {
+            "fossa_anterior": {
+                "nome": "Fossa Craniana Anterior",
+                "tituloP": "(NC I)",
+                "anatLoc": "<ul><li><b>Limites Ósseos:</b> Compreendida entre a escama do osso frontal e as asas menores do osso esfenoide.</li><li><b>Biomecânica Craniana:</b> O osso frontal, de origem membranosa, é altamente influenciado pelas fáscias cervicais e desempenha um papel chave na expansão em flexão do Movimento Respiratório Primário (MRP).</li></ul>",
+                "anatRel": "<ul><li><b>Sutura Fronto-etmoidal:</b> Zona crítica de tensão onde disfunções afetam a drenagem venosa craniana pelo forame cego.</li><li><b>Lâmina Crivosa:</b> Passagem do Nervo Olfativo (NC I).</li></ul>",
+                "anatFix": [{ "name": "Foice do Cérebro", "img": "foice_cerebro.jpg", "note": "Prega da dura-máter que se ancora na crista galli. Transmite tensões mecânicas de todo o neuroeixo." }],
+                "snaS": "<ul><li><b>Nota:</b> Não possui atividade ou via simpática clinicamente relevante nesta fossa óssea.</li></ul>",
+                "snaP": "<ul><li><b>Nervo:</b> Olfativo (NC I).</li><li><b>Trajeto:</b> Passa através dos múltiplos filamentos da Lâmina Crivosa para a cavidade nasal.</li></ul>",
+                "techs": [{ "nome": "Libertação do Frontal", "ref": "Glabela / Sutura Metópica", "tip": "Trabalhar em sincronia com as fases do MRP.", "steps": ["Contacto suave de ambos os polegares nos ossos frontais.", "Avaliar a assimetria na expansão e retração do crânio.", "Induzir a libertação óssea (V spread) ou acompanhar o movimento até ao Still Point."] }],
+                "refs": ["GRAY'S Anatomy for Students.", "MOORE, Clinically Oriented Anatomy."],
+                "img": "foto_cranio_ant.jpg"
+            },
+            "fossa_media": {
+                "nome": "Fossa Craniana Média",
+                "tituloS": "(Plexo Carotídeo)",
+                "tituloP": "(Nervos Cranianos II a VI)",
+                "anatLoc": "<ul><li><b>O Centro do Mecanismo:</b> O Esfenoide é considerado o 'osso chave' da base do crânio em Osteopatia.</li><li><b>Biomecânica das Suturas:</b> As suturas da abóbada (Coronal, Sagital, Lambdoideia e Escamosa) articulam-se direta ou indiretamente com a base, sendo a chave mecânica para absorver as forças e permitir o Modelo de Flexão/Extensão do MRP.</li><li><b>A SEB (Sincondrose Esfenobasilar):</b> Articulação central que dita o padrão mecânico e acomoda a motilidade craniana.</li></ul>",
+                "anatRel": "<ul><li><b>Fissura Orbitária Superior:</b> Uma restrição mecânica do esfenoide comprime esta fissura, perturbando os nervos cranianos e gerando dores retro-orbitárias.</li><li><b>Temporal:</b> A sua rotação interna/externa afeta o equilíbrio de toda a fossa.</li></ul>",
+                "anatFix": [{ "name": "Diafragma da Sela", "img": "diafragma_sela.jpg" }, { "name": "Tentório do Cerebelo", "img": "tentorio_cerebelo.jpg", "note": "Atua como um 'teto' de tensão fascial que separa as fossas." }],
+                "snaS": "<ul><li><b>Estrutura Chave:</b> Canal Carotídeo.</li><li><b>Trajeto:</b> Permite a passagem de entrada do <b>Plexo Simpático Carotídeo Interno</b> em direção ao interior do crânio.</li></ul>",
+                "snaP": "<ul><li><b>Trânsito Neurológico:</b> Passagem maciça de múltiplos nervos cranianos.</li><li><b>Funções:</b> Atividade motora, sensitiva e parassimpática (maioritariamente oftalmológica).</li></ul>",
+                "techs": [{ "nome": "Técnica de Descompressão da SEB", "ref": "Asas Maiores do Esfenoide", "tip": "Equilibrar flexão e extensão craniossacral.", "steps": ["Realizar a 'Hold' de abóbada de Sutherland.", "Acompanhar e sentir a assimetria nas asas maiores do esfenoide.", "Aguardar o ponto de quietude (still point) e induzir o realinhamento."] }],
+                "refs": ["NETTER, F. H. Atlas de Anatomia Humana.", "STANDRING, S. Gray's Anatomy."],
+                "img": "foto_cranio_media.jpg"
+            },
+            "fossa_posterior": {
+                "nome": "Fossa Craniana Posterior",
+                "tituloS": "(Via Artéria Vertebral)",
+                "tituloP": "(Nervo Vago X)",
+                "anatLoc": "<ul><li><b>Limites:</b> A maior fossa da base craniana, englobando o Occipital e partes do Temporal.</li><li><b>Mecânica C0-C1:</b> O forame magno marca a transição vital entre a base craniana e a coluna cervical (Atlas), um verdadeiro funil de tensões ascendentes e descendentes.</li></ul>",
+                "anatRel": "<ul><li><b>Sutura Occipitomastoideia:</b> Funciona como a 'dobradiça' lateral. A sua fixação afeta o Forame Jugular.</li><li><b>Continuidade Fascial:</b> A fáscia cervical profunda liga o rebordo do forame magno diretamente ao diafragma torácico inferiormente.</li></ul>",
+                "anatFix": [{ "name": "Músculos Suboccipitais", "img": ["musculos_suboccipitais_1.jpg", "musculos_suboccipitais_2.jpg"], "note": "O excesso de tensão nestes músculos bloqueia a extensão de C0-C1." }, { "name": "Músculo ECOM", "img": "musculo_ecom.jpg", "note": "Puxa e altera ativamente a posição do temporal (torcicolo)." }],
+                "snaS": "<ul><li><b>Vascularização:</b> Passagem vital das artérias vertebrais através do forame magno para a nutrição cerebral.</li></ul>",
+                "snaP": "<ul><li><b>O Comando Vagal:</b> O Forame Jugular (entre o occipital e o temporal) é a via de saída do <b>Nervo Vago (NC X)</b>. Um bloqueio mecânico nesta sutura pinça o nervo, provocando disautonomias na digestão e no ritmo cardíaco.</li></ul>",
+                "techs": [{ "nome": "Descompressão do Forame Jugular", "ref": "Sutura Occipitomastoideia", "tip": "A técnica rainha para libertar o tónus parassimpático vagal.", "steps": ["Contacto bimanual cruzado no processo mastoide e na escama do occipital.", "Promover uma abertura mecânica suave em 'V' durante a fase de flexão craniana.", "Relaxar a tensão reativa nos músculos suboccipitais."] }],
+                "refs": ["NETTER, F. H. Atlas de Anatomia Humana.", "BEAR, M. F. Neurociências."],
+                "img": "foto_cranio_post.jpg"
+            },
+            "face_forames": {
+                "nome": "Viscerocrânio e ATM",
+                "tituloP": "(Nervo Trigémeo)",
+                "anatLoc": "<ul><li><b>Componente Anterior:</b> Os ossos da face (Maxilar, Mandíbula, Zigomático) funcionam como os 'amortecedores' mastigatórios.</li><li><b>A Charneira Articular:</b> A ATM (Articulação Temporomandibular) é a única articulação móvel do crânio, extremamente propensa a anteriorizações do disco e adaptações posturais.</li></ul>",
+                "anatRel": "<ul><li>A tensão dos músculos mastigatórios transmite força direta sobre a sutura escamosa e o esfenoide.</li><li><b>Os Forames Alinhados:</b> Supraorbitário (Frontal), Infraorbitário (Maxilar) e Mentoniano (Mandíbula) formam uma linha de emergência nervosa.</li></ul>",
+                "anatFix": [
+                    { "name": "Músculos da Mastigação", "img": "musculos_mastigacao.jpg", "note": "Masséter, Temporal e Pterigoides. O Pterigoide Lateral é o grande responsável pelo deslocamento do disco da ATM." }, 
+                    { "name": "Músculos Supra-hióideos", "img": "musculos_hioideos.jpg", "note": "Incluem o Digástrico, Milohióideo e Estilohióideo. Funcionam como a grande ponte de ligação mecânica e de tensão contínua entre a base do crânio, a mandíbula e a coluna cervical." }
+                ],
+                "snaS": "<ul><li><b>Nota:</b> Sem aplicação autonómica primária osteopática de relevo direto nos forames (inervação acompanha os vasos sanguíneos da face).</li></ul>",
+                "snaP": "<ul><li><b>Reflexo Trigeminal (NC V):</b> A inibição dos pontos de emergência nervosa da face afrouxa de forma reflexa o tónus massetérico e reduz queixas de Bruxismo.</li></ul>",
+                "techs": [{ "nome": "Libertação dos Forames Faciais", "ref": "Linha vertical pupilar", "tip": "Avaliar sempre a lateralidade do bloqueio da ATM antes de atuar.", "steps": ["Realizar inibição profunda no ventre muscular do Masséter e do Temporal.", "Localizar a linha dos 3 forames na hemiface afetada.", "Aplicar uma pressão inibitória suave e contínua nos pontos de emergência."] }],
+                "refs": ["MOORE, Clinically Oriented Anatomy."],
+                "img": "foto_face.jpg"
+            },
+            "estomago": {
+                "nome": "Estômago",
+                "tituloS": "(T6-T9)",
+                "tituloP": "(Nervo Vago)",
+                "anatLoc": "<ul><li><b>Limites e Palpação:</b> A porção anterior acessível à palpação profunda dita o <b>Triângulo Clínico de Labbé</b>. Ocupa o epigástrio e hipocôndrio esquerdo.</li><li><b>A Chave Abdominal:</b> O Piloro encontra-se em L1. Este é o <b>Plano Transpilórico</b>, que corta em simultâneo o piloro, o colo do pâncreas e os hilos renais.</li></ul>",
+                "anatRel": "<ul><li>Sendo um órgão oco e móvel, as suas paredes deslizam ativamente sobre o pâncreas (posteriormente) e o diafragma (superiormente).</li></ul>",
+                "anatFix": [
+                    { "name": "Lig. Gastrofrénico", "img": ["lig_gastrofrenico_1.jpg", "lig_gastrofrenico_2.jpg"], "note": "Puxa mecanicamente o pilar esquerdo do diafragma em caso de tensão gástrica." }, 
+                    { "name": "Pequeno e Grande Omento", "img": ["lig_peq_omento.jpg", "lig_grande_omento.jpg"], "note": "Pregas peritoniais que garantem suspensão e vascularização." }
+                ],
+                "snaS": "<ul><li><b>Níveis Medulares (T6 a T9):</b> As restrições da coluna torácica média enviam sinais de stress pelo nervo esplâncnico, causando o espasmo do estômago e induzindo forte vasoconstrição na mucosa (isquemia).</li></ul>",
+                "snaP": "<ul><li><b>Nervo:</b> Vago (NC X).</li><li><b>Ação Fisiológica:</b> É o grande estimulador. Aumenta a motilidade mecânica (peristaltismo) e estimula a secreção glandular de Ácido Clorídrico (HCl).</li></ul>",
+                "techs": [{ "nome": "Inibição do Plexo Solar", "ref": "Linha média Xifoide-Umbigo", "tip": "Trabalhar apenas com o peso dos dedos, aguardando o relaxamento da fáscia (melting).", "steps": ["Procurar o ponto médio e espástico no epigástrio.", "Aprofundar a pressão posteriormente em direção a L1 durante a expiração do paciente.", "Manter até sentir a resposta de libertação dos tecidos profundos."] }],
+                "refs": ["NETTER, F. H. Atlas de Anatomia Humana.", "BARRAL, J. P. Manipulações Viscerais 1.", "GUYTON, A.C.; HALL, J.E. Tratado de Fisiologia."],
+                "img": "foto_tech_estomago.jpg"
+            },
+            "figado": {
+                "nome": "Fígado",
+                "tituloS": "(T7-T10)",
+                "tituloP": "(Nervo Vago)",
+                "anatLoc": "<ul><li><b>Volume e Impacto:</b> A enorme massa do fígado (hipocôndrio direito) obriga o rim direito a posicionar-se estruturalmente mais abaixo que o esquerdo. A sua face está colada ao diafragma.</li><li><b>A Mecânica da Inspiração (Mobilidade):</b> Guiado pela descida do diafragma, o fígado sofre uma <b>rotação anterior (Roll) combinada com um deslize transversal para a esquerda</b>. O bloqueio deste ritmo afeta o tórax e os ombros.</li></ul>",
+                "anatRel": "<ul><li>O peso e a rigidez do fígado moldam os órgãos em redor, criando 'impressões' no rim direito, estômago e na flexura cólica direita.</li></ul>",
+                "anatFix": [
+                    { "name": "Ligamentos Coronário e Triangular", "img": "lig_coronario.jpg", "note": "Amarras diretas ao diafragma. Qualquer tensão aqui reflete-se na mecânica das costelas e na respiração." }, 
+                    { "name": "Ligamento Falciforme", "img": "lig_falciforme.jpg" }
+                ],
+                "snaS": "<ul><li><b>Segmentos T7 a T10:</b> Em quadros de stress constante, o hiper-tónus simpático fecha o aporte vascular hepático, tornando o fígado denso, pesado e congestionado (palpável clinicamente).</li></ul>",
+                "snaP": "<ul><li><b>Nervo:</b> Vago.</li><li><b>Ação Fisiológica:</b> A sua estimulação correta por via craniana garante que o fígado mantém o seu papel regenerador celular, anabólico e de limpeza em repouso.</li></ul>",
+                "techs": [
+                    { "nome": "Testes de Palpação Hepática", "ref": "Borda Costal Inferior Direita", "tip": "Diferenciar uma restrição puramente mecânica de um fígado inflamado.", "steps": ["Teste de Mobilidade: Pedir inspiração profunda; a borda hepática deve descer sob os dedos e deslizar internamente.", "Teste de Elasticidade (Rebound): Pressionar de forma gentil; um fígado em saúde reage com efeito 'esponjoso', um congestionado surge duro/cartilaginoso."] },
+                    { "nome": "Pompage e Recoil Hepático", "ref": "Rebordo costal direito", "tip": "Técnica focada no bombeamento do sangue venoso congestionado.", "steps": ["Abraçar firmemente as costelas falsas direitas.", "Aumentar a compressão de forma rítmica na expiração.", "Realizar o Recoil (soltar rápido) no início da inspiração para gerar efeito de vácuo vascular."] }
+                ],
+                "refs": ["STANDRING, S. Gray's Anatomy.", "BARRAL, J. P.; MERCIER, P. Manipulações Viscerais."],
+                "img": "foto_tech_figado.jpg"
+            },
+            "vesicula": {
+                "nome": "Vesícula Biliar",
+                "tituloS": "(T7-T10)",
+                "tituloP": "(Nervo Vago)",
+                "anatLoc": "<ul><li><b>Referência de Palpação:</b> Posicionada debaixo do fígado, o seu fundo projeta-se na intersecção do rebordo costal direito com a linha externa do músculo reto abdominal (o Ponto Clínico de Murphy).</li><li><b>Eixo Mecânico:</b> Coincide no plano transversal com o Piloro gástrico no famoso <b>Plano Transpilórico (L1)</b>.</li></ul>",
+                "anatRel": "<ul><li>Sendo contígua à porção D1 e D2 do duodeno, tensões e espasmos intestinais criam frequentemente um efeito de compressão retrógrada e bloqueio mecânico na vesícula.</li></ul>",
+                "anatFix": [{ "name": "Peritoneu de Adesão Hepática", "img": "lig_vesicula.jpg", "note": "Fixa e cola a vesícula ao teto do fígado, acompanhando os seus movimentos diafragmáticos." }],
+                "snaS": "<ul><li><b>Bloqueio de Stress (T7-T10):</b> O excesso simpático paralisa as paredes da vesícula e tranca o esfíncter de saída, originando acumulação estática de lama biliar e dor reflexa.</li></ul>",
+                "snaP": "<ul><li><b>O Nervo Vago:</b> Induz a contração mecânica de esvaziamento. A disfunção do vago (no crânio ou pescoço) é a grande causa primária oculta da vesícula 'preguiçosa' (atonia).</li></ul>",
+                "techs": [{ "nome": "Drenagem Mecânica da Vesícula", "ref": "Ponto Subcostal de Murphy", "tip": "Aplicar sempre de forma gradual. A vesícula distendida é altamente sensível ao toque abrupto.", "steps": ["Localizar o ponto de intersecção sob as cartilagens costais.", "Na expiração, aplicar inibição digital rítmica em direção póstero-medial (em direção ao umbigo)."] }],
+                "refs": ["BARRAL, J. P. Manipulações Viscerais 1", "GUYTON, A.C.; HALL, J.E. Tratado de Fisiologia Médica."],
+                "img": "foto_tech_figado.jpg"
+            },
+            "pancreas": {
+                "nome": "Pâncreas",
+                "tituloS": "(T5-T9)",
+                "tituloP": "(Nervo Vago)",
+                "anatLoc": "<ul><li><b>O Eixo de Equilíbrio Abdominal:</b> Assenta deitado, de forma profunda (retroperitoneal), e atravessa toda a linha média do corpo, centrado no exato <b>Plano Transpilórico (L1)</b>.</li><li><b>A Cauda Móvel:</b> Enquanto a cabeça e o corpo estão fixos rigidamente, a cauda pancreática é a única parte livre que flutua até embater no baço à esquerda.</li></ul>",
+                "anatRel": "<ul><li><b>Abraço Duodenal:</b> A cabeça do pâncreas está completamente fundida à curva em 'C' do duodeno. Um bloqueio fascial no intestino trava instantaneamente o pâncreas.</li></ul>",
+                "anatFix": [{ "name": "Fáscia de Treitz", "img": "fascia_treitz.jpg", "note": "Um vasto lençol retroperitoneal. A sua retração e fibrose provocam um puxão forte que anula a lordose da coluna lombar (L1-L2)." }],
+                "snaS": "<ul><li><b>Tensão Lombar (T5-T9):</b> Restrições nas vértebras dorsais enviam inputs constantes de alerta que secam as secreções pancreáticas e imobilizam a fáscia envolvente através da vasoconstrição.</li></ul>",
+                "snaP": "<ul><li><b>Comando Vagal:</b> O parassimpático rege a mobilidade fluida dos sucos digestivos e a resposta endócrina rítmica do órgão.</li></ul>",
+                "techs": [{ "nome": "Libertação Fascial Pancreática", "ref": "Linha diagonal Umbigo-Axila Esquerda", "tip": "A abordagem osteopática atua sobre o tecido conectivo (fáscia) e não na compressão direta da glândula.", "steps": ["Colocar o paciente com pernas fletidas (relaxar o psoas).", "Alinhar as mãos sobre a projeção oblíqua do corpo e cauda do pâncreas.", "Aprofundar suavemente os dedos e induzir um estiramento miofascial do retroperitoneu."] }],
+                "refs": ["BARRAL, J. P. Manipulações Viscerais 2."],
+                "img": "foto_tech_pancreas.jpg"
+            },
+            "delgado": {
+                "nome": "Intestino Delgado",
+                "tituloS": "(T10-L1)",
+                "tituloP": "(Nervo Vago)",
+                "anatLoc": "<ul><li><b>A Suspensão:</b> O sistema mecânico do delgado depende de uma única estrutura de fixação diagonal de 15 cm: <b>A Raiz do Mesentério</b>.</li><li>A raiz atravessa a cavidade obliquamente, começando acima no lado esquerdo (L2) e terminando na Fossa Ilíaca Direita (Cego).</li></ul>",
+                "anatRel": "<ul><li>O peso das ansas intestinais descansa como uma almofada dinâmica diretamente sobre os órgãos reprodutores pélvicos (útero, bexiga) e artérias ilíacas.</li></ul>",
+                "anatFix": [
+                    { "name": "A Raiz do Mesentério", "img": "raiz_mesenterio.jpg", "note": "A sua retração tensional cruza e comprime ativamente a Veia Cava e a Artéria Aorta (síndrome de pernas pesadas)." }, 
+                    { "name": "Músculo Suspensório de Treitz", "img": "musculo_treitz.jpg", "note": "Amarra diretamente a flexura do duodeno ao Pilar Esquerdo do Diafragma (respiração molda a digestão)." }
+                ],
+                "snaS": "<ul><li><b>Reflexos de Inibição (T10-L1):</b> Perante traumas articulares, os gânglios mesentéricos disparam sinais simpáticos massivos, congelando toda a mobilidade das ansas (estado agudo de íleo).</li></ul>",
+                "snaP": "<ul><li><b>Ritmo Vagal (NC X):</b> Promove a dança natural peristáltica que massaja de forma contínua a pélvis a cada minuto.</li></ul>",
+                "techs": [{ "nome": "Estiramento da Raiz do Mesentério", "ref": "Linha diagonal L2 Esquerda -> Fossa Ilíaca Direita", "tip": "Trabalhar de forma lenta, atuando transversalmente às fibras da raiz.", "steps": ["Aprofundar as mãos na linha de fixação anatómica até encontrar a barreira fascial rígida.", "Aplicar uma força de tração afastadora (cranio-lateralmente ou ínfero-medialmente).", "Sentir o relaxamento profundo refletir-se no alívio lombar."] }],
+                "refs": ["BARRAL, J. P. Manipulações Viscerais 1"],
+                "img": "foto_tech_delgado.jpg"
+            },
+            "colon": {
+                "nome": "Intestino Grosso",
+                "tituloS": "(Transição em L1)",
+                "tituloP": "(Vago para S2-S4)",
+                "anatLoc": "<ul><li><b>A Moldura Abdominal:</b> Forma o perímetro exterior mecânico do abdómen. As flexuras (Hepática e Esplénica) são zonas naturais de paragem tensional. O ângulo esplénico é mais alto e apertado, servindo de sustentação estrutural para o baço.</li></ul>",
+                "anatRel": "<ul><li><b>Músculo Ilíaco e Psoas:</b> O cego e o cólon ascendente repousam, esfregam-se e fixam-se sobre estes grandes músculos locomotores direitos. O sigmoide faz o mesmo sobre o piriforme à esquerda.</li></ul>",
+                "anatFix": [{ "name": "Fáscias de Coalescência (Toldt)", "img": "fascia_toldt.jpg", "note": "Tecido fibroso que ancora firmemente o cólon ascendente e descendente ao fundo da parede lombar." }],
+                "snaS": "<ul><li><b>A Transição Crítica:</b> O plexo mesentérico superior inerva apenas até meio do cólon transverso. A partir do cólon descendente, o plexo lombar baixo assume. O stress constante gera o espasmo local (cólon em corda).</li></ul>",
+                "snaP": "<ul><li><b>Fronteira Parassimpática:</b> O Nervo Vago esgota o seu trajeto nos 2/3 distais do cólon transverso. Daí para a frente, as <b>Raízes Sacrais (S2-S4)</b> tomam o controlo para governar o peristaltismo de evacuação de massa.</li></ul>",
+                "techs": [
+                    { "nome": "Técnica de Recoil (Sensibilidade Fascial)", "ref": "Fossas Ilíacas (Ceco e Sigmoide)", "tip": "Utilizado na avaliação para testar a densidade elástica peritonial.", "steps": ["Aplicar uma pressão compressiva suave contra a parede da fossa ilíaca.", "Libertar de forma súbita para induzir um ressalto tecidular libertador."] },
+                    { "nome": "Abertura dos Ângulos (Flexuras)", "ref": "Bordos Subcostais", "tip": "Trata restrições viscerais que imobilizam a grelha costal inferior.", "steps": ["Introduzir dedos em forma de 'colher' sob as cartilagens da 9ª e 10ª costelas.", "Durante a expiração profunda, tracionar mecanicamente o ângulo cólico para o centro/baixo."] }
+                ],
+                "refs": ["BARRAL, J. P. Manipulações Viscerais 1"],
+                "img": "foto_tech_colon.jpg"
+            },
+            "rins": {
+                "nome": "Rins",
+                "tituloS": "(T10-L1)",
+                "tituloP": "(Nervo Vago)",
+                "anatLoc": "<ul><li><b>Planos Topográficos Chave:</b> O polo inferior do rim apoia-se mecanicamente no <b>Plano Subcostal (L3)</b> (bordo inferior da 10ª costela). Imediatamente abaixo, o <b>Plano Supracristal (L4)</b> marca os pontos mais altos das cristas ilíacas e a bifurcação da aorta.</li><li><b>Dinâmica de Movimento:</b> Os rins escorregam sobre a inclinação do músculo psoas maior, descendo uns impressionantes 3 cm a cada inspiração e realizando simultaneamente uma <b>rotação externa e báscula anterior do polo superior</b>.</li></ul>",
+                "anatRel": "<ul><li>Estão fortemente comprimidos pelas vísceras anteriores: o fígado calca o direito; o baço e pâncreas calcam o esquerdo.</li></ul>",
+                "anatFix": [{ "name": "Fáscia Renal (Gerota)", "img": "fascia_gerota.jpg", "note": "A verdadeira causa das quedas renais (Ptoses). Esta bainha é estruturalmente aberta e folgada na sua base inferior (formato de funil), deixando escapar o rim quando há perda de tensão pélvica." }],
+                "snaS": "<ul><li><b>Reflexo Viscerossomático (T10-L1):</b> O controlo é quase exclusivamente simpático. A tensão nos nervos esplâncnicos ou a perda de mobilidade do psoas originam de imediato dores na lombar média e hipertensão arterial de origem renal.</li></ul>",
+                "snaP": "<ul><li>(Trajeto Vagal puramente residual e vasomor, sem implicação motora expressiva).</li></ul>",
+                "techs": [{ "nome": "Técnica de Reposicionamento (Ptose Renal) e Escuta Local", "ref": "Abordagem Anterior-Posterior e Costela K12", "tip": "Na 'Escuta Local', a atração direcional fascial da mão é sentida lateral e para trás. Aproveitar sempre o expir para elevar a víscera.", "steps": ["Mão posterior apoia no ângulo da 12ª costela.", "Mão anterior empurra gentilmente a massa visceral abdominal para trás, atingindo a fáscia de Gerota.", "Elevar fisicamente o bloco renal no sentido crânio-medial durante a fase de expiração profunda."] }],
+                "refs": ["BARRAL, J. P. Manipulações Viscerais 1"],
+                "img": "foto_tech_rins.jpg"
+            },
+            "bexiga": {
+                "nome": "Bexiga",
+                "tituloS": "(T11-L2)",
+                "tituloP": "(Nervos S2-S4)",
+                "anatLoc": "<ul><li>Ancorada na base da pélvis atrás da sínfise púbica. Separada do osso apenas pelo 'almofadado' do Espaço de Retzius.</li><li><b>Motilidade Intrínseca:</b> A bexiga apresenta uma mecânica expansiva para cima. No seu ritmo respiratório (expir), o ápice balança e é 'puxado' numa direção obliqua para o umbigo, devido à tração tecidular do uraco.</li></ul>",
+                "anatRel": "<ul><li>As ansas do intestino delgado apoiam-se e saltam diretamente sobre o teto (cúpula) da bexiga. Tensões intestinais exercem compressão constante aqui.</li></ul>",
+                "anatFix": [
+                    { "name": "Cordão Umbilical Mediano (Uraco)", "img": "lig_uraco.jpg", "note": "O pilar superior de suspensão, formando uma corda direta da bexiga ao umbigo." }, 
+                    { "name": "Ligamentos Pubovesicais", "img": "lig_pubovesical.jpg", "note": "Amarras inferiores rígidas e potentíssimas ancoradas ao osso púbico." }
+                ],
+                "snaS": "<ul><li><b>Fase de Retenção (T11-L2):</b> As fixações da transição dorso-lombar inibem o músculo detrusor e trancam o esfíncter interno, permitindo o enchimento sem perda de urina.</li></ul>",
+                "snaP": "<ul><li><b>Fase de Micção (S2-S4):</b> Um bloqueio mecânico no osso sacro 'belisca' as raízes eferentes pélvicas, causando espasmos do detrusor ou incontinência de urgência.</li></ul>",
+                "techs": [{ "nome": "Libertação do Eixo Umbílico-Vesical e Escuta", "ref": "Sínfise Púbica e Cicatriz Umbilical", "tip": "Na Escuta osteopática a atração manual faz-se em direção inferior, para o osso púbico. Corrigir sempre a sínfise antes da víscera.", "steps": ["Encontrar e palpar a corda fascial do uraco sob a linha média (abaixo do umbigo).", "A outra mão estabiliza o púbis e a bexiga inferiormente.", "Aplicar e sustentar a tração oposta, recuperando a elasticidade vertical do tecido."] }],
+                "refs": ["BARRAL, J. P. Manipulações Viscerais 1"],
+                "img": "foto_tech_bexiga.jpg"
+            },
+            "utero": {
+                "nome": "Útero",
+                "tituloS": "(T11-L1)",
+                "tituloP": "(Nervos S2-S4)",
+                "anatLoc": "<ul><li><b>Ponto Central de Gravidade:</b> O útero situa-se em anteversão, recostado e apoiado fisiologicamente por cima da bexiga, funcionando como o núcleo de equilíbrio dinâmico de toda a pélvis menor feminina.</li></ul>",
+                "anatRel": "<ul><li>Mergulhado em peritoneu, a reflexão de tecido entre o útero e o reto origina o <b>Fundo de Saco de Douglas</b>, o ponto mais baixo da gravidade abdominal.</li></ul>",
+                "anatFix": [{ "name": "Ligamentos Redondos e Uterossacros", "img": ["lig_redondo.jpg", "lig_uterossacro.jpg"], "note": "Uma malha elástica. A tração excessiva assimétrica num ligamento redondo desvia o útero e causa torque na articulação sacroilíaca (ilíaco anterior)." }],
+                "snaS": "<ul><li><b>O Nervo da Dor Funcional (T11-L1):</b> Inerva predominantemente o corpo e o fundo do útero. Um útero estático, sob hiperestimulação simpática, entra em vasoconstrição (isquemia), gerando as violentas dores das cólicas menstruais.</li></ul>",
+                "snaP": "<ul><li><b>A Ligação Craniana Oculta:</b> O colo uterino recebe fluxo das raízes sacrais (S2-S4), contudo, bloqueios no eixo crânio-cervical superior perturbam as cascatas da hipófise, desregulando as hormonas que ditam a textura física destes tecidos locais.</li></ul>",
+                "techs": [{ "nome": "Mobilização Pélvica dos Ligamentos Redondos", "ref": "Espinha Ilíaca (EIAS) e Púbis", "tip": "É imperativo garantir que a bexiga da paciente está vazia para garantir o acesso manual sem oposição hidráulica.", "steps": ["Dispor os dedos em 'V' na região suprapúbica para contornar os rectos abdominais.", "Deslizar numa direção profunda e lateral em busca do bordo rígido dos ligamentos redondos.", "Sincronizar a força inibitória com a respiração pélvica da paciente, permitindo o relaxamento ligamentar."] }],
+                "refs": ["BARRAL, J. P. Manipulações Viscerais 1"],
+                "img": "foto_tech_utero.jpg"
+            },
+            "coccix": {
+                "nome": "Cóccix",
+                "tituloS": "(Gânglio Ímpar)",
+                "tituloP": "(Efeito Mecânico S2-S4)",
+                "anatLoc": "<ul><li><b>Ponto de Ancoragem Terminal:</b> O osso de charneira inferior de toda a estrutura vertebral. Atua como o 'clip de fixação' mecânico dos tecidos víscero-pélvicos profundos.</li></ul>",
+                "anatRel": "<ul><li><b>Cama Elástica Muscular:</b> Recebe a inserção dos músculos principais do diafragma pélvico e do esfíncter anal, ditando a tensão global do soalho pélvico.</li></ul>",
+                "anatFix": [],
+                "snaS": "<ul><li><b>O Ponto de Fusão (Gânglio de Walther/Ímpar):</b> As duas colunas vertebrais simpáticas descem e fundem-se num único 'nó' posicionado na face anterior do cóccix. O seu bloqueio gera um 'curto-circuito' irritativo generalizado no plexo hipogástrico inferior.</li></ul>",
+                "snaP": "<ul><li><b>O Efeito Cadeia:</b> O cóccix não gera parassimpático próprio. Contudo, um espasmo rígido nos seus fortes ligamentos afeta as artérias cruzadas e repuxa a dura-máter sacral superior, asfixiando mecanicamente as raízes vizinhas S2-S4 (origem de dispareunia e disfunção pélvica).</li></ul>",
+                "techs": [{ "nome": "Harmonização de Base (Coccígea)", "ref": "Ápice do Sacro e Bordo Coccígeo", "tip": "Abordagem com mínima força. A dura-máter craniana reage e 'desenrola' perante o toque focado na ponta do cóccix.", "steps": ["Contacto duplo e estabilizador sobre a base final do sacro e a ponta do cóccix.", "Induzir micromovimentos de descompressão, libertando a retração do ligamento sacrotuberoso e diafragma pélvico.", "Aguardar as pulsações rítmicas indicativas de restabelecimento local do MRP."] }],
+                "refs": ["BARRAL, J. P. Manipulações Viscerais 1"],
+                "img": "foto_coccix.jpg"
+            },
+            "coracao": {
+                "nome": "Coração",
+                "tituloS": "(T1-T5)",
+                "tituloP": "(Nervo Vago)",
+                "anatLoc": "<ul><li><b>Quadrilátero Topográfico:</b> Ângulos superiores no 2º EIC a 2 cm do esterno. Ápice no 5º EIC esquerdo.</li><li><b>Dinâmica de Movimento:</b> A motilidade inerente do mediastino faz um movimento de balanço anteroinferior durante a fase de 'inspir' craniossacral e póstero-superior no 'expir'.</li></ul>",
+                "anatRel": "<ul><li>Suspende as fáscias através das suas ancoragens do pescoço (fáscia cervical) até calcar de forma pesada o centro tendíneo do diafragma.</li></ul>",
+                "anatFix": [
+                    { "name": "Ligamentos Vertebropericárdicos", "img": "lig_vert_peri.jpg", "note": "Garamtem a tração posterior da base do coração do segmento T1 ao T4. Uma restrição aqui gera dor referida interescapular." }, 
+                    { "name": "Ligamentos Esternopericárdicos", "img": ["lig_estern_peri1.jpg", "lig_estern_peri2.jpg"], "note": "Amarras à parte de trás do esterno e manúbrio." }
+                ],
+                "snaS": "<ul><li><b>Bloqueio Dorsal Alto (T1-T5):</b> Disfunções vertebrais altas irritam os gânglios da cadeia simpática subjacente, despoletando inputs aceleradores e gerando taquicardias funcionais de etiologia estrutural.</li></ul>",
+                "snaP": "<ul><li><b>A Regulação Vagal:</b> O vago domina os intrincados nós elétricos cardíacos, injetando uma contínua mensagem de bradicardia de repouso (abrandar o ritmo) libertando acetilcolina.</li></ul>",
+                "techs": [
+                    { "nome": "Lift Esternal (Abertura Mediastinal)", "ref": "Zona do Manúbrio e Esterno Inferior", "tip": "Efeito de alívio instantâneo sobre a compressão do saco pericárdico frontal e sensação de ansiedade cardiorrespiratória.", "steps": ["Dedo médio de estabilização situado cranial na fúrcula jugular (fossa).", "A mão caudal apoia-se e ancora sobre o bordo inferior do corpo do esterno.", "Promover tração entrelaçando os polegares e puxar toda a grelha de forma contínua em direção anterior (teto)."] },
+                    { "nome": "Supinação de Deslizamento Coração-Pulmão", "ref": "Borda esternal lateral e Lobo Pulmonar Esquerdo", "tip": "Devolve a capacidade plástica de deslizamento no tecido que separa a pleura e o pericárdio.", "steps": ["A mão mais anterior agarra e monitoriza a borda da caixa torácica esquerda.", "A mão posterior assenta-se ao nível do lobo pulmonar correspondente inferior.", "Aplicar um movimento forçado de supinação na fáscia torácica, rodando a grade em curva."] }
+                ],
+                "refs": ["BARRAL, J. P. Manipulações Viscerais do Tórax."],
+                "img": "foto_tech_coracao.jpg"
+            },
+            "pulmoes": {
+                "nome": "Pulmões",
+                "tituloS": "(T1-T5)",
+                "tituloP": "(Nervo Vago)",
+                "anatLoc": "<ul><li><b>O Topo e a Base:</b> Enchem os flancos laterais do tórax. Os potentes ápices ou 'cúpulas' emergem acima da clavícula e 1ª costela. A base inferior larga repousa passiva sob o molde curvado do diafragma dinâmico.</li></ul>",
+                "anatRel": "<ul><li>Devido à presença assimétrica cardíaca, o pulmão esquerdo possui apenas 2 lobos e forma a marcante chanfradura miocárdica no seu hilo interior.</li></ul>",
+                "anatFix": [
+                    { "name": "Ligamento Suspensor da Cúpula", "img": "lig_susp_cupula.jpg", "note": "Cria um elo de tração fixa letal entre o pescoço (C7/T1) e o topo pulmonar. As suas aderências são a grande causa oculta dos torcicolos crónicos." },
+                    { "name": "Ligamento Interpleural", "img": "lig_interpleural.jpg", "note": "Passa posteriormente ao esófago e à aorta. Desempenha a função osteopática vital de equilibrar as tensões mecânicas transversais entre os dois pulmões." }
+                ],
+                "snaS": "<ul><li><b>O Papel da Caixa (T1-T5):</b> Nervos aferentes da caixa e pleura emanam sinais simpáticos que promovem o relaxamento das fibras musculares da árvore brônquica (broncodilatação) e secam a mucosa.</li></ul>",
+                "snaP": "<ul><li><b>O Defensor Visceral (NC X):</b> Em quadros alérgicos/tóxicos, o vago espoleta o reflexo defensivo de broncoconstrição e uma sobreprodução de mucosidade densa.</li></ul>",
+                "techs": [
+                    { "nome": "Alongamento Direto do Ligamento Suspensor", "ref": "Cúpula Pleural / Nível da 1ª Costela", "tip": "Utilizar a postura de inclinação do paciente para pré-tencionar a corda cervical do músculo escaleno.", "steps": ["Pedir rotação ativa combinada com flexão lateral cervical para o lado não-lesionado.", "Ancorar firmemente a mão terapêutica sobre o espaço clavicular/1ª costela afetada.", "Empurrar a fáscia subjacente com rítmica firmeza na direção ínfero-medial."] },
+                    { "nome": "Unwinding e Equilíbrio Fissural", "ref": "Bordos e Ângulos Finais Escapulares", "tip": "Técnica biomecânica passiva para o desbloqueio oculto das fissuras que dividem os vários lobos pulmonares.", "steps": ["Deslizar as palmas lisas diretamente para o dorso, inferiormente aos ângulos da omoplata.", "Criar uma ligeira diferença de alavanca com uma mão situada mais superiormente.", "Acompanhar as subtis torções rítmicas (desenrolamento tecidular) do interior do tórax até se sentir a homogeneidade simétrica final."] }
+                ],
+                "refs": ["BARRAL, J. P. Manipulações Viscerais do Tórax."],
+                "img": "foto_tech_pulmoes.jpg"
+            }
+        };
+
+        function renderCarousel() {
+            var imgEl = document.getElementById('carousel-img');
+            imgEl.src = currentCarouselImages[currentCarouselIndex];
+            imgEl.onerror = function() { this.src = 'https://placehold.co/400x300/eee/999?text=SEM+IMAGEM'; };
+            
+            var counter = document.getElementById('carousel-counter');
+            counter.innerText = (currentCarouselIndex + 1) + " / " + currentCarouselImages.length;
+            
+            document.getElementById('btn-prev').disabled = (currentCarouselIndex === 0);
+            document.getElementById('btn-next').disabled = (currentCarouselIndex === currentCarouselImages.length - 1);
+        }
+
+        function prevImage() {
+            if (currentCarouselIndex > 0) {
+                currentCarouselIndex--;
+                renderCarousel();
+            }
+        }
+
+        function nextImage() {
+            if (currentCarouselIndex < currentCarouselImages.length - 1) {
+                currentCarouselIndex++;
+                renderCarousel();
+            }
+        }
+
+        function toggleMenu(menuId, btn) {
+            var menu = document.getElementById(menuId);
+            var isOpen = menu.classList.contains('show');
+            if(isOpen) {
+                menu.classList.remove('show');
+                btn.classList.remove('active');
+            } else {
+                menu.classList.add('show');
+                btn.classList.add('active');
+            }
+        }
+
+        function load(key, btn) {
+            var d = db[key];
+            if (!d) return;
+
+            var allBtns = document.querySelectorAll('.organ-btn');
+            for(var i=0; i<allBtns.length; i++) {
+                allBtns[i].classList.remove('selected');
+            }
+            if(btn) btn.classList.add('selected');
+
+            document.getElementById('top-organ-name').innerText = d.nome;
+            document.getElementById('anat-title').innerText = d.nome;
+
+            document.getElementById('anat-loc').innerHTML = d.anatLoc || "-";
+            document.getElementById('anat-rel').innerHTML = d.anatRel || "-";
+
+            var fixList = document.getElementById('anat-fix-list');
+            fixList.innerHTML = ""; 
+            
+            var carousel = document.getElementById('anat-img-carousel');
+            var imgNote = document.getElementById('carousel-note');
+            var placeholder = document.getElementById('anat-placeholder');
+            var controls = document.getElementById('carousel-controls');
+            
+            carousel.style.display = 'none';
+            placeholder.style.display = 'block';
+
+            if (d.anatFix && Array.isArray(d.anatFix) && d.anatFix.length > 0) {
+                d.anatFix.forEach(function(lig) {
+                    var button = document.createElement('button');
+                    button.className = 'ligament-btn';
+                    button.innerText = lig.name;
+                    button.onclick = function() {
+                        placeholder.style.display = 'none';
+                        carousel.style.display = 'flex';
+                        
+                        currentCarouselImages = Array.isArray(lig.img) ? lig.img : [lig.img];
+                        currentCarouselIndex = 0;
+                        
+                        if (lig.note) {
+                            imgNote.innerText = lig.note;
+                            imgNote.style.display = 'block';
+                        } else {
+                            imgNote.style.display = 'none';
+                        }
+                        
+                        if (currentCarouselImages.length > 1) {
+                            controls.style.display = 'flex';
+                        } else {
+                            controls.style.display = 'none';
+                        }
+                        
+                        renderCarousel();
+                    };
+                    fixList.appendChild(button);
+                });
+            } else {
+                 fixList.innerHTML = "<p class=\"anat-text\">Sem dados estruturais complementares isolados.</p>";
+            }
+
+            document.getElementById('sna-titulo-s').innerText = "🔴 Simpático " + (d.tituloS || "");
+            document.getElementById('sna-titulo-p').innerText = "🔵 Parassimpático " + (d.tituloP || "");
+            document.getElementById('sna-txt-s').innerHTML = d.snaS || "-";
+            document.getElementById('sna-txt-p').innerHTML = d.snaP || "-";
+
+            var techContainer = document.getElementById('tech-container');
+            techContainer.innerHTML = "<h2 id=\"tech-name\" style=\"margin-top:0; color:var(--primary); font-size:1.6rem; border-bottom:2px solid #f0f0f0; padding-bottom:10px;\">Técnicas - " + d.nome + "</h2>";
+
+            if (d.techs && Array.isArray(d.techs)) {
+                d.techs.forEach(function(t, index) {
+                    var stepsHtml = "";
+                    t.steps.forEach(function(s) {
+                        stepsHtml += "<li>" + s + "</li>";
+                    });
+
+                    techContainer.innerHTML += "<div class=\"tech-block\">" +
+                        "<h3>" + (index + 1) + ". " + t.nome + "</h3>" +
+                        "<p style=\"background:#fff3cd; padding:10px; border-radius:5px; margin-bottom: 10px;\">💡 <strong>Dica:</strong> " + t.tip + "</p>" +
+                        "<p style=\"margin-bottom: 15px;\"><strong>📍 Posição / Referência:</strong> " + t.ref + "</p>" +
+                        "<h4 style=\"margin-bottom: 5px;\">👣 Execução:</h4>" +
+                        "<ul style=\"padding-left:20px; line-height:1.6; margin-bottom: 20px;\">" +
+                        stepsHtml +
+                        "</ul>" +
+                        "</div>";
+                });
+
+                if (d.img) {
+                    techContainer.innerHTML += "<img src=\"" + d.img + "\" class=\"tech-img\" onerror=\"this.style.display='none'\">";
+                    if (d.imgNote) {
+                        techContainer.innerHTML += "<div class=\"tech-img-note\" style=\"display:block;\">" + d.imgNote + "</div>";
+                    }
+                }
+            } else {
+                techContainer.innerHTML += "<p>Nenhuma técnica detalhada encontrada para este órgão.</p>";
+            }
+
+            var refsBox = document.getElementById('refs-box');
+            var refsList = document.getElementById('refs-list');
+            refsList.innerHTML = "";
+
+            if (d.refs && Array.isArray(d.refs) && d.refs.length > 0) {
+                d.refs.forEach(function(ref) {
+                    refsList.innerHTML += "<li>" + ref + "</li>";
+                });
+                refsBox.style.display = 'block';
+            } else {
+                refsBox.style.display = 'none';
+            }
+        }
+
+        function switchTab(viewId, btn) {
+            var views = document.querySelectorAll('.content-view');
+            for(var i=0; i<views.length; i++) {
+                views[i].classList.remove('active');
+            }
+            document.getElementById('view-'+viewId).classList.add('active');
+            
+            var tabs = document.querySelectorAll('.tab-btn');
+            for(var j=0; j<tabs.length; j++) {
+                tabs[j].classList.remove('active');
+            }
+            btn.classList.add('active');
+        }
+
+        window.onload = function() {
+            document.getElementById('menu-cranio').classList.add('show');
+            try {
+                var btns = document.querySelectorAll('.organ-btn');
+                var targetBtn = null;
+                for(var i=0; i<btns.length; i++) {
+                    if(btns[i].innerText.indexOf('Fossa Craniana Média') !== -1) { 
+                        targetBtn = btns[i]; 
+                        break; 
+                    }
+                }
+                load('fossa_media', targetBtn);
+            } catch (e) {
+                console.log("Erro no carregamento: " + e);
+            }
+        };
+    </script>
+</body>
+</html>
