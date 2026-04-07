@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>OsteoVisceral Pro V64 - Anatomia e Neuro Completas</title>
+<title>OsteoVisceral Pro V66 - Contraindicações Clínicas</title>
 <style>
     :root {
         --primary: #2c3e50;
@@ -11,6 +11,7 @@
         --bg: #f8f9fa;
         --symp: #c0392b;
         --para: #27ae60;
+        --warn: #e67e22;
     }
     body { font-family: 'Segoe UI', Roboto, sans-serif; margin: 0; background: var(--bg); color: #333; height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
     .header { height: 50px; background: white; border-bottom: 1px solid #ddd; display: flex; align-items: center; padding: 0 20px; justify-content: space-between; flex-shrink: 0; z-index: 10; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
@@ -97,6 +98,8 @@
     .tech-block { margin-bottom: 30px; border-bottom: 1px solid #eee; padding-bottom: 20px; }
     .tech-block:last-child { border-bottom: none; }
     .tech-block h3 { color: var(--primary); font-size: 1.3rem; margin-top: 0; margin-bottom: 10px; }
+    .tech-warn { background: #fff3cd; border-left: 4px solid var(--warn); padding: 10px 15px; margin-bottom: 15px; border-radius: 4px; font-size: 0.9rem; }
+    .tech-warn strong { color: #856404; }
     
     .refs-container { margin-top: 20px; margin-bottom: 40px; background: #fff; padding: 15px; border-radius: 8px; border: 1px solid #e1e8ed; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
     .refs-details { font-size: 0.9rem; color: #444; }
@@ -338,11 +341,12 @@
                     { "name": "Pequeno Epíploon", "img": "lig_peq_omento.jpg", "note": "Une a pequena curvatura ao fígado (através dos ligamentos hepatogástrico e hepatoduodenal)." },
                     { "name": "Grande Epíploon", "img": "lig_grande_omento.jpg", "note": "O 'avental' que pende da grande curvatura até L5 (unindo ao cólon transverso) e a sua extensão lateral rumo ao baço." }
                 ],
-                "snaS": "<ul><li><b>Via Neurológica:</b> Fibras do Nervo Esplâncnico Maior via Gânglio Celíaco. O hipertónus gera espasmo pilórico e isquemia da mucosa.</li><li><b>Dores Referidas:</b><ul><li>Região interescapular (T5–T6) e zona retroesternal.</li><li><b>Ombro esquerdo:</b> Relação topográfica habitual pela irritação do fundo gástrico no diafragma.</li><li><b>Ombro e braço direito:</b> Zona reflexa identificada em quadros de patologia gástrica.</li><li>Falsas mialgias cervicais por facilitação medular.</li></ul></li></ul>",
+                "snaS": "<ul><li><b>Via Neurológica:</b> Fibras do Nervo Esplâncnico Maior via Gânglio Celíaco. O hipertónus gera espasmo pilórico e isquemia da mucosa.</li><li><b>Dores Referidas:</b> Região interescapular (T5-T6) e zona retroesternal.</li><li><b>Ombro Esquerdo:</b> Relação topográfica habitual pela irritação do fundo gástrico no diafragma.</li><li><b>Ombro e Braço Direito:</b> Zona reflexa identificada em quadros de patologia gástrica.</li><li>Falsas mialgias cervicais por facilitação medular.</li></ul>",
                 "snaP": "<ul><li><b>Ação:</b> Ativa o peristaltismo e a secreção de ácido clorídrico.</li></ul>",
                 "techs": [{ 
                     "nome": "Redução da Hérnia de Hiato (Tração Gástrica)", 
                     "ref": "Plano subcostal esquerdo e junção gastroesofágica", 
+                    "contra": "Hérnia do hiato estrangulada (risco cirúrgico elevado), úlcera gástrica ou duodenal ativa (risco de perfuração), cirurgia abdominal ou torácica recente, aneurisma da aorta abdominal, neoplasia gástrica.",
                     "tip": "Sincronizar perfeitamente com a respiração. A tração puramente mecânica é executada apenas na fase de expiração para aproveitar a subida livre do diafragma.", 
                     "steps": [
                         "Colocar o paciente em decúbito dorsal com os joelhos fletidos (relaxando a fáscia e a parede abdominal).", 
@@ -368,11 +372,12 @@
                     { "name": "Epíploon Menor (+)", "img": "lig_peq_omento.jpg", "note": "Fita de tensão cruzada que suspende o estômago à face inferior hepática." },
                     { "name": "Ligamento Falciforme (+)", "img": "lig_falciforme.jpg", "note": "Apenas de suporte anterior à parede abdominal." }
                 ],
-                "snaS": "<ul><li><b>Via Neurológica:</b> Nervo Esplâncnico Maior. O stress simpático congestiona o parênquima e diminui a depuração.</li><li><b>Dores Referidas:</b><ul><li>Hipocôndrio direito e região interescapular direita (T8-T10).</li><li><b>Ombro direito:</b> Irritação da Cápsula de Glisson e do diafragma (via nervo frénico C3-C5).</li><li><b>Olho direito:</b> Cefaleias pulsáteis na zona frontal e orbital direita.</li></ul>",
+                "snaS": "<ul><li><b>Via Neurológica:</b> Nervo Esplâncnico Maior. O stress simpático congestiona o parênquima e diminui a depuração.</li><li><b>Dores Referidas:</b> Hipocôndrio direito e região interescapular direita (D8-D10).</li><li><b>Ombro Direito:</b> Irritação da Cápsula de Glisson e do diafragma (via nervo frénico C3-C5).</li><li><b>Olho Direito:</b> Cefaleias pulsáteis na zona frontal e orbital direita.</li></ul>",
                 "snaP": "<ul><li><b>Ação:</b> Governa a função metabólica e a regeneração tecidular.</li></ul>",
                 "techs": [{ 
                     "nome": "Pompage e Recoil Hepático", 
                     "ref": "Grelha Costal Direita Inferior", 
+                    "contra": "Hepatite aguda, cirrose em estadios avançados, hepatomegalia severa e dolorosa de etiologia não esclarecida, colecistite aguda, litíase biliar com risco de impactação, abcessos ou quistos hepáticos, tumores hepáticos primários ou secundários, fraturas das costelas direitas (7ª-10ª).",
                     "tip": "Manobra orientada para o combate à estase sanguínea e aumento agressivo da drenagem fluida no eixo portal congestionado.", 
                     "steps": [
                         "Envolver e abraçar firmemente com ambas as mãos as costelas falsas e flutuantes direitas da grelha torácica.", 
@@ -384,18 +389,19 @@
             },
             "vesicula": {
                 "nome": "Vesícula Biliar",
-                "tituloS": "(Simpático T7)",
+                "tituloS": "(Simpático D7)",
                 "tituloP": "(Nervo Vago)",
                 "imgAnat": "anat_vesicula.jpg",
                 "imgTech": "foto_tech_vesicula.jpg",
                 "anatLoc": "<ul><li><b>Dimensões:</b> Saco de formato alongado, cónico e ramificado nas porções anatómicas de Fundo, Corpo, Infundíbulo e Colo.</li><li><b>Palpação:</b> A palpação manual local exige estrita ausência de dor. A vesícula distendida ou inflamada por estase apresenta-se hiper-reativa, criando forte muralha contrátil perante qualquer toque digital invasivo ou abrupto.</li><li><b>Movimentos durante a respiração:</b> Encontra-se completamente dependente, sendo forçada a acompanhar de modo passivo todos os estiramentos e descidas inerentes aos fortes ritmos diafragmáticos impressos no próprio fígado.</li><li><b>Referências anatómicas:</b> A sua projeção clínica à superfície (o <b>Ponto de Murphy</b>) localiza-se na interceção da <b>linha média clavicular direita com o rebrdo da 10ª costela</b>. A nível de topografia horizontal, a base do órgão cruza em permanência a linha do <b>Plano Transpilórico (L1)</b>.</li></ul>",
                 "anatRel": "<ul><li><b>Relações viscerais e anatómicas:</b> Repousa alojada na fossa biliar da face visceral do fígado. Situa-se em relação contígua inferior às paredes da 1ª e 2ª porções do duodeno.</li></ul>",
                 "anatFix": [],
-                "snaS": "<ul><li><b>Via Neurológica:</b> Nervo Esplâncnico Maior com foco em T7. O disparo simpático fecha o esfíncter de Oddi.</li><li><b>Dores Referidas:</b><ul><li>Ângulo inferior da escápula direita (Sinal de Boas) e epigástrio.</li><li><b>Ombro direito e nuca</b>.</li><li><b>Olho esquerdo</b>: Cefaleias tipo enxaqueca com início e foco principal no lado esquerdo e tensão orbital esquerda.</li><li>Episódios de insónia biliar (2h-4h).</li></ul></li></ul>",
+                "snaS": "<ul><li><b>Via Neurológica:</b> Nervo Esplâncnico Maior com foco em D7. O disparo simpático fecha o esfíncter de Oddi.</li><li><b>Dores Referidas:</b> Ângulo inferior da escápula direita (Sinal de Boas) e epigástrio.</li><li><b>Ombro Direito e nuca.</b></li><li><b>Olho Esquerdo:</b> Cefaleias tipo enxaqueca com início e foco principal no lado esquerdo e tensão orbital esquerda.</li><li>Episódios de insónia biliar (2h-4h).</li></ul>",
                 "snaP": "<ul><li><b>Ação:</b> Contração da parede e expulsão da bílis para o duodeno.</li></ul>",
                 "techs": [{ 
                     "nome": "Técnica de Estimulação e Drenagem Passiva", 
                     "ref": "Ponto Tátil Subcostal de Murphy", 
+                    "contra": "Colecistite aguda (Sinal de Murphy positivo), colelitíase (pedras na vesícula) com sintomatologia ativa devido ao elevado risco de migração e obstrução do ducto cístico ou coledoco, colangite, pancreatite aguda, neoplasia da vesícula ou vias biliares.",
                     "tip": "É imperativo palpar o tecido e afundar de forma rítmica e puramente indolor. Uma vesícula sob tensão congestiva é hiper-reativa e veda agressivamente o tecido abdominal perante toques manuais de invasão abrupta.", 
                     "steps": [
                         "Delinear na pele a linha do Ponto de Murphy, procurando a projeção externa do fundo livre vesicular (cruzamento do músculo reto abdominal com as cartilagens da 9ª/10ª costelas).", 
@@ -415,11 +421,12 @@
                 "anatLoc": "<ul><li><b>Dimensões:</b> Glândula lobulada de disposição horizontal, estendendo-se transversalmente desde a curva do duodeno à direita até ao hilo esplénico à esquerda.</li><li><b>Palpação:</b> Não admite toque manual tátil direto devido à sua profundidade e arquitetura interna friável; avalia-se clinicamente através das fáscias elásticas retroperitoneais envolventes no seu limite de tensão.</li><li><b>Movimentos durante a respiração:</b> A vasta cabeça central e o corpo estão intimamente fixos sem movimento próprio. A cauda alongada pancreática ascendente obliquamente é a única porção dotada de liberdade oscilatória perante os ciclos toracoabdominais.</li><li><b>Referências anatómicas:</b> O colo central repousa horizontal e precisamente no <b>Plano Transpilórico (L1)</b>. O eixo clínico de pesquisa desenha-se na diagonal umbigo-axila esquerda.</li></ul>",
                 "anatRel": "<ul><li><b>Relações viscerais e anatómicas:</b> Anteriormente escondido por trás do estômago, compõe o leito posterior da bolsa omental. Posteriormente está montado de forma transversal profunda sobre fortes estruturas vasculares, cruzando sobre a artéria Aorta, a veia Cava e as raízes dos pedículos da mesentérica superior.</li></ul>",
                 "anatFix": [],
-                "snaS": "<ul><li><b>Via Neurológica:</b> Nervos Esplâncnicos via Gânglio Celíaco e Mesentérico Superior.</li><li><b>Dores Referidas:</b><ul><li>Dor epigástrica profunda que irradia \"em banda\" ou \"em cinto\" para as costas.</li><li>Tensão muscular paravertebral entre T5 e T9.</li></ul></li></ul>",
+                "snaS": "<ul><li><b>Via Neurológica:</b> Nervos Esplâncnicos via Gânglio Celíaco e Mesentérico Superior.</li><li><b>Dores Referidas:</b> Dor epigástrica profunda que irradia \"em banda\" ou \"em cinto\" para as costas.</li><li>Tensão muscular paravertebral entre T5 e T9.</li></ul>",
                 "snaP": "<ul><li><b>Ação:</b> Controlo da secreção exócrina e resposta endócrina (insulina).</li></ul>",
                 "techs": [{ 
                     "nome": "Libertação Fascial Pancreática", 
                     "ref": "Eixo Diagonal do Umbigo à Axila Esquerda", 
+                    "contra": "Pancreatite aguda (emergência médica), pseudoquistos pancreáticos, neoplasia pancreática, trauma abdominal recente.",
                     "tip": "A abordagem base osteopática induz o efeito focando-se única e exclusivamente sobre a expansão tensional do tecido conectivo circundante (a fáscia retroperitoneal amarrada). Nunca se procede à compressão direta e maciça sobre a arquitetura muito friável e sensível da glândula.", 
                     "steps": [
                         "Solicitar posicionamento passivo em decúbito dorsal ao doente e elevar os joelhos promovendo uma flexão suave das ancas (garantindo o relaxamento imediato da rigidez na báscula lombar proveniente da contração dos músculos psoas).", 
@@ -441,11 +448,12 @@
                     { "name": "A Raiz do Mesentério", "img": "raiz_mesenterio.jpg", "note": "É a faixa tecidular ultra resistente e sob grande tensão responsável por suspender e segurar os vários metros de ansas intestinais. Percorre rasgando obliquamente a topografia em declive, descendo de L2 (esquerda) e terminando na fossa ilíaca direita." }, 
                     { "name": "Músculo de Treitz", "img": "musculo_treitz.jpg", "note": "É um cordão fibromuscular dinâmico com origem dupla no pilar direito do diafragma e no tecido do tronco celíaco, que desce para suspender a flexura duodenojejunal e a porção final do duodeno." }
                 ],
-                "snaS": "<ul><li><b>Via Neurológica:</b> Gânglio Celíaco (Duodeno) e Mesentérico Superior (restante).</li><li><b>Dores Referidas:</b><ul><li><b>Duodeno</b>: Dor no ombro direito (via nervo frénico) e mal-estar epigástrico (3h-4h após comer).</li><li><b>Jejuno/íleo</b>: Dor periumbilical e tensão na charneira toracolombar (T10-T12).</li><li>Disfunção sacroilíaca reflexa.</li></ul></li></ul>",
+                "snaS": "<ul><li><b>Via Neurológica:</b> Gânglio Celíaco (Duodeno) e Mesentérico Superior (restante).</li><li><b>Dores Referidas:</b> Duodeno: Dor no ombro direito (via nervo frénico) e mal-estar epigástrico (3h-4h após comer).</li><li><b>Jejuno/Íleo:</b> Dor periumbilical e tensão na charneira toracolombar (T10-T12).</li><li>Disfunção sacroilíaca reflexa.</li></ul>",
                 "snaP": "<ul><li><b>Ação:</b> Peristaltismo absortivo e secreção intestinal.</li></ul>",
                 "techs": [{ 
                     "nome": "Estiramento da Linha Estrutural e Transversal da Fixação na Raiz do Mesentério Inferior", 
                     "ref": "Linha Anatómica Tensa em plano diagonal escorregando e unindo de L2 à esquerda até ao encaixe na Fossa Ilíaca Direita", 
+                    "contra": "Oclusão ou suboclusão intestinal, apendicite aguda, peritonite, doença de Crohn ou Colite Ulcerosa em fase ativa de agudização, isquemia mesentérica, aneurisma da aorta abdominal, cirurgia abdominal recente (aderências precoces).",
                     "tip": "É imperativo proceder ao gesto palpatório aplicando tração num decurso suave e macio, com pressão tecidular firme, atuando transversalmente e ortogonalmente (num ângulo de 90 graus) para vencer a densidade longitudinal retesada das fibras estruturais da raiz.", 
                     "steps": [
                         "Alinhar estrategicamente e aprofundar suave e progressivamente a base das mãos unidas repousando sobre a correta linha central abdominal, descendo em imersão com o expirar até os dedos embaterem na barreira de consistência rígida fascial (a raiz do mesentério).", 
@@ -469,6 +477,7 @@
                 "techs": [{ 
                     "nome": "Abertura dos Ângulos (Flexuras Hepática e Esplénica)", 
                     "ref": "Bordos Subcostais Direito e Esquerdo", 
+                    "contra": "Apendicite aguda (especialmente no lado direito e manobras de descompressão brusca - sinal de Blumberg), diverticulite aguda, doença inflamatória intestinal ativa (Crohn, Colite Ulcerosa), megacólon tóxico, suspeita de perfuração intestinal, tumores colorretais.",
                     "tip": "Muitas vezes, a libertação destes ângulos cólicos devolve de imediato a flexibilidade e a expansão mecânica à grelha costal inferior bloqueada.", 
                     "steps": [
                         "Introduzir os dedos em formato curvo de 'colher' debaixo das cartilagens da 9ª e 10ª costelas sobre o ângulo a intervir.", 
@@ -502,7 +511,7 @@
                 "imgAnat": "foto_tech_bexiga.jpg",
                 "imgTech": "foto_tech_bexiga.jpg",
                 "anatLoc": "<ul><li><b>Dimensões:</b> Capacidade fisiológica entre 300 ml e 500 ml, podendo expandir-se significativamente.</li><li><b>Palpação:</b> Apenas palpável acima da sínfise púbica quando está preenchida (globo vesical).</li><li><b>Movimentos durante a respiração:</b> Oscilação rítmica induzida pela tração do uraco; flete em direção ao umbigo na fase de expiração sistémica.</li><li><b>Referências anatómicas:</b> Espaço Retropúbico de Retzius, imediatamente atrás do osso púbico.</li></ul>",
-                "anatRel": "<ul><li><b>Relações viscerais e anatómicas:</b> A cúpula é esmagada pelas ansas do intestino delgado. No sexo feminino, relaciona-se posteriormente com o útero; no masculino, com o reto e próstata (inferiormente).</li><li><b>Outras informações:</b> A gordura perivesical permite que a bexiga deslize livremente contra a parede óssea sem atrito.</li></ul>",
+                "anatRel": "<ul><li><b>Relações viscerais e anatómicas:</b> A cúpula é esmagada pelas ansas do intestino delgado. No sexo feminino, relaciona-se posteriorly com o útero; no masculino, com o reto e próstata (inferiormente).</li><li><b>Outras informações:</b> A gordura perivesical permite que a bexiga deslize livremente contra a parede óssea sem atrito.</li></ul>",
                 "anatFix": [
                     { "name": "Uraco (Lig. Umbilical Mediano)", "img": "lig_uraco.jpg", "note": "O pilar superior de suspensão, formando uma corda direta da bexiga ao umbigo." }, 
                     { "name": "Ligamentos Umbilicais Mediais", "img": "lig_umbilicais_mediais.jpg", "note": "Ladeiam o Uraco (antigas artérias umbilicais). Formam uma tenda fascial que suspende a bexiga à parede abdominal anterior." },
@@ -554,21 +563,21 @@
                 "tituloP": "(Nervo Vago)",
                 "imgAnat": "foto_tech_coracao.jpg",
                 "imgTech": "foto_tech_coracao.jpg",
-                "anatLoc": "<ul><li><b>Dimensões:</b> Aproximadamente o tamanho de um punho fechado (12 cm de comprimento).</li><li><b>Palpação:</b> O 'Ictus Cordis' (choque da ponta) é palpável no 5º espaço intercostal esquerdo.</li><li><b>Movimentos durante a respiração:</b> Balanço antero-inferior na fase de expansão (Inspir MRP) e postero-superior na retração.</li><li><b>Referências anatómicas:</b> Quadrilátero entre o 2º e o 5º espaço intercostal; ápice na linha hemiclavicular esquerda.</li></ul>",
-                "anatRel": "<ul><li><b>Relações viscerais e anatómicas:</b> Envolvido pelo pericárdio, que ancora o coração ao esterno e ao diafragma (centro tendíneo). Relaciona-se lateralmente com as pleuras pulmonares.</li><li><b>Outras informações:</b> O nervo frénico desce lateralmente ao pericárdio, criando uma via de comunicação direta entre o coração e a base do pescoço.</li></ul>",
+                "anatLoc": "<ul><li><b>Dimensões:</b> Estrutura miocárdica de configuração cónica, apresentando um eixo longitudinal médio de 12 cm, diâmetro transversal de 9 cm e diâmetro ântero-posterior de 6 cm.</li><li><b>Palpação:</b> A propedêutica palpatória do <i>ictus cordis</i> (impulso apical) afere-se topograficamente na interseção do 5º espaço intercostal esquerdo com a linha hemiclavicular ipsilateral.</li><li><b>Movimentos durante a respiração:</b> A cinemática cardíaca, subordinada à excursão diafragmática inspiratória (fase de 'Inspir' do MRP), descreve um vetor de translação ântero-inferior acoplado a uma ligeira rotação levógira (rotação à esquerda). A fase expiratória dita o retorno viscoelástico em vetor póstero-superior.</li><li><b>Referências anatómicas:</b> Projeção topográfica torácica circunscrita a um quadrilátero precordial, cujos limites se estendem desde os 2ºs espaços intercostais (base) até ao 5º espaço intercostal (ápice), culminando estritamente sobre a linha hemiclavicular esquerda.</li></ul>",
+                "anatRel": "<ul><li><b>Relações viscerais e anatómicas:</b> Aloja-se no mediastino médio. O pericárdio estabelece contiguidade póstero-lateral com a pleura mediastínica e os pulmões, e relação inferior com a porção anterior do diafragma.</li><li><b>Outras informações:</b> O trajeto descendente do nervo frénico sobre o pericárdio fibroso estabelece uma via de comunicação fascial e neurológica direta entre a região cervical inferior e o mediastino.</li></ul>",
                 "anatFix": [
-                    { "name": "Ligamentos Vertebropericárdicos", "img": "lig_vert_peri.jpg", "note": "Garantem a tração posterior da base do coração do segmento T1 ao T4. Uma restrição aqui gera dor referida interescapular." }, 
-                    { "name": "Ligamentos Esternopericárdicos", "img": ["lig_estern_peri1.jpg", "lig_estern_peri2.jpg"], "note": "Amarras à parte de trás do esterno e manúbrio." },
-                    { "name": "Fáscia Cervicopericárdica", "img": "fascia_cervicopericardica.jpg", "note": "A lâmina pré-traqueal da fáscia cervical profunda desce do osso hioide e tiroide fundindo-se no pericárdio (a extensão do pescoço repuxa o tórax)." },
-                    { "name": "Ligamentos Freno-pericárdicos", "img": "lig_frenopericardicos.jpg", "note": "Feixes fibrosos anteriores e laterais que ancoram firmemente o pericárdio ao músculo diafragmático, além do centro tendíneo." }
+                    { "name": "Ligamentos Vertebropericárdicos", "img": "lig_vert_peri.jpg", "note": "Garantem a estabilização posterior da base do pericárdio, ancorando-a aos corpos vertebrais de T1 a T4. Disfunções de mobilidade nestes segmentos originam disautonomia e nociceção referida interescapular." }, 
+                    { "name": "Ligamentos Esternopericárdicos", "img": ["lig_estern_peri1.jpg", "lig_estern_peri2.jpg"], "note": "Feixes fibrosos superiores e inferiores que fixam a face anterior do pericárdio à face posterior do manúbrio e corpo do esterno." },
+                    { "name": "Fáscia Cervicopericárdica", "img": "fascia_cervicopericardica.jpg", "note": "Continuidade caudal da lâmina pré-traqueal da fáscia cervical profunda, ligando o osso hioide e a cartilagem tiroideia ao ápice do pericárdio, constituindo um elo de tensão cervico-torácico direto." },
+                    { "name": "Ligamentos Frenopericárdicos", "img": "lig_frenopericardicos.jpg", "note": "Condensações fibrosas anteriores e laterais (além da coalescência ao centro tendíneo) que fundem a base pericárdica ao músculo diafragma." }
                 ],
-                "snaS": "<ul><li><b>Via Neurológica (T1-T5):</b> A estimulação adrenérgica via gânglios cervicais (destaque para o <b>Gânglio Estrelado C7-T1</b>) aumenta a frequência cardíaca (taquicardia) e a contratilidade miocárdica.</li><li><b>Dores Referidas:</b> Opressão retroesternal e dor interescapular esquerda.</li><li><b>Braço Esquerdo e Mandíbula:</b> Padrão clássico de irradiação pelo bordo ulnar do braço e ângulo da mandíbula (Gonion).</li></ul>",
-                "snaP": "<ul><li><b>Nervo Vago:</b> Atua como o moderador rítmico, promovendo a bradicardia de repouso e a conservação de energia.</li></ul>",
+                "snaS": "<ul><li><b>Via Neurológica (T1-T5):</b> Fibras eferentes dos gânglios da cadeia simpática cervical e torácica superior (com particular relevância clínica no <b>Gânglio Cervicotorácico ou Estrelado C7-T1</b>). A estimulação adrenérgica exerce ação cronotrópica, inotrópica e dromotrópica positivas.</li><li><b>Dores Referidas:</b> Opressão retroesternal e dor referida ao nível interescapular esquerdo.</li><li><b>Território Braquial e Cérvico-Facial:</b> Padrão álgico reflexo projetado ao longo do trajeto do nervo ulnar do membro superior esquerdo e no ângulo da mandíbula (Gonion).</li></ul>",
+                "snaP": "<ul><li><b>Nervo Vago (NC X):</b> Media a modulação vagal cardíaca, atuando essencialmente nos nódulos sinoauricular e atrioventricular via libertação de acetilcolina, resultando em efeito cronotrópico negativo (bradicardia de repouso).</li></ul>",
                 "techs": [
-                    { "nome": "Elevação Esternal (Sternal Lift)", "ref": "Mediastino Anterior", "tip": "Alivia tensão sobre o saco pericárdico frontal.", "steps": ["Colocar o dedo médio de estabilização situado cranialmente na fúrcula jugular (fossa).", "Apoiar e ancorar a mão caudal sobre o bordo inferior do corpo do esterno.", "Promover tração entrelaçando os polegares e puxar toda a grelha de forma contínua em direção anterior (teto)."] },
-                    { "nome": "Mobilização sobre Artérias Coronárias", "ref": "Articulação esternocondral", "tip": "Influencia a tensão fascial no trajeto vascular.", "steps": ["Cruzar os braços.", "Colocar as mãos nas articulações esternocondrais esquerdas/direitas.", "Na expiração, afastar as mãos em ângulo de 40º."] },
-                    { "nome": "Deslizamento Coração-Pulmão", "ref": "Borda esternal e lobo inferior esquerdo", "tip": "Garante a mobilidade pericárdio/pleura.", "steps": ["Colocar a mão anterior sobre a borda esternal esquerda.", "Deslizar a mão posterior até ao lobo inferior pulmonar.", "Realizar uma supinação na mão anterior, enquanto a mão posterior curva a caixa torácica para o teto."] },
-                    { "nome": "Bomba Esternal e Recoil", "ref": "Ângulo de Louis", "tip": "Estimula a circulação linfática torácica.", "steps": ["Colocar as mãos sobrepostas no esterno.", "Aplicar pressão contínua na expiração. Repetir 5-6 vezes.", "Fazer um 'Recoil' rápido na inspiração profunda."] }
+                    { "nome": "Elevação Esternal (Sternal Lift)", "ref": "Mediastino Anterior", "tip": "Visa a descompressão das tensões restritivas do mediastino anterior e espaço retroesternal.", "steps": ["Estabilizar cranialmente com o dedo médio na fossa incisiva (fúrcula jugular).", "Aplicar a mão caudal sobre o terço inferior do corpo do esterno.", "Entrelaçar os polegares e induzir tração anterior contínua de toda a grelha condroesternal no vetor zénite."] },
+                    { "nome": "Mobilização das Articulações Esternocondrais", "ref": "Grelha Condroesternal", "tip": "Otimiza a elasticidade fascial ao longo do trajeto de projeção vascular coronário.", "steps": ["Posicionar os braços cruzados do terapeuta sobre a junção esternocondral bilateral do paciente.", "Acompanhar a fase expiratória, induzindo uma força de afastamento num ângulo de 40 graus com o plano sagital."] },
+                    { "nome": "Deslizamento Fascial Cardiopulmonar", "ref": "Bordo esternal esquerdo e lobo pulmonar inferior", "tip": "Restaura o plano de deslizamento (cleavage) entre o pericárdio fibroso e a pleura parietal.", "steps": ["Posicionar a mão anterior sobre o bordo condroesternal esquerdo.", "Contactar com a mão posterior a grelha costal correspondente ao lobo pulmonar inferior.", "Impor um movimento de supinação resistida na mão anterior simultâneo a uma alavanca anterior (elevação) pela mão posterior."] },
+                    { "nome": "Bomba Esternal com Recoil", "ref": "Ângulo Esternal (de Louis)", "tip": "Estimula a dinâmica dos fluidos torácicos e a drenagem linfática mediastínica.", "steps": ["Posicionar ambas as mãos sobrepostas sobre o corpo do esterno.", "Exercer pressão ântero-posterior rítmica e cumulativa durante a fase expiratória (5 a 6 ciclos).", "Aplicar a técnica de 'Recoil' (descompressão súbita) no início da fase inspiratória profunda."] }
                 ],
                 "refs": ["BARRAL, J. P. Manipulações Viscerais do Tórax."]
             },
@@ -578,21 +587,20 @@
                 "tituloP": "(Nervo Vago)",
                 "imgAnat": "foto_tech_pulmoes.jpg",
                 "imgTech": "foto_tech_pulmoes.jpg",
-                "anatLoc": "<ul><li><b>Ápice pulmonar:</b> Aproximadamente 2,5 cm acima da clavícula.</li><li><b>Borda inferior do pulmão (medial → lateral):</b> 6.ª costela, 8.ª costela e 10.ª costela.</li><li><b>Borda inferior da pleura (medial → lateral):</b> 8.ª costela, 10.ª costela e 12.ª costela.</li><li><b>Borda anterior do pulmão:</b> Espaços intercostais 2.º–6.º (no lado esquerdo desloca-se lateralmente ~3 cm).</li><li><b>Palpação:</b> Avalia-se a expansibilidade costal e as vibrações vocais; a percussão mostra timbre claro pulmonar.</li><li><b>Movimentos respiratórios:</b> Descida vertical e expansão lateral na inspiração; retração elástica e ascensão cranial na expiração.</li></ul>",
-                "anatRel": "<ul><li><b>Relações viscerais e anatómicas:</b> A base repousa sobre as cúpulas do diafragma. O pulmão esquerdo possui a chanfradura cardíaca (relação direta com o pericárdio). Medialmente, o hilo relaciona-se com os grandes vasos e brônquios.</li><li><b>Outras informações:</b> Suspensos no pescoço pelos ligamentos vertebro-pleurais e pleuro-costais (C7-T1), fundamentais na patologia cervical.</li></ul>",
+                "anatLoc": "<ul><li><b>Dimensões:</b> Estruturas parenquimatosas que ocupam a totalidade das cavidades pleurais torácicas. As cúpulas pleurais projetam-se cranialmente 2 a 3 cm superiormente ao terço medial da clavícula.</li><li><b>Palpação:</b> A avaliação propedêutica incide na mensuração da expansibilidade torácica lateral, frémito tóraco-vocal e percussão digital (normalmente revelando som claro atimpânico/ressonância).</li><li><b>Movimentos durante a respiração:</b> Ação cinemática complexa caracterizada por expansão nos três eixos ortogonais durante a inspiração (craniocaudal via diafragma; ântero-posterior e transversal via arcabouço costal). A expiração decorre do recolhimento elástico pulmonar e relaxamento miofascial.</li><li><b>Referências anatómicas:</b> Limite superior ultrapassa o bordo superior da 1ª costela. O bordo inferior projeta-se na 6ª costela (linha hemiclavicular) e 10ª costela (topografia posterior).</li></ul>",
+                "anatRel": "<ul><li><b>Relações viscerais e anatómicas:</b> A base côncava pulmonar adapta-se intimamente às cúpulas diafragmáticas. O pulmão esquerdo diferencia-se pela presença da chanfradura cardíaca (incisura) no lóbulo superior. Medialmente, o hilo pulmonar faz a transição de estruturas vasculares e nervosas do mediastino para o parênquima.</li><li><b>Outras informações:</b> A cúpula pleural apresenta fixações à charneira cérvico-torácica (C7-T1) através de forte aparelho ligamento-fascial, implicando correlação causal entre patomecânica cervical e restrição apical pulmonar.</li></ul>",
                 "anatFix": [
-                    { "name": "Ligamento Suspensor da Cúpula Pleural (Fáscia de Sibson)", "img": ["fascia_sibson_1.jpg", "fascia_sibson_2.jpg"], "note": "Fáscia que fixa a cúpula pleural ao processo transverso de C7 e à primeira costela, transmitindo tensões cervicais ao ápice pulmonar." },
-                    { "name": "Ligamento Pulmonar (prega fibroserosa do hilo)", "img": "lig_pulmonar.jpg", "note": "Prega pleural que se estende do hilo ao diafragma, limitando a ascensão excessiva da raiz pulmonar durante a inspiração profunda." },
-                    { "name": "Ligamento Interpleural (Membrana Broncopulmonar)", "img": "membrana_broncopulmonar.jpg", "note": "Estrutura de continuidade pleuro-brônquica que estabiliza as relações entre os brônquios principais e a pleura mediastinal; importante na transmissão de tensões mediastinais." },
-                    { "name": "Fáscia Mediastinal e Ligamento Vertebropericárdico", "img": "lig_vert_peri.jpg", "note": "Lâmina conectiva que liga as folhas pleurais ao mediastino e vias fibrosas que transmitem tensões vertebrais ao pericárdio, contribuindo para a coesão funcional do complexo mediastinal." }
+                    { "name": "Aparelho Suspensor da Cúpula Pleural", "img": "lig_susp_cupula.jpg", "note": "Complexo miofascial que inclui os ligamentos vertebropleural, costopleural e transversopleural. Estabelece a ancoragem estrutural entre o ápice pulmonar e a transição C7-T1. Disfunções neste aparelho induzem frequentemente cervicalgias rebeldes." },
+                    { "name": "Ligamento Interpleural", "img": "lig_interpleural.jpg", "note": "Estrutura fascial posterior ao esófago e à aorta descendente, responsável pela dissipação e equilíbrio das forças de tensão transversal entre as cavidades pleurais direita e esquerda." },
+                    { "name": "Ligamento Pulmonar (Triangular)", "img": "lig_pulmonar.jpg", "note": "Duplicação da pleura que se estende caudalmente desde o hilo pulmonar até à base diafragmática. Atua como estabilizador vertical para evitar a ascensão patológica da veia pulmonar inferior e do hilo durante inspirações profundas." }
                 ],
-                "snaS": "<ul><li><b>Via Neurológica (T1-T5):</b> Fibras provenientes dos gânglios torácicos superiores (incluindo o <b>Gânglio Estrelado C7-T1</b>) promovem a broncodilatação e a redução das secreções bronquiais.</li><li><b>Dores Referidas:</b> Tensão e dor na região interescapular alta (nível T1-T5).</li><li><b>Ombros e Trapézios:</b> A irritação da pleura parietal ou da periferia diafragmática projeta sinais dolorosos para a região dos ombros (via nervo frénico C3-C5).</li></ul>",
-                "snaP": "<ul><li><b>Nervo Vago:</b> O comando vagal induz a broncoconstrição e estimula a produção de muco glandular.</li></ul>",
+                "snaS": "<ul><li><b>Via Neurológica (T1-T5):</b> Fibras eferentes originadas nos níveis medulares T1-T5 intersetam os gânglios cervicais (particular destaque neurofisiológico ao <b>Gânglio Estrelado C7-T1</b>). A resposta adrenérgica determina o relaxamento da musculatura lisa bronquial (broncodilatação) e inibição da secreção mucosa.</li><li><b>Dores Referidas:</b> Facilitação metamérica ao nível interescapular superior (segmentos T1-T5).</li><li><b>Irradiação Cervical:</b> A nociceção decorrente de irritação da pleura parietal ou periférica diafragmática é conduzida pelas aferências do nervo frénico (C3-C5), traduzindo-se como dor reflexa no complexo articular do ombro e músculo trapézio superior.</li></ul>",
+                "snaP": "<ul><li><b>Nervo Vago (NC X):</b> Responsável pela inervação parassimpática, induzindo o tónus reflexo de broncoconstrição e a estimulação das glândulas exócrinas para produção de muco.</li></ul>",
                 "techs": [
-                    { "nome": "Estiramento do Ligamento Suspensor", "ref": "Cúpula Pleural / Nível da 1ª Costela", "tip": "Utilizar a postura de inclinação do paciente para pré-tencionar a corda cervical do músculo escaleno.", "steps": ["Pedir rotação ativa combinada com flexão lateral cervical para o lado não-lesionado, pré-tencionando o escaleno.", "Ancorar firmemente a mão terapêutica sobre o espaço da clavícula e 1ª costela afetadas.", "Empurrar a fáscia subjacente com rítmica firmeza na direção ínfero-medial."] },
-                    { "nome": "Indução do Lobo Superior", "ref": "Fissuras Interlobares", "tip": "Ajuda a libertar bloqueios na fissura horizontal.", "steps": ["Utilizar a mão inferior para inibir os lobos médio e inferior.", "Colocar a mão superior em contacto direto com o lobo superior.", "Escutar a motilidade tecidular e aguardar o still point."] },
-                    { "nome": "Equilíbrio Bilateral dos Brônquios", "ref": "Ângulos das Escápulas", "tip": "Técnica de unwinding passivo e contínuo.", "steps": ["Deslizar as palmas lisas diretamente para a zona dorsal, inferiormente aos ângulos da omoplata.", "Criar uma ligeira diferença de alavanca mantendo uma das mãos situada mais superiormente.", "Acompanhar as subtis torções rítmicas e em espiral (desenrolamento tecidular) do interior do tórax até sentir a homogeneidade mecânica simétrica final."] },
-                    { "nome": "Mobilização da Fissura Oblíqua e Lobo Médio", "ref": "Linha axilar média e 4ª Costela", "tip": "Mobiliza ativamente a separação lobar.", "steps": ["Com a mão cefálica, estabilizar a escápula (acima de T4).", "Posicionar a mão caudal anteriormente: dedo na 4ª costela e palma no lobo médio.", "Fazer um balanço rítmico (cisalhamento) da estrutura em direção ao esterno."] }
+                    { "nome": "Estiramento Fascial do Aparelho Suspensor da Cúpula Pleural", "ref": "Fossa supraclavicular e 1ª Costela", "tip": "Tiragem miofascial com recurso à pré-tensão ativa do feixe dos músculos escalenos.", "steps": ["Solicitar ao paciente inclinação lateral contralateral e rotação ipsilateral da coluna cervical para recrutar a tensão dos escalenos.", "Fixar firmemente o contacto manual sobre a junção da clavícula e da primeira costela no lado correspondente à disfunção.", "Induzir um vetor de força mecânica contínuo no sentido ínfero-medial, acompanhando a cedência fascial."] },
+                    { "nome": "Indução Interlobar do Lobo Superior", "ref": "Projeção anatómica das fissuras pulmonares", "tip": "Abordagem indireta orientada para a descompressão das tensões nas cisuras pulmonares.", "steps": ["Aplicar inibição sobre a topografia torácica inferior com a mão caudal (lobos médio e inferior).", "Estabelecer o contacto de perceção primária sobre o lobo superior com a mão cefálica.", "Monitorizar o movimento de libertação fascial inerente (motilidade) até atingir o ponto de neutralidade (Still Point)."] },
+                    { "nome": "Equilibração Bronquial Bilateral", "ref": "Ângulos inferiores das escápulas", "tip": "Recurso ao princípio de desentrelaçamento (unwinding) passivo da árvore traqueobronquial.", "steps": ["Introduzir bilateralmente a face palmar das mãos na região interescapular inferior do paciente em supino.", "Aplicar uma força subtil assimétrica mantendo um dos contactos ligeiramente superior face ao contralateral.", "Seguir vetorialmente as tensões torsionais percecionadas no tórax profundo até a restauração do equilíbrio tensional (simetria de fulcro)."] },
+                    { "nome": "Mobilização Específica da Fissura Oblíqua e Lobo Médio", "ref": "Linha axilar média intersetando a 4ª costela", "tip": "Ação de mobilização direta sobre as interfaces lobares do pulmão direito.", "steps": ["Mão cefálica promove estabilização posterior do plano escapular (nível superior a T4).", "Mão caudal estabelece contacto bimanual (digital sobre o 4º arco costal lateral e palma sobre a projeção anterior do lobo médio).", "Imprimir ciclo rítmico de translação paralela (cisalhamento) da estrutura no sentido do rebordo esternal."] }
                 ],
                 "refs": ["BARRAL, J. P. Manipulações Viscerais do Tórax."]
             }
@@ -759,8 +767,11 @@
                         stepsHtml += "<li>" + s + "</li>";
                     });
 
+                    var contraHtml = t.contra ? "<div class=\"tech-warn\"><strong>⚠️ Contraindicações Clínicas:</strong> " + t.contra + "</div>" : "";
+
                     techContainer.innerHTML += "<div class=\"tech-block\">" +
                         "<h3>" + (index + 1) + ". " + t.nome + "</h3>" +
+                        contraHtml +
                         "<p style=\"margin-bottom: 15px;\"><strong>📍 Posição / Referência:</strong> " + t.ref + "</p>" +
                         "<h4 style=\"margin-bottom: 5px;\">👣 Execução:</h4>" +
                         "<ul style=\"padding-left:20px; line-height:1.6; margin-bottom: 20px;\">" +
