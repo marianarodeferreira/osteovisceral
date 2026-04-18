@@ -92,12 +92,21 @@
     .sna-box li, .diag-box li { margin-bottom: 8px; font-size: 0.95rem; }
     .sna-box ul ul { margin-left: 18px; }
     
-    .tech-img { width: 100%; height: 280px; background: #ddd; object-fit: cover; border-radius: 10px; margin-top: 15px; }
+    .tech-img { width: 100%; height: 480px; background: #ddd; object-fit: contain; border-radius: 10px; margin-top: 15px; }
     .tech-img-note { text-align: center; font-size: 0.9rem; color: #666; font-style: italic; margin-top: 8px; display: none; padding: 5px; background: #f9f9f9; border-radius: 5px; }
     
     .tech-block { margin-bottom: 30px; border-bottom: 1px solid #eee; padding-bottom: 20px; }
     .tech-block:last-child { border-bottom: none; }
     .tech-block h3 { color: var(--primary); font-size: 1.3rem; margin-top: 0; margin-bottom: 10px; }
+    /* Layout for technique blocks: image beside text */
+    .tech-row { display: flex; gap: 24px; align-items: flex-start; }
+    .tech-media { flex: 0 0 50%; max-width: 50%; display: flex; flex-direction: column; align-items: stretch; }
+    .tech-text { flex: 1 1 50%; min-width: 0; }
+    @media (max-width: 900px) {
+        .tech-row { flex-direction: column; }
+        .tech-media { max-width: 100%; flex: none; }
+        .tech-text { width: 100%; }
+    }
     .tech-warn { background: #fff3cd; border-left: 4px solid var(--warn); padding: 10px 15px; margin-bottom: 15px; border-radius: 4px; font-size: 0.9rem; }
     .tech-warn strong { color: #856404; }
     
@@ -206,7 +215,7 @@
                             </div>
                             <div class="anat-visual-col">
                                 <div id="anat-img-carousel">
-                                    <img id="carousel-img" class="carousel-img" src="">
+                                    <img id="carousel-img" class="carousel-img" src="https://placehold.co/400x300/eee/999?text=SEM+IMAGEM">
                                     <div id="carousel-note" class="anat-img-note"></div>
                                     
                                     <div id="carousel-controls" class="carousel-controls">
@@ -258,15 +267,50 @@
     </div>
 
     <script>
+        // Global error handler - ErrorEvent and resource errors
         window.onerror = function(message, source, lineno, colno, error) {
             const msgBox = document.getElementById('error-msg');
             msgBox.style.display = 'block';
-            msgBox.innerText = "ERRO: " + message + " (Linha " + lineno + ").";
+            var text = "ERRO: " + message + "\nFonte: " + (source || 'n/a') + " (Linha " + lineno + ", Col " + colno + ")";
+            if (error && error.stack) text += "\nStack:\n" + error.stack;
+            text += "\nUA: " + (navigator.userAgent || 'n/a');
+            msgBox.innerText = text;
+            console.error(text);
+            return false;
         };
+
+        // Capture resource loading errors (images/scripts/styles) with more detail
+        window.addEventListener('error', function(e) {
+            var msgBox = document.getElementById('error-msg');
+            // ErrorEvent (JS runtime) is handled by window.onerror above
+            if (e instanceof ErrorEvent) return;
+
+            // Resource error - e.target is the element (IMG, SCRIPT, LINK)
+            var target = e.target || e.srcElement;
+            if (!target) return;
+            var src = target.currentSrc || target.src || target.href || target.getAttribute && target.getAttribute('src') || 'n/a';
+            var tag = target.tagName || 'unknown';
+            var text = 'ERRO de Recurso: tag=' + tag + ' src=' + src + '\n(este erro costuma ocorrer por ficheiros não encontrados ou bloqueio CORS)';
+            msgBox.style.display = 'block';
+            msgBox.innerText = text + '\nUA: ' + (navigator.userAgent || 'n/a');
+            console.error(text, e);
+        }, true);
+
+        // Capture unhandled promise rejections
+        window.addEventListener('unhandledrejection', function(ev) {
+            var msgBox = document.getElementById('error-msg');
+            var reason = ev && ev.reason ? (ev.reason.stack || ev.reason.message || String(ev.reason)) : 'n/a';
+            var text = 'Unhandled Rejection: ' + reason;
+            msgBox.style.display = 'block';
+            msgBox.innerText = text + '\nUA: ' + (navigator.userAgent || 'n/a');
+            console.error('Unhandled Rejection:', ev);
+        });
 
         var currentCarouselImages = [];
         var currentCarouselIndex = 0;
         var currentActiveLigament = null;
+        var techCarouselImages = [];
+        var techCarouselIndex = [];
 
         const db = {
             "fossa_anterior": {
@@ -341,19 +385,19 @@
                     { "name": "Pequeno Epíploon", "img": "lig_peq_omento.jpg", "note": "Une a pequena curvatura ao fígado (através dos ligamentos hepatogástrico e hepatoduodenal)." },
                     { "name": "Grande Epíploon", "img": "lig_grande_omento.jpg", "note": "O 'avental' que pende da grande curvatura até L5 (unindo ao cólon transverso) e a sua extensão lateral rumo ao baço." }
                 ],
-                "snaS": "<ul><li><b>Via Neurológica:</b> Fibras do Nervo Esplâncnico Maior via Gânglio Celíaco. O hipertónus gera espasmo pilórico e isquemia da mucosa.</li><li><b>Dores Referidas:</b> Região interescapular (T5-T6) e zona retroesternal.</li><li><b>Ombro Esquerdo:</b> Relação topográfica habitual pela irritação do fundo gástrico no diafragma.</li><li><b>Ombro e Braço Direito:</b> Zona reflexa identificada em quadros de patologia gástrica.</li><li>Falsas mialgias cervicais por facilitação medular.</li></ul>",
+                "snaS": "<ul><li><b>Via Neurológica:</b> Fibras do Nervo Esplâncnico Maior via Gânglio Celíaco. O hipertónus gera espasmo pilórico e isquemia da mucosa.</li><li><b>Dores Referidas:</b><ul><li>Região interescapular (T5–T6) e zona retroesternal.</li><li><b>Ombro esquerdo:</b> Relação topográfica habitual pela irritação do fundo gástrico no diafragma.</li><li><b>Ombro e braço direito:</b> Zona reflexa identificada em quadros de patologia gástrica.</li><li>Falsas mialgias cervicais por facilitação medular.</li></ul></li></ul>",
                 "snaP": "<ul><li><b>Ação:</b> Ativa o peristaltismo e a secreção de ácido clorídrico.</li></ul>",
                 "techs": [{ 
                     "nome": "Redução da Hérnia de Hiato (Tração Gástrica)", 
+                    "img": ["tech_estomago_t1_i1.jpg","tech_estomago_t1_i2.jpg","tech_estomago_t1_i3.jpg"],
                     "ref": "Plano subcostal esquerdo e junção gastroesofágica", 
                     "contra": "Hérnia do hiato estrangulada (risco cirúrgico elevado), úlcera gástrica ou duodenal ativa (risco de perfuração), cirurgia abdominal ou torácica recente, aneurisma da aorta abdominal, neoplasia gástrica.",
                     "tip": "Sincronizar perfeitamente com a respiração. A tração puramente mecânica é executada apenas na fase de expiração para aproveitar a subida livre do diafragma.", 
                     "steps": [
-                        "Colocar o paciente em decúbito dorsal com os joelhos fletidos (relaxando a fáscia e a parede abdominal).", 
-                        "Posicionar os polegares ou a borda radial das mãos sob o rebordo costal esquerdo, afundando com suavidade em direção ao cume do fundo gástrico.", 
-                        "Durante a fase de expiração do paciente, aplicar uma tração firme e contínua do estômago para baixo (direção caudal) e ligeiramente orientada para a linha média.", 
-                        "Manter a tensão elástica adquirida durante a inspiração subsequente (impedindo o estômago de subir) e repetir o ciclo mecânico 3 a 4 vezes."
-                    ] 
+                        "Colocar o dedo médio de estabilização situado cranialmente na fúrcula jugular (fossa).",
+                        "Apoiar e ancorar a mão caudal sobre o bordo inferior do corpo do esterno.",
+                        "Promover tração entrelaçando os polegares e puxar toda a grelha de forma contínua em direção anterior (teto)."
+                    ]
                 }],
                 "refs": ["NOGUEIRA, F. Diagnóstico e Intervenção Osteopática - Visceral.", "BARRAL, J. P. Manipulações Viscerais 1.", "GUYTON, A.C.; HALL, J.E. Tratado de Fisiologia."]
             },
@@ -372,11 +416,12 @@
                     { "name": "Epíploon Menor (+)", "img": "lig_peq_omento.jpg", "note": "Fita de tensão cruzada que suspende o estômago à face inferior hepática." },
                     { "name": "Ligamento Falciforme (+)", "img": "lig_falciforme.jpg", "note": "Apenas de suporte anterior à parede abdominal." }
                 ],
-                "snaS": "<ul><li><b>Via Neurológica:</b> Nervo Esplâncnico Maior. O stress simpático congestiona o parênquima e diminui a depuração.</li><li><b>Dores Referidas:</b> Hipocôndrio direito e região interescapular direita (D8-D10).</li><li><b>Ombro Direito:</b> Irritação da Cápsula de Glisson e do diafragma (via nervo frénico C3-C5).</li><li><b>Olho Direito:</b> Cefaleias pulsáteis na zona frontal e orbital direita.</li></ul>",
+                "snaS": "<ul><li><b>Via Neurológica:</b> Nervo Esplâncnico Maior. O stress simpático congestiona o parênquima e diminui a depuração.</li><li><b>Dores Referidas:</b><ul><li>Hipocôndrio direito e região interescapular direita (T8-T10).</li><li><b>Ombro direito:</b> Irritação da Cápsula de Glisson e do diafragma (via nervo frénico C3-C5).</li><li><b>Olho direito:</b> Cefaleias pulsáteis na zona frontal e orbital direita.</li></ul>",
                 "snaP": "<ul><li><b>Ação:</b> Governa a função metabólica e a regeneração tecidular.</li></ul>",
                 "techs": [{ 
                     "nome": "Pompage e Recoil Hepático", 
                     "ref": "Grelha Costal Direita Inferior", 
+                    "img": ["tech_figado_t1_i1.jpg","tech_figado_t1_i2.jpg","tech_figado_t1_i3.jpg","tech_figado_t1_i4.jpg"],
                     "contra": "Hepatite aguda, cirrose em estadios avançados, hepatomegalia severa e dolorosa de etiologia não esclarecida, colecistite aguda, litíase biliar com risco de impactação, abcessos ou quistos hepáticos, tumores hepáticos primários ou secundários, fraturas das costelas direitas (7ª-10ª).",
                     "tip": "Manobra orientada para o combate à estase sanguínea e aumento agressivo da drenagem fluida no eixo portal congestionado.", 
                     "steps": [
@@ -396,11 +441,12 @@
                 "anatLoc": "<ul><li><b>Dimensões:</b> Saco de formato alongado, cónico e ramificado nas porções anatómicas de Fundo, Corpo, Infundíbulo e Colo.</li><li><b>Palpação:</b> A palpação manual local exige estrita ausência de dor. A vesícula distendida ou inflamada por estase apresenta-se hiper-reativa, criando forte muralha contrátil perante qualquer toque digital invasivo ou abrupto.</li><li><b>Movimentos durante a respiração:</b> Encontra-se completamente dependente, sendo forçada a acompanhar de modo passivo todos os estiramentos e descidas inerentes aos fortes ritmos diafragmáticos impressos no próprio fígado.</li><li><b>Referências anatómicas:</b> A sua projeção clínica à superfície (o <b>Ponto de Murphy</b>) localiza-se na interceção da <b>linha média clavicular direita com o rebrdo da 10ª costela</b>. A nível de topografia horizontal, a base do órgão cruza em permanência a linha do <b>Plano Transpilórico (L1)</b>.</li></ul>",
                 "anatRel": "<ul><li><b>Relações viscerais e anatómicas:</b> Repousa alojada na fossa biliar da face visceral do fígado. Situa-se em relação contígua inferior às paredes da 1ª e 2ª porções do duodeno.</li></ul>",
                 "anatFix": [],
-                "snaS": "<ul><li><b>Via Neurológica:</b> Nervo Esplâncnico Maior com foco em D7. O disparo simpático fecha o esfíncter de Oddi.</li><li><b>Dores Referidas:</b> Ângulo inferior da escápula direita (Sinal de Boas) e epigástrio.</li><li><b>Ombro Direito e nuca.</b></li><li><b>Olho Esquerdo:</b> Cefaleias tipo enxaqueca com início e foco principal no lado esquerdo e tensão orbital esquerda.</li><li>Episódios de insónia biliar (2h-4h).</li></ul>",
+                "snaS": "<ul><li><b>Via Neurológica:</b> Nervo Esplâncnico Maior com foco em D7. O disparo simpático fecha o esfíncter de Oddi.</li><li><b>Dores Referidas:</b><ul><li>Ângulo inferior da escápula direita (Sinal de Boas) e epigástrio.</li><li><b>Ombro direito e nuca</b>.</li><li><b>Olho esquerdo</b>: Cefaleias tipo enxaqueca com início e foco principal no lado esquerdo e tensão orbital esquerda.</li><li>Episódios de insónia biliar (2h-4h).</li></ul></li></ul>",
                 "snaP": "<ul><li><b>Ação:</b> Contração da parede e expulsão da bílis para o duodeno.</li></ul>",
                 "techs": [{ 
                     "nome": "Técnica de Estimulação e Drenagem Passiva", 
                     "ref": "Ponto Tátil Subcostal de Murphy", 
+                    "img": ["tech_vesicula_t1_i1.jpg","tech_vesicula_t1_i2.jpg","tech_vesicula_t1_i3.jpg"],
                     "contra": "Colecistite aguda (Sinal de Murphy positivo), colelitíase (pedras na vesícula) com sintomatologia ativa devido ao elevado risco de migração e obstrução do ducto cístico ou coledoco, colangite, pancreatite aguda, neoplasia da vesícula ou vias biliares.",
                     "tip": "É imperativo palpar o tecido e afundar de forma rítmica e puramente indolor. Uma vesícula sob tensão congestiva é hiper-reativa e veda agressivamente o tecido abdominal perante toques manuais de invasão abrupta.", 
                     "steps": [
@@ -421,11 +467,12 @@
                 "anatLoc": "<ul><li><b>Dimensões:</b> Glândula lobulada de disposição horizontal, estendendo-se transversalmente desde a curva do duodeno à direita até ao hilo esplénico à esquerda.</li><li><b>Palpação:</b> Não admite toque manual tátil direto devido à sua profundidade e arquitetura interna friável; avalia-se clinicamente através das fáscias elásticas retroperitoneais envolventes no seu limite de tensão.</li><li><b>Movimentos durante a respiração:</b> A vasta cabeça central e o corpo estão intimamente fixos sem movimento próprio. A cauda alongada pancreática ascendente obliquamente é a única porção dotada de liberdade oscilatória perante os ciclos toracoabdominais.</li><li><b>Referências anatómicas:</b> O colo central repousa horizontal e precisamente no <b>Plano Transpilórico (L1)</b>. O eixo clínico de pesquisa desenha-se na diagonal umbigo-axila esquerda.</li></ul>",
                 "anatRel": "<ul><li><b>Relações viscerais e anatómicas:</b> Anteriormente escondido por trás do estômago, compõe o leito posterior da bolsa omental. Posteriormente está montado de forma transversal profunda sobre fortes estruturas vasculares, cruzando sobre a artéria Aorta, a veia Cava e as raízes dos pedículos da mesentérica superior.</li></ul>",
                 "anatFix": [],
-                "snaS": "<ul><li><b>Via Neurológica:</b> Nervos Esplâncnicos via Gânglio Celíaco e Mesentérico Superior.</li><li><b>Dores Referidas:</b> Dor epigástrica profunda que irradia \"em banda\" ou \"em cinto\" para as costas.</li><li>Tensão muscular paravertebral entre T5 e T9.</li></ul>",
+                "snaS": "<ul><li><b>Via Neurológica:</b> Nervos Esplâncnicos via Gânglio Celíaco e Mesentérico Superior.</li><li><b>Dores Referidas:</b><ul><li>Dor epigástrica profunda que irradia \"em banda\" ou \"em cinto\" para as costas.</li><li>Tensão muscular paravertebral entre T5 e T9.</li></ul></li></ul>",
                 "snaP": "<ul><li><b>Ação:</b> Controlo da secreção exócrina e resposta endócrina (insulina).</li></ul>",
                 "techs": [{ 
                     "nome": "Libertação Fascial Pancreática", 
                     "ref": "Eixo Diagonal do Umbigo à Axila Esquerda", 
+                    "img": ["tech_pancreas_t1_i1.jpg","tech_pancreas_t1_i2.jpg","tech_pancreas_t1_i3.jpg"],
                     "contra": "Pancreatite aguda (emergência médica), pseudoquistos pancreáticos, neoplasia pancreática, trauma abdominal recente.",
                     "tip": "A abordagem base osteopática induz o efeito focando-se única e exclusivamente sobre a expansão tensional do tecido conectivo circundante (a fáscia retroperitoneal amarrada). Nunca se procede à compressão direta e maciça sobre a arquitetura muito friável e sensível da glândula.", 
                     "steps": [
@@ -448,11 +495,12 @@
                     { "name": "A Raiz do Mesentério", "img": "raiz_mesenterio.jpg", "note": "É a faixa tecidular ultra resistente e sob grande tensão responsável por suspender e segurar os vários metros de ansas intestinais. Percorre rasgando obliquamente a topografia em declive, descendo de L2 (esquerda) e terminando na fossa ilíaca direita." }, 
                     { "name": "Músculo de Treitz", "img": "musculo_treitz.jpg", "note": "É um cordão fibromuscular dinâmico com origem dupla no pilar direito do diafragma e no tecido do tronco celíaco, que desce para suspender a flexura duodenojejunal e a porção final do duodeno." }
                 ],
-                "snaS": "<ul><li><b>Via Neurológica:</b> Gânglio Celíaco (Duodeno) e Mesentérico Superior (restante).</li><li><b>Dores Referidas:</b> Duodeno: Dor no ombro direito (via nervo frénico) e mal-estar epigástrico (3h-4h após comer).</li><li><b>Jejuno/Íleo:</b> Dor periumbilical e tensão na charneira toracolombar (T10-T12).</li><li>Disfunção sacroilíaca reflexa.</li></ul>",
+                "snaS": "<ul><li><b>Via Neurológica:</b> Gânglio Celíaco (Duodeno) e Mesentérico Superior (restante).</li><li><b>Dores Referidas:</b><ul><li><b>Duodeno</b>: Dor no ombro direito (via nervo frénico) e mal-estar epigástrico (3h-4h após comer).</li><li><b>Jejuno/íleo</b>: Dor periumbilical e tensão na charneira toracolombar (T10-T12).</li><li>Disfunção sacroilíaca reflexa.</li></ul></li></ul>",
                 "snaP": "<ul><li><b>Ação:</b> Peristaltismo absortivo e secreção intestinal.</li></ul>",
                 "techs": [{ 
                     "nome": "Estiramento da Linha Estrutural e Transversal da Fixação na Raiz do Mesentério Inferior", 
                     "ref": "Linha Anatómica Tensa em plano diagonal escorregando e unindo de L2 à esquerda até ao encaixe na Fossa Ilíaca Direita", 
+                    "img": ["tech_delgado_t1_i1.jpg","tech_delgado_t1_i2.jpg","tech_delgado_t1_i3.jpg","tech_delgado_t1_i4.jpg","tech_delgado_t1_i5.jpg"],
                     "contra": "Oclusão ou suboclusão intestinal, apendicite aguda, peritonite, doença de Crohn ou Colite Ulcerosa em fase ativa de agudização, isquemia mesentérica, aneurisma da aorta abdominal, cirurgia abdominal recente (aderências precoces).",
                     "tip": "É imperativo proceder ao gesto palpatório aplicando tração num decurso suave e macio, com pressão tecidular firme, atuando transversalmente e ortogonalmente (num ângulo de 90 graus) para vencer a densidade longitudinal retesada das fibras estruturais da raiz.", 
                     "steps": [
@@ -473,10 +521,11 @@
                 "anatRel": "<ul><li><b>Relações Miofasciais Posteriores:</b> O cego e o cólon ascendente estabelecem uma íntima relação de contiguidade com a fáscia do músculo psoas maior e ilíaco à direita, acompanhando a sua excursão mecânica. À esquerda, a porção distal do cólon sigmoide cruza a cavidade pélvica, repousando diretamente sobre o músculo piriforme e estabelecendo estreita proximidade topográfica com o plexo sagrado e a raiz do nervo ciático.</li></ul>",
                 "anatFix": [{ "name": "Fáscias de Coalescência (Toldt)", "img": "fascia_toldt.jpg", "note": "Lâmina fascial resultante da fusão embriológica entre o peritoneu visceral do cólon ascendente e descendente e o peritoneu parietal posterior. Este processo de coalescência determina a retroperitonização secundária destas porções intestinais, assegurando a sua estrita fixação tecidular estrutural à parede lombar posterior." }],
                 "snaS": "<ul><li><b>Via Neurológica:</b> Gânglios Mesentérico Superior e Inferior.</li><li><b>Dores Referidas:</b> Cólon Proximal: Região periumbilical e flanco direito.</li><li><b>Sigmoide:</b> Fossa ilíaca esquerda, região sagrada e suprapúbica.</li><li><b>Perna Esquerda:</b> Padrão de \"falsa ciática\" por compromisso de contiguidade com o piriforme e plexo sagrado.</li></ul>",
-                "snaP": "<ul><li><b>Ação:</b> Transição na flexura esplénica; o parassimpático sagrado (S2-S4) comanda a evacuação distal.</li></ul>",
+                "snaP": "<ul><li><b>Ação:</b> Transição na flexura esplénica (Nervo vago); o parassimpático sagrado (S2-S4) comanda a evacuação distal.</li></ul>",
                 "techs": [{ 
                     "nome": "Abertura dos Ângulos (Flexuras Hepática e Esplénica)", 
                     "ref": "Bordos Subcostais Direito e Esquerdo", 
+                    "img": ["tech_colon_t1_i1.jpg","tech_colon_t1_i2.jpg"],
                     "contra": "Apendicite aguda (especialmente no lado direito e manobras de descompressão brusca - sinal de Blumberg), diverticulite aguda, doença inflamatória intestinal ativa (Crohn, Colite Ulcerosa), megacólon tóxico, suspeita de perfuração intestinal, tumores colorretais.",
                     "tip": "Muitas vezes, a libertação destes ângulos cólicos devolve de imediato a flexibilidade e a expansão mecânica à grelha costal inferior bloqueada.", 
                     "steps": [
@@ -641,6 +690,103 @@
             }
         }
 
+        function renderTechImage(i) {
+            try {
+                var imgs = Array.isArray(techCarouselImages[i]) ? techCarouselImages[i] : (techCarouselImages[i] ? [techCarouselImages[i]] : []);
+                var idx = (typeof techCarouselIndex[i] === 'number') ? techCarouselIndex[i] : 0;
+                var imgEl = document.getElementById('tech-img-' + i);
+                var counter = document.getElementById('tech-counter-' + i);
+                var prevBtn = document.getElementById('tech-prev-' + i);
+                var nextBtn = document.getElementById('tech-next-' + i);
+                if (!imgEl) {
+                    console.warn('renderTechImage: imagem não encontrada para index', i);
+                    return;
+                }
+                if (!imgs || imgs.length === 0) {
+                    imgEl.style.display = 'none';
+                    if (counter) counter.innerText = '';
+                    if (prevBtn) prevBtn.disabled = true;
+                    if (nextBtn) nextBtn.disabled = true;
+                    return;
+                }
+                // clamp idx
+                if (idx < 0) idx = 0;
+                if (idx > imgs.length - 1) idx = imgs.length - 1;
+                techCarouselIndex[i] = idx;
+
+                imgEl.style.display = '';
+                // build a safe src: if img string is relative (no protocol or slash), prefix with base path
+                var candidate = imgs[idx] || '';
+                var srcUrl = candidate;
+                try {
+                    var isAbsolute = /^(https?:)?\/\//i.test(candidate) || candidate.indexOf(':') !== -1;
+                    var hasSlash = candidate.indexOf('/') !== -1;
+                    if (!isAbsolute && !hasSlash) {
+                        var basePath = '';
+                        if (location && location.protocol === 'file:') {
+                            // location.pathname includes full path; build file:// URL to directory
+                            var p = location.pathname.replace(/\/[^/]*$/, '');
+                            basePath = 'file://' + p;
+                        } else {
+                            var p2 = location.pathname.replace(/\/[^/]*$/, '');
+                            basePath = location.origin + p2;
+                        }
+                        srcUrl = basePath + '/' + encodeURI(candidate);
+                    }
+                } catch (e) {
+                    srcUrl = imgs[idx];
+                }
+                imgEl.src = srcUrl || 'https://placehold.co/400x300/eee/999?text=SEM+IMAGEM';
+                imgEl.onerror = function() {
+                    try {
+                        if (this.src.indexOf('https://placehold.co') === -1) {
+                            this.src = 'https://placehold.co/400x300/eee/999?text=SEM+IMAGEM';
+                        }
+                    } catch (e) { console.error('img.onerror inner error', e); }
+                };
+                if (counter) counter.innerText = imgs.length > 1 ? (idx + 1) + ' / ' + imgs.length : '';
+                if (prevBtn) prevBtn.disabled = (idx === 0);
+                if (nextBtn) nextBtn.disabled = (idx === imgs.length - 1);
+            } catch (err) {
+                var msgBox = document.getElementById('error-msg');
+                msgBox.style.display = 'block';
+                msgBox.innerText = 'Erro renderTechImage(' + i + '): ' + err + '\n' + (err && err.stack ? err.stack : '');
+                console.error('Erro renderTechImage(', i, '):', err);
+            }
+        }
+
+        function prevTechImage(i) {
+            try {
+                if (typeof techCarouselIndex[i] !== 'number') techCarouselIndex[i] = 0;
+                if (!Array.isArray(techCarouselImages[i]) || techCarouselImages[i].length === 0) return;
+                if (techCarouselIndex[i] > 0) {
+                    techCarouselIndex[i] = Math.max(0, techCarouselIndex[i] - 1);
+                    renderTechImage(i);
+                }
+            } catch (err) {
+                var msgBox = document.getElementById('error-msg');
+                msgBox.style.display = 'block';
+                msgBox.innerText = 'Erro prevTechImage(' + i + '): ' + err + '\n' + (err && err.stack ? err.stack : '');
+                console.error('Erro prevTechImage(', i, '):', err);
+            }
+        }
+
+        function nextTechImage(i) {
+            try {
+                if (typeof techCarouselIndex[i] !== 'number') techCarouselIndex[i] = 0;
+                if (!Array.isArray(techCarouselImages[i]) || techCarouselImages[i].length === 0) return;
+                if (techCarouselIndex[i] < techCarouselImages[i].length - 1) {
+                    techCarouselIndex[i] = Math.min(techCarouselImages[i].length - 1, techCarouselIndex[i] + 1);
+                    renderTechImage(i);
+                }
+            } catch (err) {
+                var msgBox = document.getElementById('error-msg');
+                msgBox.style.display = 'block';
+                msgBox.innerText = 'Erro nextTechImage(' + i + '): ' + err + '\n' + (err && err.stack ? err.stack : '');
+                console.error('Erro nextTechImage(', i, '):', err);
+            }
+        }
+
         function setFocusButtonLabel() {
             var btn = document.getElementById('focus-toggle');
             if (!btn) return;
@@ -671,8 +817,9 @@
         }
 
         function load(key, btn) {
-            var d = db[key];
-            if (!d) return;
+            try {
+                var d = db[key];
+                if (!d) return;
 
             var allBtns = document.querySelectorAll('.organ-btn');
             for(var i=0; i<allBtns.length; i++) {
@@ -769,23 +916,43 @@
 
                     var contraHtml = t.contra ? "<div class=\"tech-warn\"><strong>⚠️ Contraindicações Clínicas:</strong> " + t.contra + "</div>" : "";
 
-                    techContainer.innerHTML += "<div class=\"tech-block\">" +
-                        "<h3>" + (index + 1) + ". " + t.nome + "</h3>" +
-                        contraHtml +
-                        "<p style=\"margin-bottom: 15px;\"><strong>📍 Posição / Referência:</strong> " + t.ref + "</p>" +
+                    // prepare images for this technique (may be string or array)
+                    var imgs = Array.isArray(t.img) ? t.img : (t.img ? [t.img] : []);
+                    techCarouselImages[index] = imgs;
+                    techCarouselIndex[index] = 0;
+
+                    var imgsHtml = "";
+                    if (imgs.length > 0) {
+                        imgsHtml = "<div class=\"tech-media\" id=\"tech-img-box-"+index+"\">" +
+                            "<img id=\"tech-img-"+index+"\" src=\"" + imgs[0] + "\" class=\"tech-img\" onerror=\"this.style.display='none'\">" +
+                            "<div class=\"carousel-controls\">" +
+                                "<button id=\"tech-prev-"+index+"\" class=\"carousel-btn\" onclick=\"prevTechImage(" + index + ")\">⬅️</button>" +
+                                "<span id=\"tech-counter-"+index+"\" class=\"carousel-counter\"></span>" +
+                                "<button id=\"tech-next-"+index+"\" class=\"carousel-btn\" onclick=\"nextTechImage(" + index + ")\">Próxima ➡️</button>" +
+                            "</div>" +
+                        "</div>";
+                    }
+
+                    var textHtml = "<div class=\"tech-text\">" +
+                        "<p style=\"margin-bottom: 15px;\"><strong>📍 Posição / Referência:</strong> " + (t.ref || "-") + "</p>" +
                         "<h4 style=\"margin-bottom: 5px;\">👣 Execução:</h4>" +
                         "<ul style=\"padding-left:20px; line-height:1.6; margin-bottom: 20px;\">" +
                         stepsHtml +
                         "</ul>" +
                         "</div>";
-                });
 
-                var techImgSrc = d.imgTech || d.img;
-                if (techImgSrc) {
-                    techContainer.innerHTML += "<img src=\"" + techImgSrc + "\" class=\"tech-img\" onerror=\"this.style.display='none'\">";
-                    if (d.imgNote) {
-                        techContainer.innerHTML += "<div class=\"tech-img-note\" style=\"display:block;\">" + d.imgNote + "</div>";
-                    }
+                    techContainer.innerHTML += "<div class=\"tech-block\">" +
+                        "<h3>" + (index + 1) + ". " + t.nome + "</h3>" +
+                        contraHtml +
+                        "<div class=\"tech-row\">" +
+                            textHtml +
+                            imgsHtml +
+                        "</div>" +
+                        "</div>";
+                });
+                // initialize tech carousels
+                for (var ti = 0; ti < techCarouselImages.length; ti++) {
+                    renderTechImage(ti);
                 }
             } else {
                 techContainer.innerHTML += "<p>Nenhuma técnica detalhada encontrada para este órgão.</p>";
@@ -802,6 +969,12 @@
                 refsBox.style.display = 'block';
             } else {
                 refsBox.style.display = 'none';
+            }
+            } catch (e) {
+                var msgBox = document.getElementById('error-msg');
+                msgBox.style.display = 'block';
+                msgBox.innerText = 'Erro no load(): ' + e + '\n' + (e.stack || '');
+                console.error('Erro no load():', e);
             }
         }
 
