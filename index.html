@@ -98,7 +98,6 @@
     .tech-block { margin-bottom: 30px; border-bottom: 1px solid #eee; padding-bottom: 20px; }
     .tech-block:last-child { border-bottom: none; }
     .tech-block h3 { color: var(--primary); font-size: 1.3rem; margin-top: 0; margin-bottom: 10px; }
-    /* Layout for technique blocks: image beside text */
     .tech-row { display: flex; gap: 24px; align-items: flex-start; }
     .tech-media { flex: 0 0 50%; max-width: 50%; display: flex; flex-direction: column; align-items: stretch; }
     .tech-text { flex: 1 1 50%; min-width: 0; }
@@ -123,6 +122,43 @@
 
     .focus-toggle-btn { background: #fff; border: 1px solid #e3e8ee; color: #2c3e50; padding: 6px 10px; border-radius: 6px; font-weight: 700; cursor: pointer; margin-left: 12px; transition: 0.2s; }
     .focus-toggle-btn.active-focus { background: var(--accent); color: white; border-color: #2980b9; }
+
+    /* Layout para a aba do SNA */
+    .sna-layout { 
+        display: grid; 
+        grid-template-columns: 45% 55%; 
+        gap: 25px; 
+        align-items: start; 
+    }
+    
+    .sna-text-col { 
+        display: flex; 
+        flex-direction: column; 
+    }
+    
+    .sna-img-col { 
+        background: #eef2f5; 
+        border: 1px solid #dceefb; 
+        border-radius: 12px; 
+        padding: 15px; 
+        display: flex; 
+        flex-direction: column; 
+        justify-content: center;
+        align-items: center; 
+        min-height: 450px;
+    }
+    
+    .sna-img-col img { 
+        max-width: 100%; 
+        max-height: 400px; 
+        object-fit: contain; 
+        border-radius: 8px; 
+        box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+    }
+    
+    @media (max-width: 1000px) {
+        .sna-layout { grid-template-columns: 1fr; }
+    }
 </style>
 </head>
 <body class="focus-digest">
@@ -238,14 +274,33 @@
                         <h2 id="sna-title">Vias Neurológicas (Viscerossomáticas)</h2>
                         <hr style="border:0; border-top:1px solid #eee; margin:15px 0;">
                         
-                        <div class="sna-box sna-symp">
-                            <strong id="sna-titulo-s" style="font-size:1.1rem;">🔴 Simpático / Artérias</strong>
-                            <div id="sna-txt-s"></div>
-                        </div>
-                        
-                        <div class="sna-box sna-para">
-                            <strong id="sna-titulo-p" style="font-size:1.1rem;">🔵 Parassimpático / Nervos Cranianos</strong>
-                            <div id="sna-txt-p"></div>
+                        <div class="sna-layout">
+                            <div class="sna-text-col">
+                                <div class="sna-box sna-symp">
+                                    <strong id="sna-titulo-s" style="font-size:1.1rem;">🔴 Simpático</strong>
+                                    <div id="sna-txt-s"></div>
+                                </div>
+                                
+                                <div class="sna-box sna-para">
+                                    <strong id="sna-titulo-p" style="font-size:1.1rem;">🔵 Parassimpático</strong>
+                                    <div id="sna-txt-p"></div>
+                                </div>
+                            </div>
+
+                            <div class="sna-img-col">
+                                <div id="sna-img-carousel-container" style="display: flex; width: 100%; height: 100%; flex-direction: column; align-items: center; justify-content: space-between; padding: 8px; box-sizing: border-box;">
+                                    <img id="sna-carousel-img" alt="SNA Visualizador" style="display:none; max-width: 100%; max-height: 400px; object-fit: contain; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.08);">
+                                    <div id="sna-carousel-controls" class="carousel-controls" style="display:none; margin-top: 15px;">
+                                        <button id="btn-sna-prev" class="carousel-btn" onclick="prevSnaImage()">⬅️ Anterior</button>
+                                        <span id="sna-carousel-counter" class="carousel-counter">1 / 2</span>
+                                        <button id="btn-sna-next" class="carousel-btn" onclick="nextSnaImage()">Próxima ➡️</button>
+                                    </div>
+                                </div>
+                                <div id="sna-placeholder" class="anat-placeholder" style="display:none;">
+                                    <h3>SNA VISUALIZADOR</h3>
+                                    <p>Nenhuma imagem disponível.</p>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -267,7 +322,6 @@
     </div>
 
     <script>
-        // Global error handler - ErrorEvent and resource errors
         window.onerror = function(message, source, lineno, colno, error) {
             const msgBox = document.getElementById('error-msg');
             msgBox.style.display = 'block';
@@ -279,13 +333,9 @@
             return false;
         };
 
-        // Capture resource loading errors (images/scripts/styles) with more detail
         window.addEventListener('error', function(e) {
             var msgBox = document.getElementById('error-msg');
-            // ErrorEvent (JS runtime) is handled by window.onerror above
             if (e instanceof ErrorEvent) return;
-
-            // Resource error - e.target is the element (IMG, SCRIPT, LINK)
             var target = e.target || e.srcElement;
             if (!target) return;
             var src = target.currentSrc || target.src || target.href || target.getAttribute && target.getAttribute('src') || 'n/a';
@@ -296,7 +346,6 @@
             console.error(text, e);
         }, true);
 
-        // Capture unhandled promise rejections
         window.addEventListener('unhandledrejection', function(ev) {
             var msgBox = document.getElementById('error-msg');
             var reason = ev && ev.reason ? (ev.reason.stack || ev.reason.message || String(ev.reason)) : 'n/a';
@@ -306,15 +355,20 @@
             console.error('Unhandled Rejection:', ev);
         });
 
+        // Variáveis de Carrossel
         var currentCarouselImages = [];
         var currentCarouselIndex = 0;
         var currentActiveLigament = null;
         var techCarouselImages = [];
         var techCarouselIndex = [];
+        var currentSnaImages = [];
+        var currentSnaIndex = 0;
 
         const db = {
             "fossa_anterior": {
                 "nome": "Fossa Craniana Anterior",
+                "imgSNA": "",
+                "imgSNA2": "",
                 "tituloP": "(NC I)",
                 "imgAnat": "foto_cranio_ant.jpg",
                 "imgTech": "foto_cranio_ant.jpg",
@@ -328,6 +382,8 @@
             },
             "fossa_media": {
                 "nome": "Fossa Craniana Média",
+                "imgSNA": "",
+                "imgSNA2": "",
                 "tituloS": "(Plexo Carotídeo)",
                 "tituloP": "(Nervos Cranianos II a VI)",
                 "imgAnat": "foto_cranio_media.jpg",
@@ -342,6 +398,8 @@
             },
             "fossa_posterior": {
                 "nome": "Fossa Craniana Posterior",
+                "imgSNA": "",
+                "imgSNA2": "",
                 "tituloS": "(Via Artéria Vertebral)",
                 "tituloP": "(Nervo Vago X)",
                 "imgAnat": "foto_cranio_post.jpg",
@@ -356,6 +414,8 @@
             },
             "face_forames": {
                 "nome": "Viscerocrânio e ATM",
+                "imgSNA": "",
+                "imgSNA2": "",
                 "tituloS": "(Gânglio Cervical Superior)",
                 "tituloP": "(Nervos Trigémeo e Facial)",
                 "imgAnat": "foto_face.jpg",
@@ -374,6 +434,8 @@
             },
             "estomago": {
                 "nome": "Estômago",
+                "imgSNA": "sna_estomago_1.jpg",
+                "imgSNA2": "sna_estomago_2.jpg",
                 "tituloS": "(T5-T12)",
                 "tituloP": "(Nervo Vago)",
                 "imgAnat": "anat_estomago.jpg",
@@ -385,24 +447,24 @@
                     { "name": "Pequeno Epíploon", "img": "lig_peq_omento.jpg", "note": "Une a pequena curvatura ao fígado (através dos ligamentos hepatogástrico e hepatoduodenal)." },
                     { "name": "Grande Epíploon", "img": "lig_grande_omento.jpg", "note": "O 'avental' que pende da grande curvatura até L5 (unindo ao cólon transverso) e a sua extensão lateral rumo ao baço." }
                 ],
-                "snaS": "<ul><li><b>Via Neurológica:</b> Fibras do Nervo Esplâncnico Maior via Gânglio Celíaco. O hipertónus gera espasmo pilórico e isquemia da mucosa.</li><li><b>Dores Referidas:</b><ul><li>Região interescapular (T5–T6) e zona retroesternal.</li><li><b>Ombro esquerdo:</b> Relação topográfica habitual pela irritação do fundo gástrico no diafragma.</li><li><b>Ombro e braço direito:</b> Zona reflexa identificada em quadros de patologia gástrica.</li><li>Falsas mialgias cervicais por facilitação medular.</li></ul></li></ul>",
+                "snaS": "<ul><li><b>Via Neurológica:</b> Nervo Esplâncnico Maior via Gânglio Celíaco.</li><li><b>Dores Referidas:</b><ul><li><b>Cabeça e Ombro:</b> Dor de cabeça localizada na região frontal esquerda e dor no ombro esquerdo (irritação do diafragma/nervo frénico).</li><li><b>Coluna e Costelas:</b> Tensão e bloqueio articular com foco principal na vértebra T6 e nas costelas vizinhas.</li><li><b>Úlceras Pépticas:</b> Dor em 'facada' ou queimadura profunda diretamente para o meio das costas (T5 a T10).</li><li><b>Problemas Gastroesofágicos:</b> 'Falsas' dores no pescoço, na parte superior das costas ou nevralgias intercostais.</li><li><b>Tórax:</b> Dor retroesternal (falsa dor cardíaca) por partilha de rotas nervosas com o coração.</li></ul></li></ul>",
                 "snaP": "<ul><li><b>Ação:</b> Ativa o peristaltismo e a secreção de ácido clorídrico.</li></ul>",
                 "techs": [{ 
                     "nome": "Redução da Hérnia de Hiato (Tração Gástrica)", 
                     "img": ["tech_estomago_t1_i1.jpg","tech_estomago_t1_i2.jpg","tech_estomago_t1_i3.jpg"],
-                    "ref": "Plano subcostal esquerdo e junção gastroesofágica", 
+                    "ref": "Plano subcostal e junção gastroesofágica", 
                     "contra": "Hérnia do hiato estrangulada (risco cirúrgico elevado), úlcera gástrica ou duodenal ativa (risco de perfuração), cirurgia abdominal ou torácica recente, aneurisma da aorta abdominal, neoplasia gástrica.",
                     "tip": "Sincronizar perfeitamente com a respiração. A tração puramente mecânica é executada apenas na fase de expiração para aproveitar a subida livre do diafragma.", 
                     "steps": [
-                        "Colocar o dedo médio de estabilização situado cranialmente na fúrcula jugular (fossa).",
-                        "Apoiar e ancorar a mão caudal sobre o bordo inferior do corpo do esterno.",
-                        "Promover tração entrelaçando os polegares e puxar toda a grelha de forma contínua em direção anterior (teto)."
+                        "<p><u>Posição do paciente:</u></p><ol><li>Sentado</li><li>Costas relaxadas</li><li>Mãos e braços relaxados ao lado do tronco</li></ol><p><u>Posição do osteopata:</u></p><ol><li>Atrás do paciente</li><li>Os braços do terapeuta rodeiam ambos os lados do tórax do paciente, debaixo das axilas</li><li>As pontas dos dedos e os polegares encontram-se de ambos os lados da grelha costal nas cartilagens da 8ª, 9ª e 10ª costela, paralelamente à linha por baixo da apófise xifoide</li></ol><p><u>Execução:</u></p><ol><li>Durante a primeira expiração, aprofundar os últimos quatro dedos em direção posterior.</li><li>Na inspiração a seguir, realizar o movimento de desvio cubital, em direção caudal.</li><li>Na expiração, manter este estiramento</li><li>Pedir ao paciente para fazer a extensão da cabeça e do tronco para aumentar o grau de tensão dentro da tolerância do paciente</li><li>Realizar esta técnica durante 3 a 5 ciclos respiratórios profundos</li></ol>"
                     ]
                 }],
                 "refs": ["NOGUEIRA, F. Diagnóstico e Intervenção Osteopática - Visceral.", "BARRAL, J. P. Manipulações Viscerais 1.", "GUYTON, A.C.; HALL, J.E. Tratado de Fisiologia."]
             },
             "figado": {
                 "nome": "Fígado",
+                "imgSNA": "sna_figado_1.jpg",
+                "imgSNA2": "sna_figado_2.jpg",
                 "tituloS": "(T7-T10)",
                 "tituloP": "(Nervo Vago)",
                 "imgAnat": "anat_figado.jpg",
@@ -416,7 +478,7 @@
                     { "name": "Epíploon Menor (+)", "img": "lig_peq_omento.jpg", "note": "Fita de tensão cruzada que suspende o estômago à face inferior hepática." },
                     { "name": "Ligamento Falciforme (+)", "img": "lig_falciforme.jpg", "note": "Apenas de suporte anterior à parede abdominal." }
                 ],
-                "snaS": "<ul><li><b>Via Neurológica:</b> Nervo Esplâncnico Maior. O stress simpático congestiona o parênquima e diminui a depuração.</li><li><b>Dores Referidas:</b><ul><li>Hipocôndrio direito e região interescapular direita (T8-T10).</li><li><b>Ombro direito:</b> Irritação da Cápsula de Glisson e do diafragma (via nervo frénico C3-C5).</li><li><b>Olho direito:</b> Cefaleias pulsáteis na zona frontal e orbital direita.</li></ul>",
+                "snaS": "<ul><li><b>Via Neurológica:</b> Nervo Esplâncnico Maior.</li><li><b>Dores Referidas:</b><ul><li><b>Ombro e Omoplata Direitos:</b> Irritação da cápsula de Glisson (nervo frénico); periartrite comum no ombro direito.</li><li><b>Coluna e Costelas:</b> Bloqueios articulares em T7-T10 (foco T8-T9) e costelas direitas.</li><li><b>Região Cervical:</b> Rigidez e dor em C0-C2 e C4-C5; possível cervicobraquialgia.</li><li><b>Cabeça e Rosto:</b> Dor no olho direito e zona frontal direita; cefaleias bilaterais e sinusite crónica.</li><li><b>Membros Inferiores:</b> Ciática à esquerda (congestão portal) ou ciática/cruralgia à direita (tração fascial); dores no joelho e pé direitos.</li><li><b>Tórax e Costas:</b> Peso no hipocôndrio direito; dores lombares matinais que cedem após 20 min de pé.</li></ul></li></ul>",
                 "snaP": "<ul><li><b>Ação:</b> Governa a função metabólica e a regeneração tecidular.</li></ul>",
                 "techs": [{ 
                     "nome": "Pompage e Recoil Hepático", 
@@ -425,23 +487,23 @@
                     "contra": "Hepatite aguda, cirrose em estadios avançados, hepatomegalia severa e dolorosa de etiologia não esclarecida, colecistite aguda, litíase biliar com risco de impactação, abcessos ou quistos hepáticos, tumores hepáticos primários ou secundários, fraturas das costelas direitas (7ª-10ª).",
                     "tip": "Manobra orientada para o combate à estase sanguínea e aumento agressivo da drenagem fluida no eixo portal congestionado.", 
                     "steps": [
-                        "Envolver e abraçar firmemente com ambas as mãos as costelas falsas e flutuantes direitas da grelha torácica.", 
-                        "Transferindo o peso do corpo, aumentar o abraço compressivo de forma gradual e profunda enquanto o paciente expira.", 
-                        "Iniciada a fase inspiratória natural, realizar o gesto técnico de 'Recoil' (libertação repentina e total da força manual), originando um efeito de vácuo dinâmico que puxa o refluxo circulatório estagnado."
+                        "<p><u>Posição do paciente:</u></p><ol><li>Decúbito dorsal com almofada debaixo da cabeça;</li><li>Braços relaxados ao longo do corpo;</li><li>Pernas ligeiramente fletidas.</li></ol><p><u>Posição do osteopata:</u></p><ol><li>Do lado esquerdo do paciente;</li><li>A mão esquerda colocada posterolateralmente sobre as costelas inferiores direitas;</li><li>A mão direita assenta no hipocôndrio direito, mesmo abaixo e encostada à grelha costal inferior.</li></ol><p><u>Execução:</u></p><ol><li>Durante a fase expiratória, aplicar uma força progressiva em direção posterior;</li><li>Aprofundar a tensão no tecido de forma contínua sem perder ganhos entre expirações até atingir o end-feel elástico máximo no final da expiração;</li><li>No exato pico de tensão e end-point expiratório, retirar o contacto anterior de forma abrupta;</li><li>Repetir a técnica 4 a 5 vezes.</li></ol>"
                     ] 
                 }],
                 "refs": ["NOGUEIRA, F. Diagnóstico e Intervenção Osteopática - Visceral.", "BARRAL, J. P.; MERCIER, P. Manipulações Viscerais."]
             },
             "vesicula": {
                 "nome": "Vesícula Biliar",
-                "tituloS": "(Simpático D7)",
+                "imgSNA": "sna_vesicula_1.jpg",
+                "imgSNA2": "sna_vesicula_2.jpg",
+                "tituloS": "(Simpático T7)",
                 "tituloP": "(Nervo Vago)",
                 "imgAnat": "anat_vesicula.jpg",
                 "imgTech": "foto_tech_vesicula.jpg",
                 "anatLoc": "<ul><li><b>Dimensões:</b> Saco de formato alongado, cónico e ramificado nas porções anatómicas de Fundo, Corpo, Infundíbulo e Colo.</li><li><b>Palpação:</b> A palpação manual local exige estrita ausência de dor. A vesícula distendida ou inflamada por estase apresenta-se hiper-reativa, criando forte muralha contrátil perante qualquer toque digital invasivo ou abrupto.</li><li><b>Movimentos durante a respiração:</b> Encontra-se completamente dependente, sendo forçada a acompanhar de modo passivo todos os estiramentos e descidas inerentes aos fortes ritmos diafragmáticos impressos no próprio fígado.</li><li><b>Referências anatómicas:</b> A sua projeção clínica à superfície (o <b>Ponto de Murphy</b>) localiza-se na interceção da <b>linha média clavicular direita com o rebrdo da 10ª costela</b>. A nível de topografia horizontal, a base do órgão cruza em permanência a linha do <b>Plano Transpilórico (L1)</b>.</li></ul>",
                 "anatRel": "<ul><li><b>Relações viscerais e anatómicas:</b> Repousa alojada na fossa biliar da face visceral do fígado. Situa-se em relação contígua inferior às paredes da 1ª e 2ª porções do duodeno.</li></ul>",
                 "anatFix": [],
-                "snaS": "<ul><li><b>Via Neurológica:</b> Nervo Esplâncnico Maior com foco em D7. O disparo simpático fecha o esfíncter de Oddi.</li><li><b>Dores Referidas:</b><ul><li>Ângulo inferior da escápula direita (Sinal de Boas) e epigástrio.</li><li><b>Ombro direito e nuca</b>.</li><li><b>Olho esquerdo</b>: Cefaleias tipo enxaqueca com início e foco principal no lado esquerdo e tensão orbital esquerda.</li><li>Episódios de insónia biliar (2h-4h).</li></ul></li></ul>",
+                "snaS": "<ul><li><b>Via Neurológica:</b> Nervo Esplâncnico Maior (T7).</li><li><b>Dores Referidas:</b><ul><li><b>Ombro e Omoplata Direita:</b> Dor aguda no músculo elevador da escápula (nervo frénico).</li><li><b>Pescoço (Lado Esquerdo):</b> Tensão e dor na musculatura esquerda (vértebras C4 a C6).</li><li><b>Cabeça e Olho Esquerdo:</b> Dor no olho esquerdo, zona frontal esquerda e narina esquerda.</li><li><b>Couro Cabeludo:</b> Hipersensibilidade extrema no lado esquerdo ao pentear.</li><li><b>Cefaleias:</b> Intensas, iniciadas na zona frontal esquerda.</li><li><b>Tórax:</b> Projeção de dor para a zona retroesternal.</li></ul></li></ul>",
                 "snaP": "<ul><li><b>Ação:</b> Contração da parede e expulsão da bílis para o duodeno.</li></ul>",
                 "techs": [{ 
                     "nome": "Técnica de Estimulação e Drenagem Passiva", 
@@ -450,16 +512,15 @@
                     "contra": "Colecistite aguda (Sinal de Murphy positivo), colelitíase (pedras na vesícula) com sintomatologia ativa devido ao elevado risco de migração e obstrução do ducto cístico ou coledoco, colangite, pancreatite aguda, neoplasia da vesícula ou vias biliares.",
                     "tip": "É imperativo palpar o tecido e afundar de forma rítmica e puramente indolor. Uma vesícula sob tensão congestiva é hiper-reativa e veda agressivamente o tecido abdominal perante toques manuais de invasão abrupta.", 
                     "steps": [
-                        "Delinear na pele a linha do Ponto de Murphy, procurando a projeção externa do fundo livre vesicular (cruzamento do músculo reto abdominal com as cartilagens da 9ª/10ª costelas).", 
-                        "Introduzir suavemente os dedos em cunha, aproveitando com exclusividade o abaixamento tecidular que ocorre na fase expiratória, para conseguir ultrapassar e contornar a muralha protetora do bordo hepático anterior.", 
-                        "Instituir um compasso de bombeamento lento e elástico (ciclos de compressão e ligeira descompressão de retorno em direção constante póstero-medial apontada ao umbigo).", 
-                        "Perpetuar o ciclo durante alguns movimentos respiratórios normais do paciente, favorecendo e persuadindo a libertação hídrica indolor da bílis retida rumo ao duodeno."
+                        "<p><u>Posição do paciente:</u></p><ol><li>Decúbito dorsal com almofada debaixo da cabeça;</li><li>Braços relaxados ao longo do corpo;</li><li>Pernas fletidas com os pés apoiados na marquesa para inibir a tensão da parede abdominal.</li></ol><p><u>Posição do osteopata:</u></p><ol><li>Em pé, posicionado do lado direito do paciente;</li><li>As mãos assentam sobre a grelha costal inferior direita;</li><li>Os dedos (ou polegares) posicionam-se justapostos e ligeiramente fletidos sob o rebordo costal direito (ao nível da 9ª cartilagem costal, na intersecção com a linha hemiclavicular), diretamente sobre a projeção anatómica do fundo da vesícula biliar.</li></ol><p><u>Execução:</u></p><ol><li>Durante a expiração, aprofundar suavemente o contacto em direção posterior e ligeiramente cefálica (passando por baixo do rebordo do fígado), até encontrar a barreira fascial da vesícula;</li><li>Na inspiração, manter rigorosamente a profundidade alcançada, acompanhando a descida do fígado sem permitir o recuo dos dedos;</li><li>Aplicar uma pressão suave e sustentada (ou um leve bombeamento rítmico passivo) com um vetor de força direcionado em sentido caudal e medial (apontando para o umbigo, seguindo a topografia do canal colédoco para o duodeno);</li><li>Manter este estímulo direcional, aproveitando cada expiração para aprofundar a tensão;</li><li>Realizar a técnica de forma contínua durante 3 a 5 ciclos respiratórios profundos, até à perceção de amolecimento do tecido (<i>release</i>) e alívio da congestão local.</li></ol>"
                     ] 
                 }],
                 "refs": ["NOGUEIRA, F. Diagnóstico e Intervenção Osteopática - Visceral.", "BARRAL, J. P. Manipulações Viscerais 1."]
             },
             "pancreas": {
                 "nome": "Pâncreas",
+                "imgSNA": "sna_pancreas_1.jpg",
+                "imgSNA2": "sna_pancreas_2.jpg",
                 "tituloS": "(T5-T9)",
                 "tituloP": "(Nervo Vago)",
                 "imgAnat": "anat_pancreas.jpg",
@@ -467,7 +528,7 @@
                 "anatLoc": "<ul><li><b>Dimensões:</b> Glândula lobulada de disposição horizontal, estendendo-se transversalmente desde a curva do duodeno à direita até ao hilo esplénico à esquerda.</li><li><b>Palpação:</b> Não admite toque manual tátil direto devido à sua profundidade e arquitetura interna friável; avalia-se clinicamente através das fáscias elásticas retroperitoneais envolventes no seu limite de tensão.</li><li><b>Movimentos durante a respiração:</b> A vasta cabeça central e o corpo estão intimamente fixos sem movimento próprio. A cauda alongada pancreática ascendente obliquamente é a única porção dotada de liberdade oscilatória perante os ciclos toracoabdominais.</li><li><b>Referências anatómicas:</b> O colo central repousa horizontal e precisamente no <b>Plano Transpilórico (L1)</b>. O eixo clínico de pesquisa desenha-se na diagonal umbigo-axila esquerda.</li></ul>",
                 "anatRel": "<ul><li><b>Relações viscerais e anatómicas:</b> Anteriormente escondido por trás do estômago, compõe o leito posterior da bolsa omental. Posteriormente está montado de forma transversal profunda sobre fortes estruturas vasculares, cruzando sobre a artéria Aorta, a veia Cava e as raízes dos pedículos da mesentérica superior.</li></ul>",
                 "anatFix": [],
-                "snaS": "<ul><li><b>Via Neurológica:</b> Nervos Esplâncnicos via Gânglio Celíaco e Mesentérico Superior.</li><li><b>Dores Referidas:</b><ul><li>Dor epigástrica profunda que irradia \"em banda\" ou \"em cinto\" para as costas.</li><li>Tensão muscular paravertebral entre T5 e T9.</li></ul></li></ul>",
+                "snaS": "<ul><li><b>Via Neurológica:</b> Gânglios Celíaco e Mesentérico Superior.</li><li><b>Dores Referidas:</b><ul><li><b>Topografia Local:</b> Cabeça (T10-L2 direita), Corpo (epigástrio), Cauda (lado esquerdo).</li><li><b>Dor 'Em Cinto':</b> Dor profunda no abdómen superior que irradia para as costas (T9-T11).</li><li><b>Ombro e Omoplata Esquerda:</b> Piora consideravelmente após refeições pesadas.</li><li><b>Bacia e Pernas:</b> Bloqueios na sacroilíaca esquerda e ciática na perna esquerda.</li><li><b>Tórax e Pélvis:</b> Dor intensa e difusa em crises agudas.</li></ul></li></ul>",
                 "snaP": "<ul><li><b>Ação:</b> Controlo da secreção exócrina e resposta endócrina (insulina).</li></ul>",
                 "techs": [{ 
                     "nome": "Libertação Fascial Pancreática", 
@@ -476,16 +537,16 @@
                     "contra": "Pancreatite aguda (emergência médica), pseudoquistos pancreáticos, neoplasia pancreática, trauma abdominal recente.",
                     "tip": "A abordagem base osteopática induz o efeito focando-se única e exclusivamente sobre a expansão tensional do tecido conectivo circundante (a fáscia retroperitoneal amarrada). Nunca se procede à compressão direta e maciça sobre a arquitetura muito friável e sensível da glândula.", 
                     "steps": [
-                        "Solicitar posicionamento passivo em decúbito dorsal ao doente e elevar os joelhos promovendo uma flexão suave das ancas (garantindo o relaxamento imediato da rigidez na báscula lombar proveniente da contração dos músculos psoas).", 
-                        "Dispor e alinhar o tato das mãos longitudinalmente sob a projeção oblíqua que atravessa anatomicamente a extensão do corpo ao final da cauda do pâncreas.", 
-                        "Afundar as almofadas dos dedos lentamente ao compasso do fluxo descendente gerado pela expiração e estabelecer a ancoragem tissular, aplicando o estiramento miofascial elástico contínuo da densa base que ancora o retroperitoneu."
+                        "<p><u>Posição do paciente:</u></p><ol><li>Decúbito dorsal com almofada debaixo da cabeça;</li><li>Braços relaxados ao longo do corpo;</li><li>Pernas fletidas com os pés apoiados na marquesa para inibir a tensão da parede abdominal.</li></ol><p><u>Posição do osteopata:</u></p><ol><li>Em pé, posicionado lateralmente ao paciente;</li><li>Uma mão assenta de forma plana e relaxada sobre a linha central do abdómen (na transição entre o epigástrio e o mesogástrio superior), diretamente sobre a projeção anatómica do corpo do pâncreas;</li><li>A outra mão sobrepõe-se à primeira (contacto bimanual reforçado) para conferir peso, direção e estabilidade à técnica.</li></ol><p><u>Execução:</u></p><ol><li>Durante a fase expiratória, aprofundar o contacto bimanual em direção posterior, penetrando suavemente a parede abdominal para alcançar a barreira fascial profunda do pâncreas;</li><li>Na inspiração seguinte, manter rigorosamente a profundidade alcançada, acompanhando a resistência do tecido sem permitir o recuo das mãos;</li><li>Aplicar uma tensão fascial constante e sustentada, direcionando a força ao longo do eixo de restrição que o tecido apresentar;</li><li>A cada nova expiração, procurar uma nova barreira motora fascial, induzindo um ligeiro ganho de profundidade e estiramento dentro do conforto do paciente;</li><li>Realizar esta técnica de forma sustentada durante 3 a 5 ciclos respiratórios profundos, até à perceção de amolecimento tecidular (<i>release</i>).</li></ol>"
                     ] 
                 }],
                 "refs": ["NOGUEIRA, F. Diagnóstico e Intervenção Osteopática - Visceral.", "BARRAL, J. P. Manipulações Viscerais 2."]
             },
             "delgado": {
                 "nome": "Intestino Delgado (Duodeno, Jejuno e Íleo)",
-                "tituloS": "(T10-T12 e Duodeno D7-D10)",
+                "imgSNA": "sna_delgado_1.jpg",
+                "imgSNA2": "sna_delgado_2.jpg",
+                "tituloS": "(T10-T12 e Duodeno T7-T10)",
                 "tituloP": "(Nervo Vago)",
                 "imgAnat": "anat_delgado.jpg",
                 "imgTech": "foto_tech_delgado.jpg",
@@ -495,7 +556,7 @@
                     { "name": "A Raiz do Mesentério", "img": "raiz_mesenterio.jpg", "note": "É a faixa tecidular ultra resistente e sob grande tensão responsável por suspender e segurar os vários metros de ansas intestinais. Percorre rasgando obliquamente a topografia em declive, descendo de L2 (esquerda) e terminando na fossa ilíaca direita." }, 
                     { "name": "Músculo de Treitz", "img": "musculo_treitz.jpg", "note": "É um cordão fibromuscular dinâmico com origem dupla no pilar direito do diafragma e no tecido do tronco celíaco, que desce para suspender a flexura duodenojejunal e a porção final do duodeno." }
                 ],
-                "snaS": "<ul><li><b>Via Neurológica:</b> Gânglio Celíaco (Duodeno) e Mesentérico Superior (restante).</li><li><b>Dores Referidas:</b><ul><li><b>Duodeno</b>: Dor no ombro direito (via nervo frénico) e mal-estar epigástrico (3h-4h após comer).</li><li><b>Jejuno/íleo</b>: Dor periumbilical e tensão na charneira toracolombar (T10-T12).</li><li>Disfunção sacroilíaca reflexa.</li></ul></li></ul>",
+                "snaS": "<ul><li><b>Via Neurológica:</b> Gânglio Mesentérico Superior.</li><li><b>Dores Referidas:</b><ul><li><b>Zona do Umbigo:</b> Cãibras periumbilicais severas (obstrução/isquemia).</li><li><b>Hipersensibilidade:</b> Reatividade da parede; intolerância a cintos ou calças apertadas.</li><li><b>Ptose:</b> Sensação de 'repuxar' e fadiga após muito tempo de pé.</li><li><b>Lombalgias:</b> Lumbago reflexo; dor em 'cinto' (T11-L1) mais intensa à esquerda.</li><li><b>Sistema Urogenital:</b> Dor baixa por pressão sobre os órgãos pélvicos.</li><li><b>Postura:</b> Desconforto ao dormir de barriga para baixo (decúbito ventral).</li></ul></li></ul>",
                 "snaP": "<ul><li><b>Ação:</b> Peristaltismo absortivo e secreção intestinal.</li></ul>",
                 "techs": [{ 
                     "nome": "Estiramento da Linha Estrutural e Transversal da Fixação na Raiz do Mesentério Inferior", 
@@ -504,15 +565,14 @@
                     "contra": "Oclusão ou suboclusão intestinal, apendicite aguda, peritonite, doença de Crohn ou Colite Ulcerosa em fase ativa de agudização, isquemia mesentérica, aneurisma da aorta abdominal, cirurgia abdominal recente (aderências precoces).",
                     "tip": "É imperativo proceder ao gesto palpatório aplicando tração num decurso suave e macio, com pressão tecidular firme, atuando transversalmente e ortogonalmente (num ângulo de 90 graus) para vencer a densidade longitudinal retesada das fibras estruturais da raiz.", 
                     "steps": [
-                        "Alinhar estrategicamente e aprofundar suave e progressivamente a base das mãos unidas repousando sobre a correta linha central abdominal, descendo em imersão com o expirar até os dedos embaterem na barreira de consistência rígida fascial (a raiz do mesentério).", 
-                        "Impor a tensão e aplicar com persistente fixação da massa do ventre livre uma força contínua e afastadora, provocando um estiramento elástico. Puxar os tecidos num vetor para cima (crânio-lateral exterior à esquerda) ou forçar a tensão abrindo-os num vetor para baixo (ínfero-medial).", 
-                        "Continuar o processo de forma tátil prolongada até alcançar o exato ponto de descompressão ou fusão do afrouxamento interior ('melting'), relaxando a rede retroperitoneal e aliviando a dor irradiada profunda nas costas sob queixas de lombalgias baixas."
-                    ] 
+                        "<p><u>Posição do paciente:</u></p><ol><li>Decúbito dorsal com almofada debaixo da cabeça;</li><li>Braços relaxados ao longo do corpo;</li><li>Pernas fletidas com os pés apoiados na marquesa para inibir a tensão da parede abdominal.</li></ol><p><u>Posição do osteopata:</u></p><ol><li>Em pé, posicionado lateralmente ao paciente;</li><li>Ambas as mãos encontram-se justapostas na região do mesogástrio (zona central ao redor do umbigo), acompanhando a linha de fixação da raiz do mesentério;</li><li>Os dedos das mãos estão ligeiramente fletidos, com as polpas digitais preparadas para o contacto tecidular profundo.</li></ol><p><u>Execução:</u></p><ol><li>Durante a fase expiratória, aprofundar o contacto bimanual em direção posterior, alcançando o plano fascial profundo da raiz do mesentério;</li><li>No final da expiração, as mãos justapostas são afastadas transversalmente (força divergente) para criar o estiramento da fixação fascial;</li><li>Manter rigorosamente a profundidade e o estiramento transversal durante a fase inspiratória seguinte, sem perder os ganhos biomecânicos adquiridos;</li><li>A cada nova fase respiratória, procurar uma nova barreira motora fascial, aumentando ligeiramente a tensão transversal dentro da margem de conforto tecidular;</li><li>Realizar esta técnica de forma sustentada durante 3 a 5 ciclos respiratórios profundos, até à perceção da libertação tecidular (release).</li></ol>"                    ] 
                 }],
                 "refs": ["NOGUEIRA, F. Diagnóstico e Intervenção Osteopática - Visceral.", "BARRAL, J. P. Manipulações Viscerais 1.", "GUYTON, A.C.; HALL, J.E. Tratado de Fisiologia Médica. 13. ed."]
             },
             "colon": {
                 "nome": "Intestino Grosso",
+                "imgSNA": "sna_colon_1.jpg",
+                "imgSNA2": "sna_colon_2.jpg",
                 "tituloS": "(T10-L2)",
                 "tituloP": "(Vago para S2-S4)",
                 "imgAnat": "anat_colon.jpg",
@@ -520,7 +580,7 @@
                 "anatLoc": "<ul><li><b>A Moldura Abdominal:</b> O cólon atua como o perímetro estrutural que encerra mecanicamente o abdómen. As curvaturas agudas (ângulos ou flexuras hepática à direita e esplénica à esquerda) funcionam como estrangulamentos funcionais crónicos onde as massas param com facilidade.</li><li>A flexura cólica esquerda (ângulo esplénico) apresenta uma topografia mais cefálica e uma angulação mais aguda, atuando como uma plataforma de suporte biomecânico fundamental para o repouso e estabilização do pólo inferior do baço .</li></ul>",
                 "anatRel": "<ul><li><b>Relações Miofasciais Posteriores:</b> O cego e o cólon ascendente estabelecem uma íntima relação de contiguidade com a fáscia do músculo psoas maior e ilíaco à direita, acompanhando a sua excursão mecânica. À esquerda, a porção distal do cólon sigmoide cruza a cavidade pélvica, repousando diretamente sobre o músculo piriforme e estabelecendo estreita proximidade topográfica com o plexo sagrado e a raiz do nervo ciático.</li></ul>",
                 "anatFix": [{ "name": "Fáscias de Coalescência (Toldt)", "img": "fascia_toldt.jpg", "note": "Lâmina fascial resultante da fusão embriológica entre o peritoneu visceral do cólon ascendente e descendente e o peritoneu parietal posterior. Este processo de coalescência determina a retroperitonização secundária destas porções intestinais, assegurando a sua estrita fixação tecidular estrutural à parede lombar posterior." }],
-                "snaS": "<ul><li><b>Via Neurológica:</b> Gânglios Mesentérico Superior e Inferior.</li><li><b>Dores Referidas:</b> Cólon Proximal: Região periumbilical e flanco direito.</li><li><b>Sigmoide:</b> Fossa ilíaca esquerda, região sagrada e suprapúbica.</li><li><b>Perna Esquerda:</b> Padrão de \"falsa ciática\" por compromisso de contiguidade com o piriforme e plexo sagrado.</li></ul>",
+                "snaS": "<ul><li><b>Via Neurológica:</b> Gânglios Mesentéricos Superior e Inferior.</li><li><b>Dores Referidas:</b><ul><li><b>Coluna e Sacroilíacas:</b> Lado esquerdo bloqueia SI esquerda; lado direito bloqueia SI direita.</li><li><b>Ciática e Pernas:</b> 'Falsa ciática' vascular (esquerda) ou mecânica/psoas (direita); joelhos dolorosos.</li><li><b>Abdómen Lateral:</b> Dor na fossa ilíaca (simula apendicite ou ovário).</li><li><b>Hipersensibilidade:</b> Intolerância a roupas apertadas na cintura.</li><li><b>Ombros:</b> Espasmos nas flexuras projetam dor para os ombros (periartrite).</li><li><b>Gerais:</b> Sensibilidade à luz, língua branca e insónia a meio da noite.</li></ul></li></ul>",
                 "snaP": "<ul><li><b>Ação:</b> Transição na flexura esplénica (Nervo vago); o parassimpático sagrado (S2-S4) comanda a evacuação distal.</li></ul>",
                 "techs": [{ 
                     "nome": "Abertura dos Ângulos (Flexuras Hepática e Esplénica)", 
@@ -529,15 +589,15 @@
                     "contra": "Apendicite aguda (especialmente no lado direito e manobras de descompressão brusca - sinal de Blumberg), diverticulite aguda, doença inflamatória intestinal ativa (Crohn, Colite Ulcerosa), megacólon tóxico, suspeita de perfuração intestinal, tumores colorretais.",
                     "tip": "Muitas vezes, a libertação destes ângulos cólicos devolve de imediato a flexibilidade e a expansão mecânica à grelha costal inferior bloqueada.", 
                     "steps": [
-                        "Introduzir os dedos em formato curvo de 'colher' debaixo das cartilagens da 9ª e 10ª costelas sobre o ângulo a intervir.", 
-                        "Durante a expiração profunda do paciente, tracionar mecanicamente o ângulo cólico correspondente para o centro e para baixo (sentido ínfero-medial).", 
-                        "Acompanhar a respiração calmamente, vencendo a resistência e ganhando nova barreira fascial elástica ciclo a ciclo."
+                        "<p><u>Posição do paciente:</u></p><ol><li>Decúbito dorsal com almofada debaixo da cabeça;</li><li>Braços relaxados ao longo do corpo;</li><li>Pernas fletidas com os pés apoiados na marquesa para inibir a tensão da parede abdominal.</li></ol><p><u>Posição do osteopata:</u></p><ol><li>Em pé, posicionado lateralmente ao paciente;</li><li><b>Abordagem bilateral:</b> As mãos são colocadas em simultâneo nos hipocôndrios (uma mão sob o rebordo costal direito sobre a flexura hepática e a outra sob o esquerdo sobre a flexura esplénica);</li><li><b>Abordagem unilateral:</b> Ambas as mãos encontram-se justapostas diretamente sobre a flexura a tratar (direita ou esquerda), acompanhando o rebordo costal correspondente.</li></ol><p><u>Execução:</u></p><ol><li>A técnica pode ser executada bilateralmente em simultâneo ou de forma isolada num dos ângulos cólicos;</li><li>Durante a primeira expiração, aprofundar o contacto em direção posterior para alcançar a barreira fascial profunda da(s) flexura(s);</li><li>Na inspiração seguinte, induzir a abertura do ângulo aplicando uma força de estiramento direcional em sentido caudal e ligeiramente medial (tracionando a flexura para baixo, afastando-a do diafragma);</li><li>Na expiração, manter rigorosamente a profundidade e a tensão fascial alcançadas, sem perder os ganhos biomecânicos;</li><li>A cada nova fase inspiratória, procurar uma nova barreira motora, aumentando ligeiramente a tensão de abertura para libertar os ligamentos de fixação (hepatocólico ou frenicocólico) dentro da tolerância do paciente;</li><li>Realizar de forma sustentada durante 3 a 5 ciclos respiratórios profundos, até à perceção do <i>release</i> miofascial.</li></ol>"
                     ] 
                 }],
                 "refs": ["NOGUEIRA, F. Diagnóstico e Intervenção Osteopática - Visceral.", "BARRAL, J. P. Manipulações Viscerais 1."]
             },
             "rins": {
                 "nome": "Rins",
+                "imgSNA": "sna_rins_vias.jpg",
+                "imgSNA2": "sna_rins_dores.jpg",
                 "tituloS": "(T10-L1)",
                 "tituloP": "(Nervo Vago)",
                 "imgAnat": "foto_tech_rins.jpg",
@@ -555,6 +615,8 @@
             },
             "bexiga": {
                 "nome": "Bexiga",
+                "imgSNA": "sna_bexiga_vias.jpg",
+                "imgSNA2": "sna_bexiga_dores.jpg",
                 "tituloS": "(L1-L2)",
                 "tituloP": "(Nervos S2-S4)",
                 "imgAnat": "foto_tech_bexiga.jpg",
@@ -573,6 +635,8 @@
             },
             "utero": {
                 "nome": "Útero",
+                "imgSNA": "sna_utero_vias.jpg",
+                "imgSNA2": "sna_utero_dores.jpg",
                 "tituloS": "(T10-L2)",
                 "tituloP": "(Nervos S2-S4)",
                 "imgAnat": "foto_tech_utero.jpg",
@@ -591,6 +655,8 @@
             },
             "coccix": {
                 "nome": "Cóccix",
+                "imgSNA": "sna_coccix_vias.jpg",
+                "imgSNA2": "sna_coccix_dores.jpg",
                 "tituloS": "(Gânglio Ímpar)",
                 "tituloP": "(Efeito Mecânico S2-S4)",
                 "imgAnat": "foto_coccix.jpg",
@@ -608,6 +674,8 @@
             },
             "coracao": {
                 "nome": "Coração",
+                "imgSNA": "sna_coracao_vias.jpg",
+                "imgSNA2": "sna_coracao_dores.jpg",
                 "tituloS": "(T1-T5)",
                 "tituloP": "(Nervo Vago)",
                 "imgAnat": "foto_tech_coracao.jpg",
@@ -618,7 +686,7 @@
                     { "name": "Ligamentos Vertebropericárdicos", "img": "lig_vert_peri.jpg", "note": "Garantem a estabilização posterior da base do pericárdio, ancorando-a aos corpos vertebrais de T1 a T4. Disfunções de mobilidade nestes segmentos originam disautonomia e nociceção referida interescapular." }, 
                     { "name": "Ligamentos Esternopericárdicos", "img": ["lig_estern_peri1.jpg", "lig_estern_peri2.jpg"], "note": "Feixes fibrosos superiores e inferiores que fixam a face anterior do pericárdio à face posterior do manúbrio e corpo do esterno." },
                     { "name": "Fáscia Cervicopericárdica", "img": "fascia_cervicopericardica.jpg", "note": "Continuidade caudal da lâmina pré-traqueal da fáscia cervical profunda, ligando o osso hioide e a cartilagem tiroideia ao ápice do pericárdio, constituindo um elo de tensão cervico-torácico direto." },
-                    { "name": "Ligamentos Frenopericárdicos", "img": "lig_frenopericardicos.jpg", "note": "Condensações fibrosas anteriores e laterais (além da coalescência ao centro tendíneo) que fundem a base pericárdica ao músculo diafragma." }
+                    { "name": "Ligamentos Frenopericárdicos", "img": "lig_frenopericardicos.jpg", "note": "Condensações fibrosas anteriores e lateral (além da coalescência ao centro tendíneo) que fundem a base pericárdica ao músculo diafragma." }
                 ],
                 "snaS": "<ul><li><b>Via Neurológica (T1-T5):</b> Fibras eferentes dos gânglios da cadeia simpática cervical e torácica superior (com particular relevância clínica no <b>Gânglio Cervicotorácico ou Estrelado C7-T1</b>). A estimulação adrenérgica exerce ação cronotrópica, inotrópica e dromotrópica positivas.</li><li><b>Dores Referidas:</b> Opressão retroesternal e dor referida ao nível interescapular esquerdo.</li><li><b>Território Braquial e Cérvico-Facial:</b> Padrão álgico reflexo projetado ao longo do trajeto do nervo ulnar do membro superior esquerdo e no ângulo da mandíbula (Gonion).</li></ul>",
                 "snaP": "<ul><li><b>Nervo Vago (NC X):</b> Media a modulação vagal cardíaca, atuando essencialmente nos nódulos sinoauricular e atrioventricular via libertação de acetilcolina, resultando em efeito cronotrópico negativo (bradicardia de repouso).</li></ul>",
@@ -632,6 +700,8 @@
             },
             "pulmoes": {
                 "nome": "Pulmões",
+                "imgSNA": "sna_pulmoes_vias.jpg",
+                "imgSNA2": "sna_pulmoes_dores.jpg",
                 "tituloS": "(T1-T5)",
                 "tituloP": "(Nervo Vago)",
                 "imgAnat": "foto_tech_pulmoes.jpg",
@@ -655,6 +725,7 @@
             }
         };
 
+        // ------------- CARROSSEL DA ANATOMIA -------------
         function renderCarousel() {
             var imgEl = document.getElementById('carousel-img');
             imgEl.src = currentCarouselImages[currentCarouselIndex];
@@ -690,6 +761,56 @@
             }
         }
 
+        // ------------- CARROSSEL DO SNA -------------
+        function renderSnaCarousel() {
+            var imgEl = document.getElementById('sna-carousel-img');
+            var controls = document.getElementById('sna-carousel-controls');
+            var placeholder = document.getElementById('sna-placeholder');
+            var counter = document.getElementById('sna-carousel-counter');
+
+            if (currentSnaImages.length === 0) {
+                imgEl.style.display = 'none';
+                controls.style.display = 'none';
+                placeholder.style.display = 'block';
+                return;
+            }
+
+            placeholder.style.display = 'none';
+            imgEl.style.display = 'block';
+            imgEl.src = currentSnaImages[currentSnaIndex];
+            
+            imgEl.onerror = function() { 
+                if(this.src.indexOf('https://placehold.co') === -1) {
+                    this.src = 'https://placehold.co/400x300/eee/999?text=SEM+IMAGEM'; 
+                }
+            };
+            
+            if (currentSnaImages.length > 1) {
+                controls.style.display = 'flex';
+                counter.innerText = (currentSnaIndex + 1) + " / " + currentSnaImages.length;
+                document.getElementById('btn-sna-prev').disabled = (currentSnaIndex === 0);
+                document.getElementById('btn-sna-next').disabled = (currentSnaIndex === currentSnaImages.length - 1);
+            } else {
+                controls.style.display = 'none';
+            }
+        }
+
+        function prevSnaImage() {
+            if (currentSnaIndex > 0) {
+                currentSnaIndex--;
+                renderSnaCarousel();
+            }
+        }
+
+        function nextSnaImage() {
+            if (currentSnaIndex < currentSnaImages.length - 1) {
+                currentSnaIndex++;
+                renderSnaCarousel();
+            }
+        }
+
+
+        // ------------- CARROSSEL DAS TÉCNICAS -------------
         function renderTechImage(i) {
             try {
                 var imgs = Array.isArray(techCarouselImages[i]) ? techCarouselImages[i] : (techCarouselImages[i] ? [techCarouselImages[i]] : []);
@@ -709,13 +830,11 @@
                     if (nextBtn) nextBtn.disabled = true;
                     return;
                 }
-                // clamp idx
                 if (idx < 0) idx = 0;
                 if (idx > imgs.length - 1) idx = imgs.length - 1;
                 techCarouselIndex[i] = idx;
 
                 imgEl.style.display = '';
-                // build a safe src: if img string is relative (no protocol or slash), prefix with base path
                 var candidate = imgs[idx] || '';
                 var srcUrl = candidate;
                 try {
@@ -724,7 +843,6 @@
                     if (!isAbsolute && !hasSlash) {
                         var basePath = '';
                         if (location && location.protocol === 'file:') {
-                            // location.pathname includes full path; build file:// URL to directory
                             var p = location.pathname.replace(/\/[^/]*$/, '');
                             basePath = 'file://' + p;
                         } else {
@@ -899,10 +1017,18 @@
                  fixList.innerHTML = "<p class=\"anat-text\">Sem dados estruturais complementares isolados.</p>";
             }
 
-            document.getElementById('sna-titulo-s').innerText = "🔴 Simpático / Artérias " + (d.tituloS || "");
-            document.getElementById('sna-titulo-p').innerText = "🔵 Parassimpático / Nervos Cranianos " + (d.tituloP || "");
+            document.getElementById('sna-titulo-s').innerText = "🔴 Simpático " + (d.tituloS || "");
+            document.getElementById('sna-titulo-p').innerText = "🔵 Parassimpático " + (d.tituloP || "");
             document.getElementById('sna-txt-s').innerHTML = d.snaS || "-";
             document.getElementById('sna-txt-p').innerHTML = d.snaP || "-";
+
+            // ---------- LÓGICA DO NOVO CARROSSEL DO SNA ----------
+            currentSnaImages = [];
+            if (d.imgSNA && d.imgSNA !== "") currentSnaImages.push(d.imgSNA);
+            if (d.imgSNA2 && d.imgSNA2 !== "") currentSnaImages.push(d.imgSNA2);
+            currentSnaIndex = 0;
+            renderSnaCarousel();
+            // -----------------------------------------------------
 
             var techContainer = document.getElementById('tech-container');
             techContainer.innerHTML = "<h2 id=\"tech-name\" style=\"margin-top:0; color:var(--primary); font-size:1.6rem; border-bottom:2px solid #f0f0f0; padding-bottom:10px;\">Técnicas - " + d.nome + "</h2>";
@@ -916,7 +1042,6 @@
 
                     var contraHtml = t.contra ? "<div class=\"tech-warn\"><strong>⚠️ Contraindicações Clínicas:</strong> " + t.contra + "</div>" : "";
 
-                    // prepare images for this technique (may be string or array)
                     var imgs = Array.isArray(t.img) ? t.img : (t.img ? [t.img] : []);
                     techCarouselImages[index] = imgs;
                     techCarouselIndex[index] = 0;
@@ -950,7 +1075,6 @@
                         "</div>" +
                         "</div>";
                 });
-                // initialize tech carousels
                 for (var ti = 0; ti < techCarouselImages.length; ti++) {
                     renderTechImage(ti);
                 }
