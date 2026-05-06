@@ -16,9 +16,23 @@
     body { font-family: 'Segoe UI', Roboto, sans-serif; margin: 0; background: var(--bg); color: #333; height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
     .header { height: 50px; background: white; border-bottom: 1px solid #ddd; display: flex; align-items: center; padding: 0 20px; justify-content: space-between; flex-shrink: 0; z-index: 10; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
     .brand { font-weight: 800; color: var(--primary); font-size: 1.1rem; text-transform: uppercase; letter-spacing: 1px; }
-    .main-stage { flex: 1; display: grid; grid-template-columns: 260px 1fr; overflow: hidden; }
-    .anatomy-col { background: #fff; border-right: 1px solid #ddd; display: flex; flex-direction: column; position: relative; z-index: 2; box-shadow: 2px 0 10px rgba(0,0,0,0.05); }
-    .menu-scroll-area { flex: 0 0 auto; max-height: 55vh; overflow-y: auto; border-bottom: 1px solid #eee; }
+    
+    /* --- NOVO: BOTÃO DO MENU HAMBÚRGUER --- */
+    .menu-toggle-btn { background: var(--primary); color: white; border: none; padding: 6px 12px; border-radius: 6px; font-size: 1rem; font-weight: bold; cursor: pointer; transition: 0.2s; display: flex; align-items: center; }
+    .menu-toggle-btn:hover { background: var(--accent); }
+
+    /* --- ALTERADO: MAIN-STAGE PASSA A FLEX E OCUPA 100% --- */
+    .main-stage { flex: 1; display: flex; overflow: hidden; position: relative; width: 100%; }
+    
+    /* --- ALTERADO: ANATOMY-COL AGORA É UM MENU RETRÁTIL (GAVETA) --- */
+    .anatomy-col { background: #fff; border-right: 1px solid #ddd; display: flex; flex-direction: column; position: fixed; top: 0; left: 0; width: 280px; height: 100vh; z-index: 1000; box-shadow: 5px 0 15px rgba(0,0,0,0.2); transform: translateX(-100%); transition: transform 0.3s ease-in-out; }
+    .anatomy-col.open { transform: translateX(0); }
+    
+    /* --- NOVO: FUNDO ESCURO AO ABRIR O MENU --- */
+    #menu-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 999; opacity: 0; visibility: hidden; transition: all 0.3s ease-in-out; backdrop-filter: blur(2px); }
+    #menu-overlay.show { opacity: 1; visibility: visible; }
+
+    .menu-scroll-area { flex: 0 0 auto; max-height: 100vh; overflow-y: auto; border-bottom: 1px solid #eee; padding-bottom: 50px; }
 
     /* Modo Foco: mostrar apenas o Sistema Digestivo */
     body.focus-digest .menu-scroll-area .sys-btn,
@@ -44,7 +58,9 @@
     .map-container { display: none; }
     .interactive-map-img { display: none; }
     
-    .info-col { padding: 20px 30px; overflow-y: auto; background: var(--bg); display: flex; flex-direction: column; }
+    /* --- ALTERADO: INFO-COL AGORA EXPANDE ATÉ AOS LIMITES --- */
+    .info-col { padding: 20px 30px; overflow-y: auto; background: var(--bg); display: flex; flex-direction: column; flex: 1; width: 100%; box-sizing: border-box; }
+    
     .tab-switcher { display: flex; gap: 8px; margin-bottom: 20px; background: #e9ecef; padding: 5px; border-radius: 8px; width: fit-content; flex-wrap: wrap; flex-shrink: 0; }
     .tab-btn { border: none; background: none; padding: 8px 15px; border-radius: 6px; font-weight: 600; font-size: 0.9rem; color: #666; cursor: pointer; transition: 0.3s; }
     .tab-btn:hover { background: rgba(255,255,255,0.5); }
@@ -74,8 +90,12 @@
     .anat-visual-col { background: #eef2f5; border-radius: 12px; border: 2px dashed #ccc; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; min-height: 420px; }
     .anat-placeholder { color: #888; text-align: center; padding: 20px; display: none; }
     
-    #anat-img-carousel { display: flex; width: 100%; height: 100%; flex-direction: column; align-items: center; justify-content: space-between; padding: 8px; box-sizing: border-box; }
-    .carousel-img { max-width: 100%; max-height: 92%; object-fit: contain; border-radius: 6px; box-shadow: 0 6px 20px rgba(0,0,0,0.12); }
+    #anat-img-carousel { display: flex; width: 100%; height: 100%; flex-direction: column; align-items: center; justify-content: space-between; padding: 0.5cm; box-sizing: border-box; }
+    .carousel-img { width: 100%; height: auto; max-height: calc(100% - 1cm); object-fit: contain; border-radius: 6px; box-shadow: 0 6px 20px rgba(0,0,0,0.12); display:block; margin: 0 auto; box-sizing: border-box; }
+
+    /* SNA carousel container spacing to keep images 0.5cm from edges */
+    #sna-img-carousel-container { padding: 0.5cm; box-sizing: border-box; display:flex; width:100%; height:100%; flex-direction:column; align-items:center; justify-content:space-between; }
+    #sna-carousel-img { width: 100%; height: auto; max-height: calc(100% - 1cm); object-fit: contain; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.08); display: block; margin: 0 auto; box-sizing: border-box; }
     .anat-img-note { width: 100%; text-align: center; font-size: 0.85rem; color: #444; font-style: italic; margin-top: 10px; }
     
     .carousel-controls { display: flex; gap: 15px; margin-top: 10px; align-items: center; background: rgba(255,255,255,0.8); padding: 8px 15px; border-radius: 8px; }
@@ -126,7 +146,7 @@
     /* Layout para a aba do SNA */
     .sna-layout { 
         display: grid; 
-        grid-template-columns: 45% 55%; 
+        grid-template-columns: 40% 60%; 
         gap: 25px; 
         align-items: start; 
     }
@@ -140,17 +160,17 @@
         background: #eef2f5; 
         border: 1px solid #dceefb; 
         border-radius: 12px; 
-        padding: 15px; 
+        padding: 1cm; 
         display: flex; 
         flex-direction: column; 
         justify-content: center;
         align-items: center; 
-        min-height: 450px;
+        min-height: 600px;
     }
     
     .sna-img-col img { 
         max-width: 100%; 
-        max-height: 400px; 
+        max-height: calc(100% - 2cm); 
         object-fit: contain; 
         border-radius: 8px; 
         box-shadow: 0 4px 15px rgba(0,0,0,0.08);
@@ -167,6 +187,8 @@
 
     <div class="header">
         <div style="display:flex; align-items:center; gap:12px;">
+            <!-- --- NOVO: BOTÃO MENU NO CABEÇALHO --- -->
+            <button class="menu-toggle-btn" onclick="toggleSidebar()">☰ Menu</button>
             <div class="brand">OsteoVisceral Pro</div>
             <button id="focus-toggle" class="focus-toggle-btn" onclick="toggleFocusDigest()">Mostrar Tudo</button>
         </div>
@@ -174,7 +196,11 @@
     </div>
 
     <div class="main-stage">
-        <div class="anatomy-col">
+        <!-- --- NOVO: FUNDO ESCURO PARA FECHAR O MENU --- -->
+        <div id="menu-overlay" onclick="toggleSidebar()"></div>
+
+        <!-- --- ALTERADO: ADICIONADO O ID sidebar-menu --- -->
+        <div class="anatomy-col" id="sidebar-menu">
             <div class="menu-scroll-area">
                 
                 <button class="sys-btn" style="background:#eef7fa; color:#007f8b; border-left: 4px solid #007f8b;" onclick="toggleMenu('menu-cranio', this)">SISTEMA CRANIAL</button>
@@ -288,8 +314,8 @@
                             </div>
 
                             <div class="sna-img-col">
-                                <div id="sna-img-carousel-container" style="display: flex; width: 100%; height: 100%; flex-direction: column; align-items: center; justify-content: space-between; padding: 8px; box-sizing: border-box;">
-                                    <img id="sna-carousel-img" alt="SNA Visualizador" style="display:none; max-width: 100%; max-height: 400px; object-fit: contain; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.08);">
+                                <div id="sna-img-carousel-container">
+                                    <img id="sna-carousel-img" class="carousel-img" alt="SNA Visualizador" style="display:none; max-width: 100%; object-fit: contain;">
                                     <div id="sna-carousel-controls" class="carousel-controls" style="display:none; margin-top: 15px;">
                                         <button id="btn-sna-prev" class="carousel-btn" onclick="prevSnaImage()">⬅️ Anterior</button>
                                         <span id="sna-carousel-counter" class="carousel-counter">1 / 2</span>
@@ -354,6 +380,14 @@
             msgBox.innerText = text + '\nUA: ' + (navigator.userAgent || 'n/a');
             console.error('Unhandled Rejection:', ev);
         });
+
+        // --- NOVA FUNÇÃO PARA ABRIR/FECHAR A GAVETA DO MENU ---
+        function toggleSidebar() {
+            var sidebar = document.getElementById('sidebar-menu');
+            var overlay = document.getElementById('menu-overlay');
+            sidebar.classList.toggle('open');
+            overlay.classList.toggle('show');
+        }
 
         // Variáveis de Carrossel
         var currentCarouselImages = [];
@@ -602,13 +636,13 @@
                 "tituloP": "(Nervo Vago)",
                 "imgAnat": "foto_tech_rins.jpg",
                 "imgTech": "foto_tech_rins.jpg",
-                "anatLoc": "<ul><li><b>Dimensões:</b> Aproximadamente 12 cm de altura, 6 cm de largura e 3 cm de espessura.</li><li><b>Palpação:</b> Técnica bimanual de Guyon (abaixo das costelas). Devem ser móveis e elásticos ao ritmo respiratório.</li><li><b>Movimentos durante a respiração:</b> Descida de 3 cm na inspiração, acompanhada de rotação externa e báscula anterior do pólo superior (deslizam sobre a rampa do psoas).</li><li><b>Referências anatómicas:</b> Pólo superior em T12; pólo inferior em L3 (Plano Subcostal). O rim direito é ligeiramente mais baixo.</li></ul>",
-                "anatRel": "<ul><li><b>Relações viscerais e anatómicas:</b> O rim direito relaciona-se com o fígado e duodeno; o esquerdo com o baço, pâncreas e estômago. Posteriormente, repousam sobre o psoas e o quadrado lombar.</li><li><b>Outras informações:</b> Envolvidos pela Fáscia de Gerota, que é aberta inferiormente (via de escape para a ptose renal).</li></ul>",
+                "anatLoc": "<ul><li><b>Dimensões e Estrutura:</b> Cada rim possui forma de feijão (~140g) com cerca de 12x7x3 cm. O esquerdo é habitualmente maior e o direito posiciona-se ligeiramente mais abaixo devido ao fígado.</li><li><b>Palpação:</b> Avaliados com maior eficácia via palpação profunda anterior (abdominal). O polo inferior é sentido lateralmente ao umbigo como uma massa sólida semelhante a uma 'barra de sabão'.</li><li><b>Movimentos Respiratórios:</b> O diafragma empurra-os 3 a 4 cm para baixo ao longo do psoas na inspiração, provocando inclinação anterior do polo superior e rotação externa.</li><li><b>Referências Anatómicas:</b> Estendem-se de T11 a L3 (posterior). Na frente, o limite superior coincide com a 9ª cartilagem costal e a base situa-se ao nível do umbigo.</li></ul>",
+                "anatRel": "<ul><li><b>Relações Posteriores:</b> Assentam sobre o diafragma e os músculos psoas e quadrado lombar. As glândulas suprarrenais funcionam como 'chapéus' nos polos superiores.</li><li><b>Relações Anteriores:</b> À direita com o fígado, duodeno e cólon; à esquerda com o baço, estômago, pâncreas e cólon.</li><li><b>Sistema de Fixação:</b> Não possuem ligamentos fixos. São mantidos por um 'ninho' de fáscia e gordura (aberto inferiormente) e pela pressão constante dos músculos abdominais.</li><li><b>Nota Clínica:</b> Esta arquitetura torna-os muito suscetíveis a descidas anormais (ptose renal).</li></ul>",
                 "anatFix": [
                     { "name": "Fáscia Renal (Gerota)", "img": "fascia_gerota.jpg", "note": "Saco anatómico aberto inferiormente, sendo a principal falha estrutural por onde o rim escapa cronicamente em episódios de ptose severa." },
                     { "name": "Pedículo Vascular e Gordura", "img": "pediculo_renal.jpg", "note": "Sem ligamentos verdadeiros, o rim é ancorado transversalmente pelo pesado pedículo vascular (Artéria/Veia Renais) e mantido pela pressão da cápsula adiposa perirrenal." }
                 ],
-                "snaS": "<ul><li><b>Via Neurológica (T10-L1):</b> Regula o tónus vascular renal via Gânglio Aorticorrenal. O stress simpático (ou compressão por espasmo do psoas/diafragma) diminui a filtração e pode elevar drasticamente a pressão arterial.</li><li><b>Dores Referidas:</b> Dor no flanco com irradiação anterior para a virilha e região genital. Tensão profunda na charneira toracolombar (T12-L1).</li></ul>",
+                "snaS": "<ul><li><b>Via Neurológica (T10-L1):</b> Sinapse no Gânglio Aorticorrenal. Controla o tónus vascular e a pressão arterial.</li><li><b>Dores Referidas:</b><ul><li><b>Lombalgia Renal:</b> Dor matinal que melhora ao levantar e agrava ao fim do dia.</li><li><b>Subcostal (T12):</b> Dor nas costelas inferiores que irradia para o umbigo.</li><li><b>Urogenital (L1-L2):</b> Dor nas virilhas, órgãos genitais e anca (falsas coxartroses).</li><li><b>Membros Inferiores (L2-L4):</b> Dor na face lateral da coxa e sensibilidade na cápsula do joelho.</li><li><b>Cólica Renal:</b> Dor aguda no flanco irradiada para o abdómen inferior e coxas.</li></ul></li></ul>",
                 "snaP": "<ul><li><b>Nervo Vago:</b> Papel vasomotor discreto na cápsula renal.</li></ul>",
                 "techs": [{ "nome": "Técnica de Reposicionamento (Ptose Renal) e Escuta Local", "ref": "Abordagem Anterior-Posterior Bimanual ao longo da Costela K12", "tip": "Na avaliação inicial de 'Escuta Local', a mão do terapeuta perceciona uma nítida atração fascial orientada na direção ínfero-lateral e ligeiramente posterior (indicando a queda). Todas as manobras ativas aproveitam impreterivelmente o fôlego da expiração para ascender e aliviar a tensão da víscera.", "steps": ["Ancorar a mão do terapeuta com o paciente em decúbito dorsal, abrangendo firmemente o trajeto transversal da 12ª costela para suporte e base de alavancagem profunda.", "Utilizando a mão de tração anterior, deprimir os tecidos da grelha visceral abdominal deslocando-os progressiva e brandamente em direção retroperitoneal até encostar na densidade fibrosa da própria Fáscia de Gerota.", "Proceder com a técnica ativa e induzir a subida contínua num vetor preciso de direção crânio-medial com a ajuda passiva e ascendente do diafragma no final da expiração forçada."] }],
                 "refs": ["BARRAL, J. P. Manipulações Viscerais 1", "NOGUEIRA, F. Diagnóstico e Intervenção Osteopática - Visceral."]
@@ -621,14 +655,14 @@
                 "tituloP": "(Nervos S2-S4)",
                 "imgAnat": "foto_tech_bexiga.jpg",
                 "imgTech": "foto_tech_bexiga.jpg",
-                "anatLoc": "<ul><li><b>Dimensões:</b> Capacidade fisiológica entre 300 ml e 500 ml, podendo expandir-se significativamente.</li><li><b>Palpação:</b> Apenas palpável acima da sínfise púbica quando está preenchida (globo vesical).</li><li><b>Movimentos durante a respiração:</b> Oscilação rítmica induzida pela tração do uraco; flete em direção ao umbigo na fase de expiração sistémica.</li><li><b>Referências anatómicas:</b> Espaço Retropúbico de Retzius, imediatamente atrás do osso púbico.</li></ul>",
-                "anatRel": "<ul><li><b>Relações viscerais e anatómicas:</b> A cúpula é esmagada pelas ansas do intestino delgado. No sexo feminino, relaciona-se posteriorly com o útero; no masculino, com o reto e próstata (inferiormente).</li><li><b>Outras informações:</b> A gordura perivesical permite que a bexiga deslize livremente contra a parede óssea sem atrito.</li></ul>",
+                "anatLoc": "<ul><li><b>Dimensões e Estrutura:</b> Reservatório muscular oco (músculo detrusor) com capacidade de ~500 ml. A forte vontade de urinar surge habitualmente entre os 300 e 350 ml.</li><li><b>Palpação:</b> Vazia, permanece oculta atrás da sínfise púbica. Cheia, projeta-se até 3 cm acima do osso, sendo palpável na região suprapúbica (vetor inferior e profundo).</li><li><b>Movimentos Respiratórios:</b> Move-se em sintonia com o sacro e útero: desloca-se póstero-superiormente na inspiração e ântero-inferiormente na expiração.</li><li><b>Referências Anatómicas:</b> Localizada na pelve menor, atrás da sínfise púbica. O ápice sobe em direção ao umbigo conforme o enchimento vesical.</li></ul>",
+                "anatRel": "<ul><li><b>Relações Viscerais:</b> Superiormente com o intestino delgado; anterior com o púbis; inferior com a próstata (homens) ou pavimento pélvico (mulheres).</li><li><b>Relações Posteriores:</b> Com o reto e vesículas seminais nos homens, ou com o útero e a vagina nas mulheres.</li><li><b>Nota Biomecânica:</b> O músculo detrusor possui alta condutividade elétrica, permitindo uma contração sincrónica e total para o esvaziamento.</li></ul>",
                 "anatFix": [
                     { "name": "Uraco (Lig. Umbilical Mediano)", "img": "lig_uraco.jpg", "note": "O pilar superior de suspensão, formando uma corda direta da bexiga ao umbigo." }, 
                     { "name": "Ligamentos Umbilicais Mediais", "img": "lig_umbilicais_mediais.jpg", "note": "Ladeiam o Uraco (antigas artérias umbilicais). Formam uma tenda fascial que suspende a bexiga à parede abdominal anterior." },
                     { "name": "Ligamentos Pubovesicais", "img": "lig_pubovesical.jpg", "note": "Amarras inferiores rígidas e potentíssimas ancoradas ao osso púbico." }
                 ],
-                "snaS": "<ul><li><b>Via Neurológica (L1-L2):</b> Fibras viajam pelo Plexo Hipogástrico Superior e Inferior. Regula a fase de enchimento vesical (fecha o esfíncter interno e relaxa o detrusor).</li><li><b>Dores Referidas:</b> Desconforto na região suprapúbica e sagrada inferior.</li></ul>",
+                "snaS": "<ul><li><b>Via Neurológica (T10-L1):</b> Sinapse no Gânglio Aorticorrenal. Regula a vasomotricidade e pressão arterial.</li><li><b>Dores Referidas:</b><ul><li><b>Lombalgia Renal:</b> Padrão matinal cíclico (melhora ao levantar, piora à tarde).</li><li><b>Subcostal e Umbigo (T12):</b> Irritação nervosa por ptose, pior ao tossir.</li><li><b>Urogenital e Anca (L1-L2):</b> Dor na virilha e trocânter (simula artrose da anca).</li><li><b>Membros Inferiores (L2-L4):</b> Dor na face lateral da coxa e cápsula do joelho (falsa artrite).</li><li><b>Cólica Renal:</b> Dor aguda no flanco irradiada para o baixo abdómen e genitais.</li></ul></li></ul>",
                 "snaP": "<ul><li><b>Parassimpático Sagrado (S2-S4):</b> Comanda o reflexo de micção através da contração do músculo detrusor.</li></ul>",
                 "techs": [{ "nome": "Libertação Global do Eixo Umbílico-Vesical e Teste de Escuta", "ref": "Sínfise Púbica Frontal e Rebordo da Cicatriz Umbilical", "tip": "Na clássica Escuta Pélvica, a atração do tecido é sentida pela mão manifestando-se profundamente na direção infrapúbica. É imperativo testar e equilibrar bloqueios estáticos da cartilagem da sínfise púbica em caso de cisalhamento ou inflamação antes de tentar alcançar a elasticidade da bexiga.", "steps": ["Encontrar e apoiar ativamente os dedos palpando a linha média densa que assinala a corda fibrosa longitudinal inerente à tensão do uraco, repousando ligeiramente a uns centímetros abaixo do umbigo.", "Tendo uma das mãos ancorada nesta posição superior, a extremidade oposta estabiliza firmemente e sem causar dor à paciente, aplicando base e barreira protetora manual para bloquear o complexo ósseo púbico inferior.", "Com a sensibilidade tátil no zénite da fáscia intermédia, aplicar gradualmente o estiramento tensional em vetores em oposição rítmica, sustentando com suavidade a tração mecânica até permitir a devolução viscoelástica intrínseca."] }],
                 "refs": ["BARRAL, J. P. Manipulações Viscerais 1"]
@@ -641,14 +675,14 @@
                 "tituloP": "(Nervos S2-S4)",
                 "imgAnat": "foto_tech_utero.jpg",
                 "imgTech": "foto_tech_utero.jpg",
-                "anatLoc": "<ul><li><b>Dimensões:</b> No estado não gravídico, mede cerca de 7 cm de comprimento e 5 cm de largura.</li><li><b>Palpação (Abordagem Externa):</b> Exige posicionamento em decúbito dorsal com os joelhos fletidos para anular a tensão da parede abdominal. O contacto tátil faz-se através de uma depressão profunda, suave e progressiva na região suprapúbica durante a expiração. Os dedos devem deslizar num vetor caudal e posterior (mergulhando na pélvis menor por cima do osso) para intercetar a densidade em 'almofada' do fundo uterino, alojado por trás da bexiga.</li><li><b>Movimentos durante a respiração:</b> Dinâmica de anteversão/retroversão suave, basculando para gerir as pressões intra-abdominais que descem como um êmbolo a partir do diafragma.</li><li><b>Referências anatómicas:</b> A âncora óssea inferior é o bordo superior da <b>Sínfise Púbica</b>. A projeção central do fundo uterino situa-se na linha média do hipogástrio (no centro do triângulo formado pela sínfise e as duas EIAS). <b>Nota Clínica:</b> A palpação deve ser feita com a bexiga vazia; uma bexiga cheia empurra o útero mecanicamente para cima e para trás (retroversão forçada), escondendo-o e falseando a avaliação tensional.</li></ul>",
-                "anatRel": "<ul><li><b>Relações viscerais e anatómicas:</b> Repousa sobre a bexiga (anterior). O Fundo de Saco de Douglas separa-o do reto (posterior). Lateralmente, liga-se às trompas e ovários.</li><li><b>Outras informações:</b> Mantido em suspensão pelos ligamentos redondos e uterossacros, que transmitem tensões diretamente ao sacro e às ancas.</li></ul>",
+                "anatLoc": "<ul><li><b>Dimensões e Estrutura:</b> Tem a forma de um cone achatado (corpo, istmo e colo). Pesa entre 30 e 120g e mede cerca de 7 a 9 cm de comprimento (em mulheres multíparas), com enorme capacidade de expansão.</li><li><b>Palpação:</b> O fundo uterino é avaliável via abdominal (suprapúbica). A precisão diagnóstica aumenta com a técnica bimanual (abdominal e vaginal simultâneas).</li><li><b>Dinâmica e Motilidade:</b> Órgão extremamente móvel; a sua posição varia com o enchimento da bexiga ou reto. Na fase de 'expir' da motilidade inerente, desloca-se para trás e para cima.</li><li><b>Referências Anatómicas:</b> Localizado na pelve menor. O fundo projeta-se logo acima da sínfise púbica, no terço inferior da distância entre o púbis e o umbigo.</li></ul>",
+                "anatRel": "<ul><li><b>Relações Viscerais:</b> Anteriormente com a bexiga (bolsa vesicouterina) e posteriormente com o reto (bolsa de Douglas).</li><li><b>Relações Laterais:</b> Conecta-se com as trompas de Falópio, ovários e complexos vasculares pélvicos.</li><li><b>Posicionamento:</b> Normalmente encontra-se em anteversão e anteflexão.</li><li><b>Suporte Estrutural:</b> Mantido por uma rede de ligamentos (largos, redondos e uterossacrados) e pelo pavimento pélvico. A fraqueza destas estruturas predispõe a retroversões ou prolapsos.</li></ul>",
                 "anatFix": [
                     { "name": "Matriz Forte (Redondos e Uterossacros)", "img": ["lig_redondo.jpg", "lig_uterossacro.jpg"], "note": "Um autêntico feixe sob o formato de uma malha elástica pélvica tridimensional. A tensão restritiva unilateral num braço esticado do ligamento redondo arrasta e contorce a mobilidade pélvica lateral." },
                     { "name": "Ligamentos Cardinais (Mackenrodt)", "img": "lig_cardinal.jpg", "note": "A verdadeira fundação do útero. Ligam o colo do útero e a cúpula vaginal diretamente às paredes laterais da pélvis. Assimetrias aqui causam desvios laterais do cérvix." },
                     { "name": "Ligamentos Largos", "img": "lig_largo.jpg", "note": "Duas 'velas de barco' de peritónio que caem para os lados do útero e o fixam às paredes pélvicas, englobando trompas e ovários." }
                 ],
-                "snaS": "<ul><li><b>Via Neurológica (T10-L2):</b> Fibras viajam pelo Plexo Hipogástrico Superior e Inferior. Controla a vasomotricidade uterina. O hipertónus simpático pode induzir isquemia miometrial (dismenorreia).</li><li><b>Dores Referidas:</b> Lombalgia baixa e dor referida na região do sacro e virilhas.</li></ul>",
+                "snaS": "<ul><li><b>Via Neurológica (T12-L2):</b> Inervação do corpo e fundo uterino via Plexo Hipogástrico Superior.</li><li><b>Dores Referidas:</b><ul><li><b>Lombalgia:</b> Dor na transição dorsolombar e dermátomos de L1-L2.</li><li><b>Abdómen e Virilhas:</b> Cólicas menstruais e dor inguinal via ligamentos redondos.</li><li><b>Cervical Superior:</b> Bloqueios em C0-C2 por reflexo do eixo hormonal.</li></ul></li></ul>",
                 "snaP": "<ul><li><b>Parassimpático Sagrado (S2-S4):</b> Gere a inervação do cérvix e estruturas vulvovaginais (vasodilatação).</li></ul>",
                 "techs": [{ "nome": "Mobilização Pélvica dos Ligamentos Redondos", "ref": "Espinha Ilíaca (EIAS) e Púbis", "tip": "É imperativo garantir que a bexiga da paciente está vazia para garantir o acesso manual sem oposição hidráulica.", "steps": ["Dispor os dedos em 'V' na região suprapúbica para contornar os rectos abdominais.", "Deslizar numa direção profunda e lateral em busca do bordo rígido dos ligamentos redondos.", "Sincronizar a força inibitória com a respiração pélvica da paciente, permitindo o relaxamento ligamentar."] }],
                 "refs": ["BARRAL, J. P. Manipulações Viscerais 1"]
@@ -661,13 +695,13 @@
                 "tituloP": "(Efeito Mecânico S2-S4)",
                 "imgAnat": "foto_coccix.jpg",
                 "imgTech": "foto_coccix.jpg",
-                "anatLoc": "<ul><li><b>Dimensões:</b> Pequeno segmento terminal triangular formado por 3 a 5 vértebras fundidas.</li><li><b>Palpação:</b> Palpação externa da ponta e bordos lateral; avaliação da flexibilidade sacro-coccígea.</li><li><b>Movimentos durante a respiração:</b> Pequenos movimentos de flexão e extensão em sincronia com o sacro (MRP).</li><li><b>Referências anatómicas:</b> Ápice do osso sacro.</li></ul>",
-                "anatRel": "<ul><li><b>Relações viscerais e anatómicas:</b> Ponto de inserção vital para o músculo elevador do ânus (soalho pélvico) e para o esfíncter externo do ânus.</li><li><b>Outras informações:</b> O Gânglio Ímpar (Walther) localiza-se na sua face anterior, sendo o ponto de reunião terminal das cadeias simpáticas.</li></ul>",
+                "anatLoc": "<ul><li><b>Dimensões e Estrutura:</b> Pequena secção óssea terminal da coluna. Une-se ao sacro através de uma articulação (diartrose) móvel, com amplitude até 30 graus.</li><li><b>Palpação:</b> Externamente na prega glútea (1 cm atrás do ânus) ou internamente (toque retal/vaginal) para testar a mobilidade entre o indicador e polegar.</li><li><b>Dinâmica e Mobilidade:</b> Articulação altamente dinâmica (flexão posterior), vital para o parto, defecação, micção e cópula.</li><li><b>Referências Anatómicas:</b> O ápice situa-se na base da bacia, formando a âncora posterior do pavimento pélvico e do triângulo anal.</li></ul>",
+                "anatRel": "<ul><li><b>Relações Viscerais:</b> Relaciona-se intimamente à frente com o reto, próstata (homens), útero e bexiga (mulheres).</li><li><b>Ponto de Fixação:</b> Serve de âncora para quase todos os músculos e ligamentos do pavimento pélvico.</li><li><b>Conexão Dural:</b> Liga-se de forma ininterrupta à base do crânio através da dura-máter, funcionando como a âncora inferior do sistema nervoso central.</li></ul>",
                 "anatFix": [
                     { "name": "Ligamentos Sacroespinhais e Sacrotuberosos", "img": "lig_sacroespinhais.jpg", "note": "Cruzam-se e fecham a pélvis menor, recebendo a tensão de todo o soalho pélvico." },
                     { "name": "Ligamentos Sacrococcígeos", "img": "lig_sacrococcigeos.jpg", "note": "As 'dobradiças' (anterior, posterior e laterais) diretas que mantêm a articulação coesa e ditam a flexibilidade face a traumatismos." }
                 ],
-                "snaS": "<ul><li><b>Via Neurológica:</b> Gânglio Ímpar (Walther) - ponto de fusão terminal das cadeias simpáticas. O seu bloqueio mecânico gera um 'curto-circuito' irritativo em todo o plexo hipogástrico.</li><li><b>Dores Referidas:</b> Dor pélvica profunda e desconforto na base sacral.</li></ul>",
+                "snaS": "<ul><li><b>Gânglio Ímpar (Walther):</b> Ponto de fusão terminal das cadeias simpáticas. O seu bloqueio gera 'curto-circuito' irritativo no plexo hipogástrico.</li><li><b>Dores Referidas:</b><ul><li><b>Urogenital:</b> Cistites, prostatites e disfunção sexual (libido/ereção).</li><li><b>Pelviperineal:</b> Espasmos retais, hemorroidas e dor ao sentar.</li><li><b>Rins:</b> Ligação clínica com ptose renal e perda de vitalidade global.</li></ul></li></ul>",
                 "snaP": "<ul><li><b>Influência Mecânica:</b> A tensão coccígea afeta as raízes S2-S4 por continuidade dural, impactando toda a regulação parassimpática da pequena bacia.</li></ul>",
                 "techs": [{ "nome": "Harmonização de Base (Coccígea)", "ref": "Ápice do Sacro e Bordo Coccígeo", "tip": "Abordagem com mínima força. A dura-máter craniana reage e 'desenrola' perante o toque focado na ponta do cóccix.", "steps": ["Garantir contacto duplo e estabilizador sobre a base final do sacro e a ponta livre do cóccix.", "Induzir micromovimentos suaves de descompressão, libertando o excesso de retração do ligamento sacrotuberoso e da grelha do diafragma pélvico.", "Aguardar as pulsações rítmicas indicativas de restabelecimento fascial local e do Movimento Respiratório Primário (MRP)."] }],
                 "refs": ["BARRAL, J. P. Manipulações Viscerais 1"]
@@ -680,15 +714,15 @@
                 "tituloP": "(Nervo Vago)",
                 "imgAnat": "foto_tech_coracao.jpg",
                 "imgTech": "foto_tech_coracao.jpg",
-                "anatLoc": "<ul><li><b>Dimensões:</b> Estrutura miocárdica de configuração cónica, apresentando um eixo longitudinal médio de 12 cm, diâmetro transversal de 9 cm e diâmetro ântero-posterior de 6 cm.</li><li><b>Palpação:</b> A propedêutica palpatória do <i>ictus cordis</i> (impulso apical) afere-se topograficamente na interseção do 5º espaço intercostal esquerdo com a linha hemiclavicular ipsilateral.</li><li><b>Movimentos durante a respiração:</b> A cinemática cardíaca, subordinada à excursão diafragmática inspiratória (fase de 'Inspir' do MRP), descreve um vetor de translação ântero-inferior acoplado a uma ligeira rotação levógira (rotação à esquerda). A fase expiratória dita o retorno viscoelástico em vetor póstero-superior.</li><li><b>Referências anatómicas:</b> Projeção topográfica torácica circunscrita a um quadrilátero precordial, cujos limites se estendem desde os 2ºs espaços intercostais (base) até ao 5º espaço intercostal (ápice), culminando estritamente sobre a linha hemiclavicular esquerda.</li></ul>",
-                "anatRel": "<ul><li><b>Relações viscerais e anatómicas:</b> Aloja-se no mediastino médio. O pericárdio estabelece contiguidade póstero-lateral com a pleura mediastínica e os pulmões, e relação inferior com a porção anterior do diafragma.</li><li><b>Outras informações:</b> O trajeto descendente do nervo frénico sobre o pericárdio fibroso estabelece uma via de comunicação fascial e neurológica direta entre a região cervical inferior e o mediastino.</li></ul>",
+                "anatLoc": "<ul><li><b>Dimensões e Estrutura:</b> Possui aproximadamente o tamanho de um punho fechado e cerca de 300g. Funciona como uma bomba dupla dividida em quatro câmaras (dois átrios e dois ventrículos).</li><li><b>Palpação:</b> A motilidade subtil é difícil de palpar diretamente devido à força do batimento; a avaliação é feita indiretamente através da zona do mediastino (ex: mão no xifoide e outra em T11).</li><li><b>Movimentos Respiratórios:</b> Além da torção intrínseca (100.000 a 120.000 vezes/dia), acompanha passivamente a tração do mediastino e a descida do diafragma em cada ciclo respiratório.</li><li><b>Referências Anatómicas:</b> Projeta-se num quadrilátero entre o 2.º espaço intercostal (topo) e o 5.º espaço intercostal esquerdo (ápice), logo abaixo do mamilo.</li></ul>",
+                "anatRel": "<ul><li><b>Localização e Relações:</b> Situado no mediastino médio, envolvido pelo pericárdio e ladeado pelos pulmões. Repousa inferiormente sobre o diafragma e relaciona-se atrás com o esófago, aorta e coluna vertebral.</li><li><b>Sistema de Fixação:</b> É mantido no lugar por um sistema de vácuo e por ligamentos potentes que o ancoram ao esterno, coluna e diafragma.</li><li><b>Eixo Fascial:</b> Estas conexões formam um eixo central de tensão fascial que se estende até à base do crânio, sendo um ponto de convergência mecânica vital para o corpo.</li></ul>",
                 "anatFix": [
                     { "name": "Ligamentos Vertebropericárdicos", "img": "lig_vert_peri.jpg", "note": "Garantem a estabilização posterior da base do pericárdio, ancorando-a aos corpos vertebrais de T1 a T4. Disfunções de mobilidade nestes segmentos originam disautonomia e nociceção referida interescapular." }, 
                     { "name": "Ligamentos Esternopericárdicos", "img": ["lig_estern_peri1.jpg", "lig_estern_peri2.jpg"], "note": "Feixes fibrosos superiores e inferiores que fixam a face anterior do pericárdio à face posterior do manúbrio e corpo do esterno." },
                     { "name": "Fáscia Cervicopericárdica", "img": "fascia_cervicopericardica.jpg", "note": "Continuidade caudal da lâmina pré-traqueal da fáscia cervical profunda, ligando o osso hioide e a cartilagem tiroideia ao ápice do pericárdio, constituindo um elo de tensão cervico-torácico direto." },
                     { "name": "Ligamentos Frenopericárdicos", "img": "lig_frenopericardicos.jpg", "note": "Condensações fibrosas anteriores e lateral (além da coalescência ao centro tendíneo) que fundem a base pericárdica ao músculo diafragma." }
                 ],
-                "snaS": "<ul><li><b>Via Neurológica (T1-T5):</b> Fibras eferentes dos gânglios da cadeia simpática cervical e torácica superior (com particular relevância clínica no <b>Gânglio Cervicotorácico ou Estrelado C7-T1</b>). A estimulação adrenérgica exerce ação cronotrópica, inotrópica e dromotrópica positivas.</li><li><b>Dores Referidas:</b> Opressão retroesternal e dor referida ao nível interescapular esquerdo.</li><li><b>Território Braquial e Cérvico-Facial:</b> Padrão álgico reflexo projetado ao longo do trajeto do nervo ulnar do membro superior esquerdo e no ângulo da mandíbula (Gonion).</li></ul>",
+                "snaS": "<ul><li><b>Via Neurológica (T1-T5):</b> Fibras eferentes dos níveis T1-T5 com sinapse nos gânglios cervicais, com destaque para o <b>Gânglio Estrelado (C7-T1)</b>.</li><li><b>Ação Fisiológica:</b> Aumento da frequência cardíaca (cronotropismo), da força de contração (inotropismo) e da velocidade de condução.</li><li><b>Dores Referidas:</b><ul><li><b>Zonas Típicas:</b> Região retroesternal, interescapular e bordo ulnar do braço esquerdo.</li><li><b>Mandíbula:</b> Dor referida no ângulo da mandíbula (Gonion).</li><li><b>Reflexos Frénicos:</b> Podem simular epicondilites, contratura de Dupuytren ou síndrome de Sudeck.</li></ul></li><li><b>Pontos de Diagnóstico:</b><ul><li><b>Coluna Vertebral:</b> Foco clínico em restrições na vértebra <b>T4</b>.</li><li><b>Pontos de Chapman:</b> Anteriores (2º espaço intercostal) e Posteriores (transversas de T2-T4).</li></ul></li></ul>",
                 "snaP": "<ul><li><b>Nervo Vago (NC X):</b> Media a modulação vagal cardíaca, atuando essencialmente nos nódulos sinoauricular e atrioventricular via libertação de acetilcolina, resultando em efeito cronotrópico negativo (bradicardia de repouso).</li></ul>",
                 "techs": [
                     { "nome": "Elevação Esternal (Sternal Lift)", "ref": "Mediastino Anterior", "tip": "Visa a descompressão das tensões restritivas do mediastino anterior e espaço retroesternal.", "steps": ["Estabilizar cranialmente com o dedo médio na fossa incisiva (fúrcula jugular).", "Aplicar a mão caudal sobre o terço inferior do corpo do esterno.", "Entrelaçar os polegares e induzir tração anterior contínua de toda a grelha condroesternal no vetor zénite."] },
@@ -706,14 +740,14 @@
                 "tituloP": "(Nervo Vago)",
                 "imgAnat": "foto_tech_pulmoes.jpg",
                 "imgTech": "foto_tech_pulmoes.jpg",
-                "anatLoc": "<ul><li><b>Dimensões:</b> Estruturas parenquimatosas que ocupam a totalidade das cavidades pleurais torácicas. As cúpulas pleurais projetam-se cranialmente 2 a 3 cm superiormente ao terço medial da clavícula.</li><li><b>Palpação:</b> A avaliação propedêutica incide na mensuração da expansibilidade torácica lateral, frémito tóraco-vocal e percussão digital (normalmente revelando som claro atimpânico/ressonância).</li><li><b>Movimentos durante a respiração:</b> Ação cinemática complexa caracterizada por expansão nos três eixos ortogonais durante a inspiração (craniocaudal via diafragma; ântero-posterior e transversal via arcabouço costal). A expiração decorre do recolhimento elástico pulmonar e relaxamento miofascial.</li><li><b>Referências anatómicas:</b> Limite superior ultrapassa o bordo superior da 1ª costela. O bordo inferior projeta-se na 6ª costela (linha hemiclavicular) e 10ª costela (topografia posterior).</li></ul>",
-                "anatRel": "<ul><li><b>Relações viscerais e anatómicas:</b> A base côncava pulmonar adapta-se intimamente às cúpulas diafragmáticas. O pulmão esquerdo diferencia-se pela presença da chanfradura cardíaca (incisura) no lóbulo superior. Medialmente, o hilo pulmonar faz a transição de estruturas vasculares e nervosas do mediastino para o parênquima.</li><li><b>Outras informações:</b> A cúpula pleural apresenta fixações à charneira cérvico-torácica (C7-T1) através de forte aparelho ligamento-fascial, implicando correlação causal entre patomecânica cervical e restrição apical pulmonar.</li></ul>",
+                "anatLoc": "<ul><li><b>Dimensões e Estrutura:</b> O pulmão direito é maior e possui três lobos; o esquerdo é mais pequeno (para acomodar o coração) e possui apenas dois lobos.</li><li><b>Palpação:</b> A única porção diretamente palpável é a cúpula pleural (o topo do pulmão), localizada imediatamente acima da clavícula.</li><li><b>Movimentos Respiratórios:</b> Têm um comportamento passivo, acompanhando a caixa torácica e o diafragma. Na inspiração, expandem-se com uma ligeira rotação externa e deslizam para preencher os recessos pleurais.</li><li><b>Referências Anatómicas:</b> O ápice ultrapassa a 1ª costela e a clavícula. A base repousa sobre o diafragma, descendo até ao nível de T11-T12 na região posterior.</li></ul>",
+                "anatRel": "<ul><li><b>Mediastino:</b> Estão separados na linha média pelo coração, esófago e grandes vasos.</li><li><b>Relações Inferiores:</b> Assentam sobre o diafragma, que serve de barreira física para o fígado (à direita) e para o estômago e baço (à esquerda).</li><li><b>Sistema Pleural:</b> Envolvidos pela pleura (membrana dupla com líquido lubrificante), mantêm-se unidos à parede torácica através de pressão negativa (vácuo), permitindo o deslizamento sem atrito.</li></ul>",
                 "anatFix": [
                     { "name": "Aparelho Suspensor da Cúpula Pleural", "img": "lig_susp_cupula.jpg", "note": "Complexo miofascial que inclui os ligamentos vertebropleural, costopleural e transversopleural. Estabelece a ancoragem estrutural entre o ápice pulmonar e a transição C7-T1. Disfunções neste aparelho induzem frequentemente cervicalgias rebeldes." },
                     { "name": "Ligamento Interpleural", "img": "lig_interpleural.jpg", "note": "Estrutura fascial posterior ao esófago e à aorta descendente, responsável pela dissipação e equilíbrio das forças de tensão transversal entre as cavidades pleurais direita e esquerda." },
                     { "name": "Ligamento Pulmonar (Triangular)", "img": "lig_pulmonar.jpg", "note": "Duplicação da pleura que se estende caudalmente desde o hilo pulmonar até à base diafragmática. Atua como estabilizador vertical para evitar a ascensão patológica da veia pulmonar inferior e do hilo durante inspirações profundas." }
                 ],
-                "snaS": "<ul><li><b>Via Neurológica (T1-T5):</b> Fibras eferentes originadas nos níveis medulares T1-T5 intersetam os gânglios cervicais (particular destaque neurofisiológico ao <b>Gânglio Estrelado C7-T1</b>). A resposta adrenérgica determina o relaxamento da musculatura lisa bronquial (broncodilatação) e inibição da secreção mucosa.</li><li><b>Dores Referidas:</b> Facilitação metamérica ao nível interescapular superior (segmentos T1-T5).</li><li><b>Irradiação Cervical:</b> A nociceção decorrente de irritação da pleura parietal ou periférica diafragmática é conduzida pelas aferências do nervo frénico (C3-C5), traduzindo-se como dor reflexa no complexo articular do ombro e músculo trapézio superior.</li></ul>",
+                "snaS": "<ul><li><b>Via Neurológica (T1-T5):</b> Fibras eferentes originadas nos níveis medulares T1-T5.</li><li><b>Dores Referidas:</b><ul><li><b>Pescoço e Braços:</b> Cervicalgias crónicas e nevralgias que irradiam até aos dedos das mãos por continuidade fascial.</li><li><b>Coluna Dorsal (T1-T5):</b> Restrições de movimento na parte superior das costas, rigidez e tendência ao aumento da curvatura (hipercifose).</li><li><b>Grelha Costal Superior:</b> Dores da 1ª à 5ª costela, nevralgias intercostais e sensibilidade nas articulações com o esterno.</li><li><b>Ombros e Trapézios:</b> Através do <b>Nervo Frénico (C3-C5)</b>, a irritação da pleura projeta dor no topo do ombro e base do pescoço.</li></ul></li></ul>",
                 "snaP": "<ul><li><b>Nervo Vago (NC X):</b> Responsável pela inervação parassimpática, induzindo o tónus reflexo de broncoconstrição e a estimulação das glândulas exócrinas para produção de muco.</li></ul>",
                 "techs": [
                     { "nome": "Estiramento Fascial do Aparelho Suspensor da Cúpula Pleural", "ref": "Fossa supraclavicular e 1ª Costela", "tip": "Tiragem miofascial com recurso à pré-tensão ativa do feixe dos músculos escalenos.", "steps": ["Solicitar ao paciente inclinação lateral contralateral e rotação ipsilateral da coluna cervical para recrutar a tensão dos escalenos.", "Fixar firmemente o contacto manual sobre a junção da clavícula e da primeira costela no lado correspondente à disfunção.", "Induzir um vetor de força mecânica contínuo no sentido ínfero-medial, acompanhando a cedência fascial."] },
@@ -793,6 +827,10 @@
             } else {
                 controls.style.display = 'none';
             }
+            // ajustar dimensão da imagem para preencher proporcionalmente à altura da caixa do carrossel
+            try {
+                syncSnaImageSize();
+            } catch (e) { console.warn('syncSnaImageSize erro', e); }
         }
 
         function prevSnaImage() {
@@ -808,6 +846,45 @@
                 renderSnaCarousel();
             }
         }
+
+        // Ajusta a altura da caixa do carrossel para igualar a altura da coluna de texto
+        function syncSnaImageSize() {
+            var textCol = document.querySelector('.sna-text-col');
+            var imgCol = document.querySelector('.sna-img-col');
+            var carouselContainer = document.getElementById('sna-img-carousel-container');
+            var imgEl = document.getElementById('sna-carousel-img');
+            var controls = document.getElementById('sna-carousel-controls');
+            if (!textCol || !imgCol || !carouselContainer || !imgEl) return;
+
+            // definir altura da caixa do carrossel igual à altura da coluna de texto
+            var targetH = textCol.clientHeight;
+            if (targetH && targetH > 50) {
+                imgCol.style.height = targetH + 'px';
+            } else {
+                imgCol.style.height = '';
+            }
+
+            // calcular espaço disponível para a imagem (subtrair controles e paddings)
+            var controlsH = (controls && controls.offsetHeight) ? controls.offsetHeight : 0;
+            var style = window.getComputedStyle(carouselContainer);
+            var padTop = parseInt(style.paddingTop || 0, 10);
+            var padBottom = parseInt(style.paddingBottom || 0, 10);
+            var availableH = imgCol.clientHeight - controlsH - padTop - padBottom - 4; // pequena margem
+            if (availableH > 0) {
+                imgEl.style.maxHeight = availableH + 'px';
+                imgEl.style.height = availableH + 'px';
+                imgEl.style.width = 'auto';
+            } else {
+                imgEl.style.maxHeight = '';
+                imgEl.style.height = '';
+                imgEl.style.width = '';
+            }
+        }
+
+        // manter sincronização ao redimensionar a janela
+        window.addEventListener('resize', function() {
+            try { syncSnaImageSize(); } catch (e) {}
+        });
 
 
         // ------------- CARROSSEL DAS TÉCNICAS -------------
@@ -1022,10 +1099,12 @@
             document.getElementById('sna-txt-s').innerHTML = d.snaS || "-";
             document.getElementById('sna-txt-p').innerHTML = d.snaP || "-";
 
-            // ---------- LÓGICA DO NOVO CARROSSEL DO SNA ----------
+            // ---------- LÓGICA DO CARROSSEL DO SNA (mapa geral fica por último) ----------
             currentSnaImages = [];
             if (d.imgSNA && d.imgSNA !== "") currentSnaImages.push(d.imgSNA);
             if (d.imgSNA2 && d.imgSNA2 !== "") currentSnaImages.push(d.imgSNA2);
+            // colocar o mapa geral como última imagem do carrossel
+            currentSnaImages.push('sna_mapa_geral.jpg');
             currentSnaIndex = 0;
             renderSnaCarousel();
             // -----------------------------------------------------
@@ -1094,6 +1173,13 @@
             } else {
                 refsBox.style.display = 'none';
             }
+
+            // --- NOVO: FECHAR O MENU APÓS SELECIONAR A VÍSCERA ---
+            var sidebar = document.getElementById('sidebar-menu');
+            if (sidebar && sidebar.classList.contains('open')) {
+                toggleSidebar();
+            }
+
             } catch (e) {
                 var msgBox = document.getElementById('error-msg');
                 msgBox.style.display = 'block';
