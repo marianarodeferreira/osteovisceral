@@ -175,10 +175,178 @@
         border-radius: 8px; 
         box-shadow: 0 4px 15px rgba(0,0,0,0.08);
     }
+
+        .diag-diff-widget {
+            display: flex;
+            flex-direction: row;
+            flex-wrap: nowrap;
+            gap: 30px;
+            align-items: flex-start;
+            margin-bottom: 24px;
+        }
+
+        
+
+        .diag-map-column {
+            flex: 0 0 50%;
+            min-width: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 12px;
+            box-sizing: border-box;
+        }
+
+        .diag-panel-column {
+            flex: 1;
+            min-width: 0;
+            box-sizing: border-box;
+        }
+
+    .diag-map-wrapper {
+      position: relative;
+      border-radius: 18px;
+      overflow: hidden;
+      background: #fff;
+      box-shadow: 0 10px 24px rgba(0, 0, 0, 0.08);
+    }
+
+        .diag-map-img {
+            max-width: 100%;
+            height: auto;
+            object-fit: contain;
+            display: block;
+            margin: 0 auto;
+        }
+
+        /* Hotspots over the image */
+        .diag-hotspot {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #3498db;
+            border: none;
+            cursor: pointer;
+            z-index: 20;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.12);
+            transition: background 0.18s ease, transform 0.12s ease;
+            animation: diag-pulse 1.8s ease-out infinite;
+        }
+
+        .diag-hotspot:active,
+        .diag-hotspot.active {
+            background: #e67e22;
+            transform: scale(1.05);
+        }
+
+        @keyframes diag-pulse {
+            0% { box-shadow: 0 0 0 0 rgba(52,152,219,0.45); }
+            70% { box-shadow: 0 0 0 12px rgba(52,152,219,0.06); }
+            100% { box-shadow: 0 0 0 0 rgba(52,152,219,0); }
+        }
+
+    .diag-panel-column {
+      background: #f9f9f9;
+      border-radius: 18px;
+      padding: 24px;
+      box-shadow: 0 10px 24px rgba(0, 0, 0, 0.06);
+    }
+
+        .diag-map-column { display:flex; align-items:center; justify-content:center; padding: 12px; }
+
+    .diag-panel-column h2 {
+      margin-top: 0;
+      color: var(--primary);
+      font-size: 1.5rem;
+      margin-bottom: 18px;
+    }
+
+    .diag-panel-column h3 {
+      margin-top: 0;
+      color: #2c3e50;
+      font-size: 1.3rem;
+    }
+
+    .diag-panel-column .diag-main-topic {
+      font-size: 1.05rem;
+      display: inline-block;
+      margin-bottom: 0.25rem;
+    }
+
+    .diag-panel-column p,
+    .diag-panel-column ul {
+      color: #333;
+      line-height: 1.65;
+      margin: 0.75rem 0 0;
+    }
+
+    .diag-panel-column ul {
+      padding-left: 20px;
+      margin-top: 14px;
+    }
+
+    .diag-panel-column li {
+      margin-bottom: 0.8rem;
+    }
+
+    @media (max-width: 900px) {
+      .diag-diff-widget {
+        flex-direction: column;
+      }
+    }
+
+        /* Overlay panel positioned on the right half of the image */
+        .diag-overlay-panel {
+            position: absolute;
+            right: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 50%;
+            max-width: 50%;
+            box-sizing: border-box;
+            background: #f9f9f9;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 12px 30px rgba(0,0,0,0.12);
+            overflow: auto;
+        }
     
     @media (max-width: 1000px) {
         .sna-layout { grid-template-columns: 1fr; }
     }
+
+/* WIDGET DIAGNÓSTICO DIFERENCIAL (NOVO) */
+.diag-diff-widget { display: flex; flex-direction: row; flex-wrap: nowrap; gap: 30px; align-items: flex-start; margin-bottom: 24px; }
+.diag-map-column { flex: 0 0 50%; min-width: 0; display: flex; align-items: center; justify-content: center; padding: 12px; box-sizing: border-box; }
+.diag-panel-column { flex: 1; min-width: 0; box-sizing: border-box; background: #f9f9f9; border-radius: 18px; padding: 24px; box-shadow: 0 10px 24px rgba(0, 0, 0, 0.06); }
+
+.diag-map-wrapper { position: relative; border-radius: 18px; overflow: hidden; background: #fff; box-shadow: 0 10px 24px rgba(0, 0, 0, 0.08); }
+.diag-map-img { max-width: 100%; height: auto; object-fit: contain; display: block; margin: 0 auto; }
+
+/* Pontos Quentes (Hotspots) */
+.diag-hotspot {
+    position: absolute; width: 20px; height: 20px; border-radius: 50%; background: #3498db; border: none; cursor: pointer; z-index: 20;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.12); transition: background 0.18s ease, transform 0.12s ease;
+    animation: diag-pulse 1.8s ease-out infinite;
+}
+.diag-hotspot:active, .diag-hotspot.active { background: #e67e22; transform: scale(1.05); }
+@keyframes diag-pulse {
+    0% { box-shadow: 0 0 0 0 rgba(52,152,219,0.45); }
+    70% { box-shadow: 0 0 0 12px rgba(52,152,219,0.06); }
+    100% { box-shadow: 0 0 0 0 rgba(52,152,219,0); }
+}
+
+.diag-panel-column h2 { margin-top: 0; color: var(--primary); font-size: 1.5rem; margin-bottom: 18px; }
+.diag-panel-column h3 { margin-top: 0; color: #2c3e50; font-size: 1.3rem; }
+.diag-panel-column p, .diag-panel-column ul { color: #333; line-height: 1.65; margin: 0.75rem 0 0; }
+.diag-panel-column ul { padding-left: 20px; margin-top: 14px; }
+.diag-panel-column li { margin-bottom: 0.8rem; }
+
+@media (max-width: 900px) {
+    .diag-diff-widget { flex-direction: column; }
+}
+    
 </style>
 </head>
 <body class="focus-digest">
@@ -252,6 +420,7 @@
             <div class="tab-switcher">
                 <button class="tab-btn active" onclick="switchTab('anatomia', this)">Anatomia & Biomecânica</button>
                 <button class="tab-btn" onclick="switchTab('sna', this)">SNA / Neuro</button>
+                <button class="tab-btn" onclick="switchTab('diagnostico', this)">Diagnóstico Diferencial</button>
                 <button class="tab-btn" onclick="switchTab('tecnica', this)">Técnica Manual</button>
             </div>
 
@@ -274,10 +443,14 @@
                                     <span class="anat-label">⚓ Sistema de Fixação / Ligamentos</span>
                                     <div id="anat-fix-list"></div>
                                 </div>
+                                <div class="anat-box">
+                                    <span class="anat-label">⚠️ Contraindicações Clínicas</span>
+                                    <div id="anat-contra-list" class="anat-text">Nenhuma contraindicação clínica registada.</div>
+                                </div>
                             </div>
                             <div class="anat-visual-col">
                                 <div id="anat-img-carousel">
-                                    <img id="carousel-img" class="carousel-img" src="https://placehold.co/400x300/eee/999?text=SEM+IMAGEM">
+                                    <img id="carousel-img" class="carousel-img" src="sem_imagem.jpg">
                                     <div id="carousel-note" class="anat-img-note"></div>
                                     
                                     <div id="carousel-controls" class="carousel-controls">
@@ -326,6 +499,24 @@
                                     <h3>SNA VISUALIZADOR</h3>
                                     <p>Nenhuma imagem disponível.</p>
                                 </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="view-diagnostico" class="content-view">
+                    <div class="diag-diff-widget">
+                        <div class="diag-map-column">
+                            <div class="diag-map-wrapper" id="map-wrapper">
+                                <img src="6997109.jpg" alt="Mapa Clínico" class="diag-map-img">
+                                <!-- Os botões serão injetados aqui pelo JavaScript -->
+                            </div>
+                        </div>
+
+                        <div class="diag-panel-column">
+                            <h2 id="diag-main-title" style="margin-top:0; color:var(--primary); font-size:1.6rem; border-bottom:2px solid #f0f0f0; padding-bottom:10px;">Diagnóstico Diferencial</h2>
+                            <div id="diag-panel" class="diag-panel-default">
+                                <!-- O texto inicial será injetado aqui -->
                             </div>
                         </div>
                     </div>
@@ -397,6 +588,7 @@
         var techCarouselIndex = [];
         var currentSnaImages = [];
         var currentSnaIndex = 0;
+        var currentDiagOrgan = 'estomago';
 
         const db = {
             "fossa_anterior": {
@@ -590,7 +782,7 @@
                     { "name": "A Raiz do Mesentério", "img": "raiz_mesenterio.jpg", "note": "É a faixa tecidular ultra resistente e sob grande tensão responsável por suspender e segurar os vários metros de ansas intestinais. Percorre rasgando obliquamente a topografia em declive, descendo de L2 (esquerda) e terminando na fossa ilíaca direita." }, 
                     { "name": "Músculo de Treitz", "img": "musculo_treitz.jpg", "note": "É um cordão fibromuscular dinâmico com origem dupla no pilar direito do diafragma e no tecido do tronco celíaco, que desce para suspender a flexura duodenojejunal e a porção final do duodeno." }
                 ],
-                "snaS": "<ul><li><b>Via Neurológica:</b> Gânglio Mesentérico Superior.</li><li><b>Dores Referidas:</b><ul><li><b>Zona do Umbigo:</b> Cãibras periumbilicais severas (obstrução/isquemia).</li><li><b>Hipersensibilidade:</b> Reatividade da parede; intolerância a cintos ou calças apertadas.</li><li><b>Ptose:</b> Sensação de 'repuxar' e fadiga após muito tempo de pé.</li><li><b>Lombalgias:</b> Lumbago reflexo; dor em 'cinto' (T11-L1) mais intensa à esquerda.</li><li><b>Sistema Urogenital:</b> Dor baixa por pressão sobre os órgãos pélvicos.</li><li><b>Postura:</b> Desconforto ao dormir de barriga para baixo (decúbito ventral).</li></ul></li></ul>",
+                "snaS": "<ul><li><b>Via Neurológica:</b> Gânglio Mesentérico Superior.</li><li><b>Dores Referidas:</b><ul><li><b>Zona do Umbigo:</b> Cãibras periumbilicais severas (obstrução/isquemia).</li><li><b>Hipersensibilidade:</b> Reatividade da parede; intolerância a cintos ou calças apertadas.</li><li><b>Ptose:</b> Sensação de 'repuxar' e fadiga após muito tempo de pé.</li><li><b>Lombalgias:</b> Dor em 'cinto' (T11-L1) mais intensa à esquerda.</li><li><b>Sistema Urogenital:</b> Dor baixa por pressão sobre os órgãos pélvicos.</li><li><b>Postura:</b> Desconforto ao dormir de barriga para baixo (decúbito ventral).</li></ul></li></ul>",
                 "snaP": "<ul><li><b>Ação:</b> Peristaltismo absortivo e secreção intestinal.</li></ul>",
                 "techs": [{ 
                     "nome": "Estiramento da Linha Estrutural e Transversal da Fixação na Raiz do Mesentério Inferior", 
@@ -630,17 +822,16 @@
             },
             "rins": {
                 "nome": "Rins",
-                "imgSNA": "sna_rins_vias.jpg",
-                "imgSNA2": "sna_rins_dores.jpg",
+                "imgSNA": "sna_rins_1.jpg",
+                "imgSNA2": "sna_rins_2.jpg",
                 "tituloS": "(T10-L1)",
                 "tituloP": "(Nervo Vago)",
-                "imgAnat": "foto_tech_rins.jpg",
+                "imgAnat": "anat_rins.jpg",
                 "imgTech": "foto_tech_rins.jpg",
                 "anatLoc": "<ul><li><b>Dimensões e Estrutura:</b> Cada rim possui forma de feijão (~140g) com cerca de 12x7x3 cm. O esquerdo é habitualmente maior e o direito posiciona-se ligeiramente mais abaixo devido ao fígado.</li><li><b>Palpação:</b> Avaliados com maior eficácia via palpação profunda anterior (abdominal). O polo inferior é sentido lateralmente ao umbigo como uma massa sólida semelhante a uma 'barra de sabão'.</li><li><b>Movimentos Respiratórios:</b> O diafragma empurra-os 3 a 4 cm para baixo ao longo do psoas na inspiração, provocando inclinação anterior do polo superior e rotação externa.</li><li><b>Referências Anatómicas:</b> Estendem-se de T11 a L3 (posterior). Na frente, o limite superior coincide com a 9ª cartilagem costal e a base situa-se ao nível do umbigo.</li></ul>",
                 "anatRel": "<ul><li><b>Relações Posteriores:</b> Assentam sobre o diafragma e os músculos psoas e quadrado lombar. As glândulas suprarrenais funcionam como 'chapéus' nos polos superiores.</li><li><b>Relações Anteriores:</b> À direita com o fígado, duodeno e cólon; à esquerda com o baço, estômago, pâncreas e cólon.</li><li><b>Sistema de Fixação:</b> Não possuem ligamentos fixos. São mantidos por um 'ninho' de fáscia e gordura (aberto inferiormente) e pela pressão constante dos músculos abdominais.</li><li><b>Nota Clínica:</b> Esta arquitetura torna-os muito suscetíveis a descidas anormais (ptose renal).</li></ul>",
                 "anatFix": [
-                    { "name": "Fáscia Renal (Gerota)", "img": "fascia_gerota.jpg", "note": "Saco anatómico aberto inferiormente, sendo a principal falha estrutural por onde o rim escapa cronicamente em episódios de ptose severa." },
-                    { "name": "Pedículo Vascular e Gordura", "img": "pediculo_renal.jpg", "note": "Sem ligamentos verdadeiros, o rim é ancorado transversalmente pelo pesado pedículo vascular (Artéria/Veia Renais) e mantido pela pressão da cápsula adiposa perirrenal." }
+
                 ],
                 "snaS": "<ul><li><b>Via Neurológica (T10-L1):</b> Sinapse no Gânglio Aorticorrenal. Controla o tónus vascular e a pressão arterial.</li><li><b>Dores Referidas:</b><ul><li><b>Lombalgia Renal:</b> Dor matinal que melhora ao levantar e agrava ao fim do dia.</li><li><b>Subcostal (T12):</b> Dor nas costelas inferiores que irradia para o umbigo.</li><li><b>Urogenital (L1-L2):</b> Dor nas virilhas, órgãos genitais e anca (falsas coxartroses).</li><li><b>Membros Inferiores (L2-L4):</b> Dor na face lateral da coxa e sensibilidade na cápsula do joelho.</li><li><b>Cólica Renal:</b> Dor aguda no flanco irradiada para o abdómen inferior e coxas.</li></ul></li></ul>",
                 "snaP": "<ul><li><b>Nervo Vago:</b> Papel vasomotor discreto na cápsula renal.</li></ul>",
@@ -653,7 +844,7 @@
                 "imgSNA2": "sna_bexiga_dores.jpg",
                 "tituloS": "(L1-L2)",
                 "tituloP": "(Nervos S2-S4)",
-                "imgAnat": "foto_tech_bexiga.jpg",
+                "imgAnat": "anat_bexiga.jpg",
                 "imgTech": "foto_tech_bexiga.jpg",
                 "anatLoc": "<ul><li><b>Dimensões e Estrutura:</b> Reservatório muscular oco (músculo detrusor) com capacidade de ~500 ml. A forte vontade de urinar surge habitualmente entre os 300 e 350 ml.</li><li><b>Palpação:</b> Vazia, permanece oculta atrás da sínfise púbica. Cheia, projeta-se até 3 cm acima do osso, sendo palpável na região suprapúbica (vetor inferior e profundo).</li><li><b>Movimentos Respiratórios:</b> Move-se em sintonia com o sacro e útero: desloca-se póstero-superiormente na inspiração e ântero-inferiormente na expiração.</li><li><b>Referências Anatómicas:</b> Localizada na pelve menor, atrás da sínfise púbica. O ápice sobe em direção ao umbigo conforme o enchimento vesical.</li></ul>",
                 "anatRel": "<ul><li><b>Relações Viscerais:</b> Superiormente com o intestino delgado; anterior com o púbis; inferior com a próstata (homens) ou pavimento pélvico (mulheres).</li><li><b>Relações Posteriores:</b> Com o reto e vesículas seminais nos homens, ou com o útero e a vagina nas mulheres.</li><li><b>Nota Biomecânica:</b> O músculo detrusor possui alta condutividade elétrica, permitindo uma contração sincrónica e total para o esvaziamento.</li></ul>",
@@ -708,8 +899,8 @@
             },
             "coracao": {
                 "nome": "Coração",
-                "imgSNA": "sna_coracao_vias.jpg",
-                "imgSNA2": "sna_coracao_dores.jpg",
+                "imgSNA": "sna_coracao_1.jpg",
+                "imgSNA2": "sna_coracao_2.jpg",
                 "tituloS": "(T1-T5)",
                 "tituloP": "(Nervo Vago)",
                 "imgAnat": "foto_tech_coracao.jpg",
@@ -719,7 +910,6 @@
                 "anatFix": [
                     { "name": "Ligamentos Vertebropericárdicos", "img": "lig_vert_peri.jpg", "note": "Garantem a estabilização posterior da base do pericárdio, ancorando-a aos corpos vertebrais de T1 a T4. Disfunções de mobilidade nestes segmentos originam disautonomia e nociceção referida interescapular." }, 
                     { "name": "Ligamentos Esternopericárdicos", "img": ["lig_estern_peri1.jpg", "lig_estern_peri2.jpg"], "note": "Feixes fibrosos superiores e inferiores que fixam a face anterior do pericárdio à face posterior do manúbrio e corpo do esterno." },
-                    { "name": "Fáscia Cervicopericárdica", "img": "fascia_cervicopericardica.jpg", "note": "Continuidade caudal da lâmina pré-traqueal da fáscia cervical profunda, ligando o osso hioide e a cartilagem tiroideia ao ápice do pericárdio, constituindo um elo de tensão cervico-torácico direto." },
                     { "name": "Ligamentos Frenopericárdicos", "img": "lig_frenopericardicos.jpg", "note": "Condensações fibrosas anteriores e lateral (além da coalescência ao centro tendíneo) que fundem a base pericárdica ao músculo diafragma." }
                 ],
                 "snaS": "<ul><li><b>Via Neurológica (T1-T5):</b> Fibras eferentes dos níveis T1-T5 com sinapse nos gânglios cervicais, com destaque para o <b>Gânglio Estrelado (C7-T1)</b>.</li><li><b>Ação Fisiológica:</b> Aumento da frequência cardíaca (cronotropismo), da força de contração (inotropismo) e da velocidade de condução.</li><li><b>Dores Referidas:</b><ul><li><b>Zonas Típicas:</b> Região retroesternal, interescapular e bordo ulnar do braço esquerdo.</li><li><b>Mandíbula:</b> Dor referida no ângulo da mandíbula (Gonion).</li><li><b>Reflexos Frénicos:</b> Podem simular epicondilites, contratura de Dupuytren ou síndrome de Sudeck.</li></ul></li><li><b>Pontos de Diagnóstico:</b><ul><li><b>Coluna Vertebral:</b> Foco clínico em restrições na vértebra <b>T4</b>.</li><li><b>Pontos de Chapman:</b> Anteriores (2º espaço intercostal) e Posteriores (transversas de T2-T4).</li></ul></li></ul>",
@@ -734,8 +924,8 @@
             },
             "pulmoes": {
                 "nome": "Pulmões",
-                "imgSNA": "sna_pulmoes_vias.jpg",
-                "imgSNA2": "sna_pulmoes_dores.jpg",
+                "imgSNA": "sna_pulmoes_1.jpg",
+                "imgSNA2": "sna_pulmoes_2.jpg",
                 "tituloS": "(T1-T5)",
                 "tituloP": "(Nervo Vago)",
                 "imgAnat": "foto_tech_pulmoes.jpg",
@@ -743,7 +933,7 @@
                 "anatLoc": "<ul><li><b>Dimensões e Estrutura:</b> O pulmão direito é maior e possui três lobos; o esquerdo é mais pequeno (para acomodar o coração) e possui apenas dois lobos.</li><li><b>Palpação:</b> A única porção diretamente palpável é a cúpula pleural (o topo do pulmão), localizada imediatamente acima da clavícula.</li><li><b>Movimentos Respiratórios:</b> Têm um comportamento passivo, acompanhando a caixa torácica e o diafragma. Na inspiração, expandem-se com uma ligeira rotação externa e deslizam para preencher os recessos pleurais.</li><li><b>Referências Anatómicas:</b> O ápice ultrapassa a 1ª costela e a clavícula. A base repousa sobre o diafragma, descendo até ao nível de T11-T12 na região posterior.</li></ul>",
                 "anatRel": "<ul><li><b>Mediastino:</b> Estão separados na linha média pelo coração, esófago e grandes vasos.</li><li><b>Relações Inferiores:</b> Assentam sobre o diafragma, que serve de barreira física para o fígado (à direita) e para o estômago e baço (à esquerda).</li><li><b>Sistema Pleural:</b> Envolvidos pela pleura (membrana dupla com líquido lubrificante), mantêm-se unidos à parede torácica através de pressão negativa (vácuo), permitindo o deslizamento sem atrito.</li></ul>",
                 "anatFix": [
-                    { "name": "Aparelho Suspensor da Cúpula Pleural", "img": "lig_susp_cupula.jpg", "note": "Complexo miofascial que inclui os ligamentos vertebropleural, costopleural e transversopleural. Estabelece a ancoragem estrutural entre o ápice pulmonar e a transição C7-T1. Disfunções neste aparelho induzem frequentemente cervicalgias rebeldes." },
+                    { "name": "Aparelho Suspensor da Cúpula Pleural", "img": ["lig_susp_cupula_1.jpg", "lig_susp_cupula_2.jpg"], "note": "O ligamento suspensor fixa a cúpula pleural ao esqueleto. É constituído por fibras musculares do músculo escaleno posterior (por vezes misturadas com fibras dos músculos escalenos anterior e médio), além dos fascículos fibrosos. Este ligamento não se insere diretamente na pleura parietal, mas sim na fáscia intratorácica." },
                     { "name": "Ligamento Interpleural", "img": "lig_interpleural.jpg", "note": "Estrutura fascial posterior ao esófago e à aorta descendente, responsável pela dissipação e equilíbrio das forças de tensão transversal entre as cavidades pleurais direita e esquerda." },
                     { "name": "Ligamento Pulmonar (Triangular)", "img": "lig_pulmonar.jpg", "note": "Duplicação da pleura que se estende caudalmente desde o hilo pulmonar até à base diafragmática. Atua como estabilizador vertical para evitar a ascensão patológica da veia pulmonar inferior e do hilo durante inspirações profundas." }
                 ],
@@ -1112,6 +1302,27 @@
             var techContainer = document.getElementById('tech-container');
             techContainer.innerHTML = "<h2 id=\"tech-name\" style=\"margin-top:0; color:var(--primary); font-size:1.6rem; border-bottom:2px solid #f0f0f0; padding-bottom:10px;\">Técnicas - " + d.nome + "</h2>";
 
+            // ---------- Diagnóstico Diferencial ----------
+            try {
+                var diagTitle = document.getElementById('diag-title');
+                var diagAn = document.getElementById('diag-anamnese');
+                var diagM = document.getElementById('diag-mec');
+                var diagC = document.getElementById('diag-conex');
+                if (diagTitle) diagTitle.innerText = d.nome || '';
+                var diag = d.diagnostico || {};
+                    if (diagAn) diagAn.innerHTML = diag.anamnese || d.diffAnamnese || d.diff_anamnese || '-';
+                    if (diagM) diagM.innerHTML = diag.mecanica || d.diffMecanica || d.diff_mecanica || '-';
+                    if (diagC) diagC.innerHTML = diag.conexoes || d.diffConexoes || d.diff_conexoes || '-';
+                } catch (e) { console.error('diag fill error', e); }
+            // ------------------------------------------------
+
+            currentDiagOrgan = key;
+            var diagMainTitle = document.getElementById('diag-main-title');
+            if (diagMainTitle) {
+                diagMainTitle.innerText = 'Diagnóstico Diferencial - ' + d.nome;
+            }
+            renderDiagnosisWidgetForOrgan(key);
+
             if (d.techs && Array.isArray(d.techs)) {
                 d.techs.forEach(function(t, index) {
                     var stepsHtml = "";
@@ -1119,7 +1330,7 @@
                         stepsHtml += "<li>" + s + "</li>";
                     });
 
-                    var contraHtml = t.contra ? "<div class=\"tech-warn\"><strong>⚠️ Contraindicações Clínicas:</strong> " + t.contra + "</div>" : "";
+                    // contraindications will be shown in the Anatomy tab; do not render here in Techniques
 
                     var imgs = Array.isArray(t.img) ? t.img : (t.img ? [t.img] : []);
                     techCarouselImages[index] = imgs;
@@ -1147,7 +1358,6 @@
 
                     techContainer.innerHTML += "<div class=\"tech-block\">" +
                         "<h3>" + (index + 1) + ". " + t.nome + "</h3>" +
-                        contraHtml +
                         "<div class=\"tech-row\">" +
                             textHtml +
                             imgsHtml +
@@ -1160,6 +1370,25 @@
             } else {
                 techContainer.innerHTML += "<p>Nenhuma técnica detalhada encontrada para este órgão.</p>";
             }
+
+            // Preencher a caixa de contraindicações na aba de Anatomia
+            try {
+                var contraEl = document.getElementById('anat-contra-list');
+                if (contraEl) {
+                    var contras = [];
+                    if (d.techs && Array.isArray(d.techs)) {
+                        d.techs.forEach(function(t){ if (t.contra) contras.push({nome: t.nome, text: t.contra}); });
+                    }
+                    if (contras.length > 0) {
+                        var html = '<ul style="padding-left:18px; margin:0;">';
+                        contras.forEach(function(c){ html += '<li><strong>' + c.nome + ':</strong> ' + c.text + '</li>'; });
+                        html += '</ul>';
+                        contraEl.innerHTML = html;
+                    } else {
+                        contraEl.innerHTML = '<p class="anat-text">Nenhuma contraindicação clínica registada.</p>';
+                    }
+                }
+            } catch (e) { console.error('fill contra error', e); }
 
             var refsBox = document.getElementById('refs-box');
             var refsList = document.getElementById('refs-list');
@@ -1202,6 +1431,486 @@
             btn.classList.add('active');
         }
 
+        function renderHotspots(organKey) {
+            const wrapper = document.getElementById('map-wrapper');
+            const panel = document.getElementById('diag-panel');
+            const titlePanel = document.getElementById('diag-main-title');
+            
+            if (!wrapper || !panel) return;
+
+            // Atualiza os títulos principais
+
+            var organName = '';
+            switch(organKey) {
+                case 'figado':
+                    organName = 'Fígado';
+                    break;
+                case 'estomago':
+                    organName = 'Estômago';
+                    break;
+                case 'vesicula':
+                    organName = 'Vesícula Biliar';
+                    break;
+                case 'pancreas': 
+                    organName = 'Pâncreas';
+                    break;
+                case 'delgado':
+                    organName = 'Intestino Delgado';
+                    break;
+                case 'colon':
+                    organName = 'Intestino Grosso';
+                    break;        
+            }
+            titlePanel.innerText = `Diagnóstico Diferencial - ${organName}`;
+            panel.innerHTML = `<h3>Mapeamento Clínico - ${organName}</h3><p>Clique num ponto luminoso no corpo para explorar as pistas.</p>`;
+
+            // Remove os botões antigos
+            const existingButtons = wrapper.querySelectorAll('.diag-hotspot');
+            existingButtons.forEach(btn => btn.remove());
+
+            // Vai buscar os dados do órgão selecionado
+            const organData = clinicalMapData[organKey];
+            if (!organData) return;
+
+            // Cria os novos botões
+            Object.keys(organData).forEach(btnId => {
+                const info = organData[btnId];
+                
+                // Cria o elemento
+                const btn = document.createElement('button');
+                btn.id = btnId;
+                btn.className = 'diag-hotspot';
+                btn.title = info.hoverTitle;
+                
+                // Aplica o CSS diretamente
+                btn.style.top = info.pos.top;
+                btn.style.left = info.pos.left;
+                btn.style.position = 'absolute'; // Garante que ficam por cima da imagem
+
+                // Adiciona o evento de clique
+                btn.addEventListener('click', function() {
+                    // Remove a classe 'active' de todos
+                    wrapper.querySelectorAll('.diag-hotspot').forEach(b => b.classList.remove('active'));
+                    // Adiciona ao clicado
+                    btn.classList.add('active');
+                    // Atualiza o painel
+                    panel.innerHTML = `<h3>${info.title}</h3>${info.content}`;
+                });
+
+                // Injeta no HTML
+                wrapper.appendChild(btn);
+            });
+        }
+
+        const clinicalMapData = {
+            estomago: {
+                'btn-epigastrio': {
+                    pos: { top: '33%', left: '30%' },
+                    hoverTitle: 'Epigástrio (Anterior)',
+                    title: 'Anamnese, Mecânica & Red Flags (Epigástrio)',
+                    content: `
+        <ul>
+        <li><strong>🗣️ Pistas Anamnese:</strong>
+            <ul>
+            <li><strong>Azia, Pirose e Refluxo:</strong> Regurgitação ácida, hálito ácido. Agrava ao inclinar corpo para a frente ou deitar.</li>
+            <li><strong>Relação com Refeições:</strong> Dor 1,5h a 3h após comer. Alivia momentaneamente com ingestão (exceto açúcar).</li>
+            <li><strong>Dores Noturnas:</strong> Despertar entre as 2h e as 4h (Forte indicador de úlcera).</li>
+            <li><strong>Sintomas Digestivos:</strong> Saciedade rápida, som de "chapinhar" tardio, gases, aerofagia e disfagia.</li>
+            <li><strong>Dificuldade com Roupas Apertadas:</strong> Sinal de ptose (descida) gástrica.</li>
+            </ul>
+        </li>
+        <li><strong>🧍 Pistas Mecânicas:</strong>
+            <ul>
+            <li><strong>Postura:</strong> antálgica em flexão anterior (curvado). Evita decúbito ventral. Dor ao respirar fundo, tossir ou defecar.</li>
+            </ul>
+        </li>
+        <li><strong>⚠️ Red Flags (⚠️ Médico):</strong>
+            <ul>
+            <li><strong>Fezes escuras/pastosas (melenas):</strong> vómitos com sangue, perda de peso inexplicável (averssão à carne), e Gânglio de Virchow (clavícula esquerda).</li>
+            </ul>
+        </li>
+        </ul>`
+                },
+                'btn-ombro': {
+                    pos: { top: '24%', left: '39%' },
+                    hoverTitle: 'Ombro Esquerdo (Anterior)',
+                    title: 'Conexão: Ombro Esquerdo (Periartrite)',
+                    content: `
+        <ul>
+        <li><strong>🔗 Cadeia Lesional:</strong> Tensão gástrica reflete-se fascialmente no ombro esquerdo. Causa comum e oculta de periartrite umeroescapular.</li>
+        <li><strong>🧍 Pistas Mecânicas:</strong> A dor piora com braços levantados (pintar tetos) ou cabeça inclinada para trás (estira fibras gástricas).</li>
+        </ul>`
+                },
+                'btn-testa': {
+                    pos: { top: '11%', left: '32%' },
+                    hoverTitle: 'Testa Esquerda (Anterior)',
+                    title: 'Conexão: Cefaleia Frontal Esquerda',
+                    content: `
+        <ul>
+        <li><strong>🔗 Cadeia Lesional:</strong> Cefaleias caracteristicamente no lado esquerdo da testa (frontais esquerdas).</li>
+        <li><strong>Ritmo:</strong> Surgem no final de refeição abundante, seguindo ritmo peristáltico.</li>
+        <li><strong>Sinal:</strong> Aliviam ou desaparecem subitamente se o paciente vomitar.</li>
+        </ul>`
+                },
+                'btn-dorsal': {
+                    pos: { top: '30%', left: '65.7%' },
+                    hoverTitle: 'T6 (Posterior)',
+                    title: 'Conexão: Coluna Dorsal e Costelas (T6)',
+                    content: `
+        <ul>
+        <li><strong>🔗 Cadeia Lesional:</strong> Ponto mecânico facilitado na Vértebra T6 e 6ª articulação costovertebral esquerda.</li>
+        <li><strong>Sinal:</strong> Hiperestesia no Ponto de Boas ao lado da coluna vertebral, entre T10 e T12 à esquerda.</li>
+        </ul>`
+                },
+                'btn-lombar': {
+                    pos: { top: '46%', left: '63%' },
+                    hoverTitle: 'SI Esquerda/Lombar (Posterior)',
+                    title: 'Conexão: Psoas, Lombar e Sacro (SIE)',
+                    content: `
+        <ul>
+        <li><strong>🔗 Cadeia Lesional:</strong> Espasmo reflexo do músculo Psoas esquerdo (partilha de fáscia com diafragma).</li>
+        <li><strong>Consequência:</strong> Dores lombares e restrições na articulação sacroilíaca esquerda.</li>
+        </ul>`
+                },
+                'btn-garganta': {
+                    pos: { top: '23%', left: '31%' },
+                    hoverTitle: 'Garganta (Anterior)',
+                    title: 'Conexão: Pescoço & Vias Aéreas (Frénico)',
+                    content: `
+        <ul>
+        <li><strong>🔗 Cadeia Lesional:</strong> Dores de garganta atípicas (sem causa infeciosa).</li>
+        <li><strong>Em Crianças:</strong> Crises de asma noturnas/manhã cedo e amigdalites de repetição. Pode disfarçar hérnias hiato.</li>
+        </ul>`
+                }
+            },
+            figado: {
+                'btn-hipocondrio': {
+                    pos: { top: '35%', left: '25%' },
+                    hoverTitle: 'Hipocôndrio Direito (Anterior)',
+                    title: 'Anamnese e Postura (Hipocôndrio Direito)',
+                    content: `<ul><li>🗣️ <b>Pistas Anamnese</b><ul><li><b>Fadiga e Sono:</b> Cansaço profundo. Acorda cansado, com picos de febre/suores entre a 1h e as 3h da manhã.</li><li><b>Digestão:</b> Vómitos matinais viscosos (muito comum na toxicidade alcoólica), regurgitações amargas (funcionamento biliar alterado), diarreia urgente pós-refeição, fezes descoloradas e halitose a acetona.</li><li><b>Aversões:</b> Gorduras, ovos, chocolate, álcool, carne de porco e cebolas.</li><li><b>Pele:</b> Icterícia, prurido intenso, pele e cabelo oleosos, alopecia, acne severo, angiomas estelares e eritema palmar. </li><li><b>Sinais sensoriais:</b> Fotofobia 1-2 horas após a refeição e hipersensibilidade do couro cabeludo. </li><li><b>Emocional:</b> Depressão e fadiga mental rápida, irritabilidade, raiva intensa e frustração, sensação de perda de "propósito de vida" e perda do sentido do "eu verdadeiro".</li></ul></li><li>🧍 <b>Pistas Mecânicas</b><ul><li><b>Postura:</b> Flexão anterior com sidebending direito (para relaxar ligamentos peri-hepáticos) e ligeira rotação esquerda do tronco por períodos prolongados. Evita decúbito ventral e lado direito durante o descanso e o sono ou qualquer posição que comprima o hipocôndrio direito. </li><li><b>Respiração:</b> Assimétrica (lado esquerdo começa primeiro). Limita o movimento torácico direito. Dor ao inspirar fundo.</li></ul></li></ul>`
+                },
+                'btn-ombro-dir': {
+                    pos: { top: '24%', left: '21%' },
+                    hoverTitle: 'Ombro Direito (Anterior)',
+                    title: 'Conexão Periférica: Ombro Direito',
+                    content: `<p>🔗 <b>Cadeia Lesional:</b> Periartrite umeroescapular direita (inflamação e limitação de ao levantar o braço).</p><p>📍 <b>Mecanismo:</b> Transmissão mecânica (fáscias cervicopleurais) e reflexa (irritação do nervo frénico direito).</p>`
+                },
+                'btn-lombar-ciatica': {
+                    pos: { top: '48%', left: '68%' },
+                    hoverTitle: 'Lombar, SI e Pernas (Posterior)',
+                    title: 'Conexão Periférica: Lombar, SI e Pernas',
+                    content: `<p>🔗 <b>Cadeia Lesional:</b> Dor lombar intensa matinal que desaparece ~20 min após levantar (devido à estase no plexo venoso vertebral).</p><ul><li><b>Ciática Esquerda Aguda:</b> Hipertensão porta causa dilatação das veias epidurais no sacro. Muito resistente às terapêuticas convencionais.</li><li><b>Membros Inferiores:</b> Cruralgia à direita (dor ao longo do nervo crural/femoral) e bloqueios distantes (tibioperoniais, cuboide e 5º metatarso do pé direito).</li></ul>`
+                },
+                'btn-cervical': {
+                    pos: { top: '18%', left: '65%' },
+                    hoverTitle: 'Coluna Cervical (Posterior)',
+                    title: 'Conexão Periférica: Coluna Cervical',
+                    content: `<p>🔗 <b>Cadeia Lesional:</b> Bloqueios vertebrais cervicais à direita ou bilaterais, tipicamente em C4-C5 e C5-C6.</p><p>📍 <b>Causa e Sintomas:</b> Irritação ascendente do nervo frénico. Possíveis nevralgias cervicobraquiais associadas.</p>`
+                },
+                'btn-dorsal-dir': {
+                    pos: { top: '32%', left: '68%' },
+                    hoverTitle: 'Dorsais e Costelas (Dir.)',
+                    title: 'Conexão Periférica: Dorsais e Costelas (Dir.)',
+                    content: `<p>🔗 <b>Cadeia Lesional:</b> Bloqueios vertebrais crónicos e recorrentes entre T7 e T10 (muito persistentes e difíceis de resolver).</p><p>📍 <b>Restrições Costais:</b> Especial incidência nas costelas 7 a 10 do lado direito, com palpação dolorosa.</p>`
+                },
+                'btn-rosto': {
+                    pos: { top: '11%', left: '28%' },
+                    hoverTitle: 'Crânio e Rosto',
+                    title: 'Conexão Periférica: Crânio e Rosto',
+                    content: `<p>🔗 <b>Cadeia Lesional:</b> Dores de cabeça bilaterais previsíveis, acompanhadas de dor nos olhos e na coluna cervical.</p><ul><li><b>Sinais Faciais:</b> Sinusite crónica e rubor facial (<i>flushing</i>) predominante no lado direito, 1 a 2 horas após refeições.</li><li><b>Sinais Sensoriais:</b> Fotofobia (coincide com máxima atividade hepática) e hipersensibilidade do couro cabeludo ao toque.</li></ul>`
+                }
+            },
+            vesicula: {
+                'btn-hipocondrio-ves': {
+                    pos: { top: '37%', left: '28%' },
+                    hoverTitle: 'Hipocôndrio Dir. (Vesícula)',
+                    title: 'Anamnese e Postura (Sinal de Murphy)',
+                    content: `
+                <ul>
+                    <li>🗣️ <b>Pistas Anamnese</b>
+                        <ul>
+                            <li><b>Alívio Paradoxal:</b> Alívio imediato ao comer, agravando pouco depois com náuseas, peso e suores frios.</li>
+                            <li><b>Aversões e Desejos:</b> Aversão a gorduras, ovos e chocolate; desejo por alimentos ácidos e temperados. Hálito com odor alcalino.</li>
+                            <li><b>Noite e Sono:</b> Picos de febre noturna (2h-4h ou 23h-1h) com sensação de frio paradoxal.</li>
+                            <li><b>Influência hormonal (em Mulheres):</b> Agrava na 2ª metade do ciclo menstrual (progesterona) ou com contracetivos.</li>
+                        </ul>
+                    </li>
+                    <li>🧍 <b>Pistas Mecânicas</b>
+                        <ul>
+                            <li><b>Postura Típica:</b> Flexão anterior com sidebending direito e rotação esquerda (ombro direito descaído - "postura de enjoo"). Intolerância ao decúbito ventral.</li>
+                            <li><b>Respiração & Murphy:</b> A dor súbita ao inspirar fundo sob o rebordo costal direito é o Sinal de Murphy (a dor ao expirar fundo aponta antes para o colédoco).</li>
+                        </ul>
+                    </li>
+                </ul>`
+                },
+                'btn-ombro-dir-ves': {
+                    pos: { top: '24%', left: '70%' },
+                    hoverTitle: 'Escápula Direita (Anterior)',
+                    title: 'Conexão Periférica: Escápula Direita',
+                    content: `
+                <p>🔗 <b>Cadeia Lesional:</b> Dor referida clássica na zona retroescapular direita, com foco na inserção do músculo elevador da escápula.</p>
+                <p>📍 <b>Causa e Consequência:</b> Irritação descendente do nervo frénico. Pode evoluir para periartrite umeroescapular direita crónica com forte limitação de movimento.</p>`
+                },
+                'btn-cervical-esq-ves': {
+                    pos: { top: '20%', left: '33%' },
+                    hoverTitle: 'Cervical Esquerda (Cruzado)',
+                    title: 'Conexão Periférica: Cervical Esquerda',
+                    content: `
+                <p>🔗 <b>Cadeia Lesional:</b> Bloqueios vertebrais mecânicos focados especificamente entre C4 e C6 no lado esquerdo do pescoço.</p>
+                <p>📍 <b>Significado Clínico:</b> Padrão reflexo cruzado muito característico e diferenciador da patologia biliar (ao contrário do fígado, que bloqueia habitualmente à direita).</p>`
+                },
+                'btn-rosto-esq-ves': {
+                    pos: { top: '11%', left: '32%' },
+                    hoverTitle: 'Crânio Esquerdo (Cruzado)',
+                    title: 'Conexão Periférica: Crânio (Lado Esquerdo)',
+                    content: `
+                <p>🔗 <b>Cadeia Lesional:</b> Manifestação de fenómenos reflexos cruzados, espelhados na metade esquerda da cabeça.</p>
+                <ul>
+                    <li><b>Sinais Oculares e Nasais:</b> Tensão dolorosa aguda no olho esquerdo, afeção da narina esquerda e fotofobia predominante.</li>
+                    <li><b>Cefaleias e Sensibilidade:</b> Dores de cabeça severas (iniciam à esquerda e generalizam durante a crise) e couro cabeludo doloroso ao toque ou ao pentear do lado esquerdo.</li>
+                    <li><b>Restrições Cranianas:</b> Padrão de bloqueio nos ossos temporal e frontal esquerdos.</li>
+                </ul>`
+                },
+                'btn-dorsal-dir-ves': {
+                    pos: { top: '39%', left: '68%' },
+                    hoverTitle: 'Costelas Direitas e T12',
+                    title: 'Conexão Periférica: Costelas Direitas',
+                    content: `
+                <p>🔗 <b>Cadeia Lesional:</b> Restrições vertebrais recorrentes entre T7 e T10, frequentemente resistentes a terapia convencional.</p>
+                <ul>
+                    <li><b>Compressão Costal:</b> A compressão lateral manual sobre a 9ª e 10ª costelas direitas agrava o desconforto respiratório e os sintomas biliares.</li>
+                    <li><b>Sinal de Boas:</b> Zona de hiperestesia (sensibilidade extrema ao toque) na região paravertebral direita, ao nível de T12. Facilita o diagnóstico diferencial.</li>
+                </ul>`
+                }
+            },
+            pancreas: {
+                'btn-pancreas-anamnese': {
+                    pos: { top: '38%', left: '33%' },
+                    hoverTitle: 'Corpo Pancreático (Anamnese)',
+                    title: 'Anamnese e Sinais Digestivos',
+                    content: `
+                <ul>
+                    <li>🗣️ <b>Fadiga e Glicemia:</b> 
+                        <ul>
+                            <li>Fadiga extrema e persistente, com destaque para o cansaço pós-prandial imediato (agrava muito com açúcares).</li>
+                            <li>Ataques de fome súbitos (pico de fome ~1h após pequeno-almoço abundante, seguido de "crash" de energia e nova fome enganadora, perpetuando o ciclo).</li>
+                        </ul>
+                    </li>
+                    <li><b>Afrontamentos e Suores:</b> Desconforto epigástrico e sensação de calor/suores que começam imediatamente após a ingestão (indicador de hiperfunção aguda).</li>
+                    <li><b>Alterações Sensoriais:</b> Hipersensibilidade olfativa (aversão a perfumes pesados) e gustativa (desejo invulgar por alimentos ácidos/muito condimentados).</li>
+                    <li><b>Má digestão (Fezes):</b> Diarreia pós-prandial frequente, fezes descoloradas (tipo betume), esteatorreia (fezes gordurosas) e presença visual de alimento não digerido (sinal clássico de insuficiência exócrina).</li>
+                </ul>`
+                },
+                'btn-pancreas-mecanica': {
+                    pos: { top: '45%', left: '32%' },
+                    hoverTitle: 'Abdómen Central (Postura)',
+                    title: 'Pistas Mecânicas e Posturais',
+                    content: `
+                <ul>
+                    <li>🧍 <b>Postura de Alívio:</b> Flexão anterior (queixo no esterno) com inclinação esquerda e rotação direita (encurta fibras pancreáticas).
+                        <ul>
+                            <li><b>Crise Aguda:</b> Sentado inclinado para a frente, cabeça entre os joelhos, braços cruzados a pressionar o abdómen.</li>
+                        </ul>
+                    </li>
+                    <li><b>Intolerância Postural:</b> Agravamento severo em decúbito dorsal (deitar de costas alonga os ligamentos do pâncreas). Prefere estar deitado de lado ou encolhido.</li>
+                    <li><b>Respiração:</b> Muito superficial e curta (especialmente 1 a 3h após a refeição) para evitar a tração diafragmática.</li>
+                    <li><b>Sinal Tátil ("Estômago de Borracha"):</b> Sensação palpável de tensão "elástica" no tecido abdominal superior, sendo um bom indicador de edema ou inflamação pancreática.</li>
+                </ul>`
+                },
+                'btn-pancreas-alerta': {
+                    pos: { top: '14%', left: '48%' },
+                    hoverTitle: 'Bandeiras Vermelhas ⚠️',
+                    title: 'Sinais de Alerta (Bandeiras Vermelhas) ⚠️',
+                    content: `
+                <p>Qualquer combinação destas pistas exige encaminhamento urgente para avaliação oncológica (despiste de neoplasia):</p>
+                <ul>
+                    <li><b>Perda de Peso:</b> Acentuada, rápida e inexplicável.</li>
+                    <li><b>Icterícia Indolor:</b> Pele/olhos amarelados sem qualquer dor biliar associada (muito suspicioso).</li>
+                    <li><b>Urina:</b> Muito escura (sinal clínico de colestase).</li>
+                    <li><b>Diabetes Súbita:</b> Aparecimento recente e repentino sem historial prévio, podendo ser a primeira apresentação clínica do cancro pancreático.</li>
+                </ul>`
+                }
+            },
+            delgado: {
+                'btn-delgado-umbigo': {
+                    pos: { top: '48%', left: '30.7%' },
+                    hoverTitle: 'Abdómen Central (Periumbilical)',
+                    title: 'Anamnese e Biótipo (Ptose Intestinal)',
+                    content: `
+                <ul>
+                    <li>🗣️ <b>Pistas Anamnese</b>
+                        <ul>
+                            <li><b>Dor e Digestão:</b> Desconforto/peso ("puxão") periumbilical, 3 a 4 horas após a refeição. Saciedade precoce e flatulência que alivia muito a dor.</li>
+                            <li><b>Fadiga e Sono:</b> Acentuada ao final da tarde. Sono agitado e insónia a meio da noite (não reparador).</li>
+                            <li><b>Perfil Emocional:</b> Preocupação com a proteção e o papel na família, instinto materno e feminilidade, necessidade de estabilidade e justiça. Frequente fundo de hipocondria.</li>
+                            <li><b>Histórico Ginecológico:</b> Sintomas frequentemente iniciados após gravidez/parto (perda de elasticidade e ptose).</li>
+                        </ul>
+                    </li>
+                    <li>🧍 <b>Pistas Mecânicas (Biótipo Ptósico)</b>
+                        <ul>
+                            <li><b>Biótipo e Parede Abdominal:</b> Comum em pessoas asténicas longilíneas (magras/altas). Distensão abdominal visível em "bola" abaixo do umbigo.</li>
+                            <li><b>Agravamento Ortostático:</b> Piora muito após tempo em pé (tração gravitacional). Intolerante ao decúbito ventral e lateral direito.</li>
+                            <li><b>Roupas Apertadas:</b> Sinal clássico de incapacidade de usar cintos ou calças justas (necessidade urgente de desapertar).</li>
+                            <li><b>Respiração:</b> Superficial crónica ao expirar profundamente, especialmente em pé. O desconforto aumenta ao manter o tronco inclinado para a frente durante longos períodos</li>
+                        </ul>
+                    </li>
+                </ul>`
+                },
+                'btn-delgado-lombar': {
+                    pos: { top: '42%', left: '66%' },
+                    hoverTitle: 'Coluna Lombar (T10-L2)',
+                    title: 'Conexão Periférica: Coluna Lombar',
+                    content: `
+                <p>🔗 <b>Cadeia Lesional:</b> Bloqueios vertebrais mecânicos focados entre T10 e L2.</p>
+                <ul>
+                    <li>📍 <b>Dor em "Cinto":</b> Padrão de T11 a L1, frequentemente mais intensa do lado esquerdo.</li>
+                    <li>📍 <b>Sinal Diagnóstico Forte (Lumbago):</b> Lombalgia de instalação súbita após um esforço mínimo, mecânico ou banal (exemplo clássico: <i>"baixar para apanhar um fósforo"</i>). Pode ocorrer até em crianças e adolescentes.</li>
+                    <li>🧍 <b>Postura de Compensação:</b> Hiperlordose lombar (adotada instintivamente pela tração anterior imposta pela raiz do mesentério).</li>
+                </ul>`
+                },
+                'btn-delgado-pernas': {
+                    pos: { top: '70%', left: '59%' },
+                    hoverTitle: 'Pélvis e Membros Inferiores',
+                    title: 'Conexão Periférica: Membros Inferiores e Pélvis',
+                    content: `
+                <p>🔗 <b>Cadeia Lesional:</b> Tensão reflexa nas estruturas fasciais intestinais, originando espasmos do psoas e da junção ileocecal.</p>
+                <ul>
+                    <li><b>Falsa Ciática (Padrão Lateral):</b> O teste de Lasègue é frequentemente positivo e a dor diminui com inibição manual sobre a zona intestinal afetada.
+                        <ul>
+                            <li><i>Lado Direito:</i> Carácter mais mecânico.</li>
+                            <li><i>Lado Esquerdo:</i> Carácter congestivo e vascular (dilatação das veias epidurais e forames intervertebrais).</li>
+                        </ul>
+                    </li>
+                    <li><b>Articulações Inexplicáveis:</b> Dores no joelho (compressão reflexa do nervo femoral), dormência nas coxas e tensão nos flexores do quadril.</li>
+                    <li><b>Sintoma Matinal:</b> Sensação extrema de peso nas pernas e pés logo ao acordar, devido à congestão venosa mesentérica e estase abdominal.</li>
+                </ul>`
+                },
+                'btn-delgado-cabeca': {
+                    pos: { top: '10%', left: '34%' },
+                    hoverTitle: 'Cabeça e Visão',
+                    title: 'Conexão Periférica: Crânio e Cervical',
+                    content: `
+                <p>🔗 <b>Cadeia Lesional:</b> A sobrecarga descendente das ptoses gera compensações mecânicas e reflexos neurológicos superiores.</p>
+                <ul>
+                    <li><b>Cervicotorácica:</b> Rigidez e cifose compensatória na transição cervicotorácica (aspeto visual de "marrã" ou "corcunda").</li>
+                    <li><b>Cabeça e Face:</b> Cefaleias crónicas de tipo tensional.</li>
+                    <li><b>Visão:</b> Sensação inexplicável de olhos a arder e fotofobia (hipersensibilidade acentuada à luz).</li>
+                </ul>`
+                }
+            },
+            colon: {
+                'btn-colon-geral': {
+                    pos: { top: '50%', left: '30.6%' },
+                    hoverTitle: 'Abdómen Inferior (Geral)',
+                    title: 'Anamnese e Postura Global',
+                    content: `
+                <ul>
+                    <li>🗣️ <b>Pistas Anamnese</b>
+                        <ul>
+                            <li><b>Trânsito:</b> Alternância obstipação/diarreia. Padrão SII (diarreia matinal, fezes finas/bolinhas com muco). A dor melhora após defecar.</li>
+                            <li><b>Orais e Visuais:</b> Língua saburrosa (branca), halitose crónica, fotofobia e ardor ocular 3-4h após refeições.</li>
+                            <li><b>Fadiga e Sono:</b> Piora ao final da tarde. Insónia a meio da noite (pode acordar banhado em suor).</li>
+                            <li><b>Emocional:</b> Preocupação/proteção familiar, ansiedade, hipocondria e carcinofobia. Sintomas melhoram nas férias.</li>
+                        </ul>
+                    </li>
+                    <li>🧍 <b>Pistas Mecânicas</b>
+                        <ul>
+                            <li><b>Postura de Alívio:</b> Flexão anterior. Intolerância severa ao decúbito ventral (barriga para baixo).</li>
+                            <li><b>Esforço:</b> Muito tempo de pé, tossir ou desporto de impacto desencadeiam dores baixas, perda de urina e sensação de "peso" retal.</li>
+                            <li><b>Respiração:</b> Superficial e curta (ligações do cólon restringem o diafragma).</li>
+                        </ul>
+                    </li>
+                </ul>`
+                },
+                'btn-colon-dir': {
+                    pos: { top: '47%', left: '26%' },
+                    hoverTitle: 'Fossa Ilíaca Direita (Ceco)',
+                    title: 'Lado Direito: Ceco e Ascendente',
+                    content: `
+                <ul>
+                    <li>🗣️ <b>Clínica Específica (Direita):</b>
+                        <ul>
+                            <li><b>Digestão:</b> Fermentação excessiva de hidratos de carbono. Gases noturnos e fezes amareladas/espumosas.</li>
+                        </ul>
+                    </li>
+                    <li>🔗 <b>Conexões e Reflexos:</b>
+                        <ul>
+                            <li><b>Sacroilíaca:</b> Afeta diretamente a articulação sacroilíaca direita.</li>
+                            <li><b>Falsa Ciática Direita:</b> Carácter mecânico, devido a aderências e trações do ceco sobre o psoas e nervos locais.</li>
+                            <li><b>Joelho Direito:</b> Dores atípicas, muito frequentes em raparigas jovens (relacionado com alterações hormonais) e dor nas ancas.</li>
+                        </ul>
+                    </li>
+                    <li>🧍 <b>Postura (Flexura Hepática):</b> Inclinação lateral com ligeira rotação do tronco para a esquerda.</li>
+                </ul>`
+                },
+                'btn-colon-esq': {
+                    pos: { top: '47%', left: '35%' },
+                    hoverTitle: 'Fossa Ilíaca Esq. (Sigmoide)',
+                    title: 'Lado Esquerdo: Descendente e Sigmoide',
+                    content: `
+                <ul>
+                    <li>🗣️ <b>Clínica Específica (Esquerda):</b>
+                        <ul>
+                            <li><b>Digestão:</b> Putrefação proteica predominante. Fezes castanhas com odor muito fétido/pútrido.</li>
+                        </ul>
+                    </li>
+                    <li>🔗 <b>Conexões e Reflexos:</b>
+                        <ul>
+                            <li><b>Sacroilíaca:</b> Afeta diretamente a articulação sacroilíaca esquerda.</li>
+                            <li><b>Falsa Ciática Esquerda:</b> Carácter vascular/congestivo, originada no sigmoide tenso ou prolapsado (dilatação das veias epidurais).</li>
+                        </ul>
+                    </li>
+                    <li>🧍 <b>Postura (Flexura Esplénica):</b> Inclinação lateral com ligeira rotação do tronco para a direita.</li>
+                </ul>`
+                },
+                'btn-colon-lombar': {
+                    pos: { top: '40%', left: '66%' },
+                    hoverTitle: 'Lombar e Pelve (Posterior)',
+                    title: 'Conexão Periférica: Lombar',
+                    content: `
+                <p>🔗 <b>Cadeia Lesional:</b> O cólon é uma das causas viscerais primárias para lombalgias e bloqueios pélvicos inexplicáveis.</p>
+                <ul>
+                    <li>📍 <b>Bloqueios Lombares:</b> Lombalgias altas que surgem ou variam com a atividade digestiva.</li>
+                </ul>`
+                },
+                'btn-colon-ombro': {
+                    pos: { top: '24%', left: '21%' },
+                    hoverTitle: 'Ombros e Cabeça',
+                    title: 'Conexão Periférica: Ombros e Crânio',
+                    content: `
+                <p>🔗 <b>Cadeia Lesional:</b> A sobrecarga mecânica ou congestão das flexuras (ângulos) do cólon reflete-se superiormente.</p>
+                <ul>
+                    <li><b>Periartrite Umeroescapular:</b> Dores nos ombros geradas por irritação cruzada dos nervos e fáscias que ligam as flexuras do cólon ao diafragma, e deste para o ombro.</li>
+                    <li><b>Cefaleias:</b> Dores de cabeça crónicas associadas à instabilidade vasomotora gerada pelas disfunções do trato intestinal.</li>
+                </ul>`
+                },
+                'btn-colon-pes': {
+                    pos: { top: '88%', left: '24%' },
+                    hoverTitle: 'Membros Inferiores e Pés',
+                    title: 'Conexão Periférica: Membros Inferiores',
+                    content: `
+                <p>🔗 <b>Cadeia Lesional:</b> Compressão nervosa e tensão fascial propagada caudalmente.</p>
+                <ul>
+                    <li><b>Dormência e Nevralgias:</b> Sensação de dormência nas coxas, virilhas e genitais por compressão local (nervos cutâneo lateral da coxa, genitofemoral e femoral).</li>
+                    <li><b>Pernas Pesadas:</b> Sintoma matinal causado por congestão venosa pélvica e mesentérica.</li>
+                    <li><b>Hallux Valgus (Joanetes):</b> Desenvolvimento de joanetes num ou em ambos os dedos grandes dos pés, justificado pelas contínuas cadeias miofasciais que ligam o cólon, o psoas e o trato iliotibial até ao pé.</li>
+                </ul>`
+                }
+            }
+        };
+
+        // 3. Função que gere a mudança de órgão
+        function renderDiagnosisWidgetForOrgan(key) {
+            currentDiagOrgan = key || currentDiagOrgan;
+            renderHotspots(currentDiagOrgan);
+        }
+
+        // 4. Inicialização
+        function initClinicalMap() {
+            renderDiagnosisWidgetForOrgan(currentDiagOrgan);
+        }
+
         window.onload = function() {
             document.getElementById('menu-digest').classList.add('show');
             try {
@@ -1217,6 +1926,7 @@
             } catch (e) {
                 console.log("Erro no carregamento: " + e);
             }
+            try { initClinicalMap(); } catch (e) { console.warn('initClinicalMap failed', e); }
             setFocusButtonLabel();
         };
     </script>
